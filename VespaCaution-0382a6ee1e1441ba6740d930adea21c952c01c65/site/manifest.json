@@ -1,0 +1,43 @@
+{
+  "name": "Vespacaution — Outils pour apiculteurs",
+  "short_name": "Vespacaution",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f9f7f1",
+  "theme_color": "#c99b48",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "VespaTimer",
+      "short_name": "VespaTimer",
+      "description": "Ouvrir VespaTimer",
+      "url": "./index.html#vespatimer",
+      "icons": [{ "src": "../apps/vespatimer/icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "ApiGuide",
+      "short_name": "ApiGuide",
+      "description": "Ouvrir ApiGuide",
+      "url": "./index.html#apiguide",
+      "icons": [{ "src": "../apps/apiguide/icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "AlvearCheck",
+      "short_name": "AlvearCheck",
+      "description": "Ouvrir AlvearCheck",
+      "url": "./index.html#alvearcheck",
+      "icons": [{ "src": "../apps/alvearcheck/icon.png", "sizes": "192x192" }]
+    }
+  ]
+}
