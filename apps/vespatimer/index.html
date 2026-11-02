@@ -424,12 +424,47 @@ function updateNotifButton(){var btn=document.getElementById('notifBtnLabel');if
 function checkHistoryExpiry(){var hist=getHist();var histDays=currentUser?180:HISTORY_DAYS;var cutoff=Date.now()-histDays*24*60*60*1000;var expiring=hist.filter(function(e){var diff=new Date(e.date).getTime()-cutoff;return diff<24*60*60*1000&&diff>0;});if(expiring.length>0){sendNotification(t('history_expiry_title'),expiring.length+' '+t('history_expiry_text'));}}
 
 function showUndoButton(){var existing=document.getElementById('undoDelete');if(existing)existing.remove();var btn=document.createElement('button');btn.id='undoDelete';btn.className='btn-gold btn-sm';btn.innerHTML='↩️ '+t('undo_delete');btn.onclick=undoDelete;document.body.appendChild(btn);clearTimeout(undoTimer);undoTimer=setTimeout(function(){var b=document.getElementById('undoDelete');if(b)b.remove();lastDeleted=null;},5000);}
-function undoDelete(){if(!lastDeleted)return;if(Date.now()-lastDeleted.timestamp>5000)return;switch(lastDeleted.type){case'flight':var h=hornets.find(function(x){return x.id===lastDeleted.hornetId});if(h)h.flights.splice(lastDeleted.index,0,lastDeleted.value);break;case'hornet':if(hornets.length<MAX_HORNETS)hornets.push(lastDeleted.hornet);break;case'history':var hist=getHist();hist.splice(lastDeleted.index,0,lastDeleted.entry);localStorage.setItem('vh',JSON.stringify(hist));showHistory();break;}renderAll();saveAll();if(map)drawAnalysis();lastDeleted=null;var b=document.getElementById('undoDelete');if(b)b.remove();showToast(t('undo_success'));}
-
+function undoDelete(){
+    if(!lastDeleted)return;
+    if(Date.now()-lastDeleted.timestamp>5000)return;
+    switch(lastDeleted.type){
+        case'flight':
+            var h=hornets.find(function(x){return x.id===lastDeleted.hornetId});
+            if(h)h.flights.splice(lastDeleted.index,0,lastDeleted.value);
+            break;
+        case'hornet':
+            if(hornets.length<MAX_HORNETS)hornets.push(lastDeleted.hornet);
+            break;
+        case'history':
+            var hist=getHist();
+            hist.splice(lastDeleted.index,0,lastDeleted.entry);
+            localStorage.setItem('vh',JSON.stringify(hist));
+            showHistory();
+            break;
+    }
+    renderAll();
+    saveAll(); // (saveAll already calls sbPush)
+    if(map)drawAnalysis();
+    lastDeleted=null;
+    var b=document.getElementById('undoDelete');
+    if(b)b.remove();
+    showToast(t('undo_success'));
+    if (currentUser && sbClient) sbPush(); // <-- ADD THIS LINE
+}
+    
 function deleteFlight(hid,idx){var h=hornets.find(function(x){return x.id===hid});if(!h||idx<0||idx>=h.flights.length)return;lastDeleted={type:'flight',hornetId:hid,index:idx,value:h.flights[idx],timestamp:Date.now()};h.flights.splice(idx,1);renderAll();saveAll();showUndoButton();}
 function deleteHornet(id){if(hornets.length<=1){showAlert(t('keep_one_hornet'),'🐝');return;}var h=hornets.find(function(x){return x.id===id});if(!h)return;lastDeleted={type:'hornet',hornet:h,timestamp:Date.now()};hornets=hornets.filter(function(x){return x.id!==id});delete collapsedCards[id];renderAll();saveAll();showUndoButton();}
-function deleteHistEntry(index){var hist=getHist();if(index<0||index>=hist.length)return;lastDeleted={type:'history',entry:hist[index],index:index,timestamp:Date.now()};hist.splice(index,1);localStorage.setItem('vh',JSON.stringify(hist));showHistory();showUndoButton();}
-
+function deleteHistEntry(index){
+    var hist=getHist();
+    if(index<0||index>=hist.length)return;
+    lastDeleted={type:'history',entry:hist[index],index:index,timestamp:Date.now()};
+    hist.splice(index,1);
+    localStorage.setItem('vh',JSON.stringify(hist));
+    showHistory();
+    showUndoButton();
+    if (currentUser && sbClient) sbPush(); // <-- ADD THIS LINE
+}
+    
 function resumeHistEntryByIndex(index){var hist=getHist();if(index<0||index>=hist.length){showAlert(t('entry_not_found'),'❌');return;}var entry=hist[index];var hasCurrentData=hornets.some(function(h){return h.flights.length>0})||surveyLocation.name||inspectorName||notes;if(hasCurrentData){saveHist();}surveyLocation=entry.location||{lat:46.8,lng:6.8,name:''};inspectorName=entry.inspectorName||'';notes=entry.notes||'';if(entry.personalInfo){personalInfo=entry.personalInfo;}else{personalInfo={firstName:'',lastName:'',phone:''};}if(entry.hornets&&entry.hornets.length){hornets=entry.hornets.map(function(h){var nh=createHornet(h.name);nh.direction=h.direction||0;nh.flights=h.flights||[];nh.color=h.color||null;return nh;});}else{hornets=[createHornet('Frelon 1')];}resumedFromIndex=index;localStorage.setItem('resumed_idx',resumedFromIndex);document.getElementById('firstName').value=personalInfo.firstName||'';document.getElementById('lastName').value=personalInfo.lastName||'';document.getElementById('phone').value=personalInfo.phone||'';document.getElementById('locationInput').value=surveyLocation.name||surveyLocation.lat.toFixed(5)+', '+surveyLocation.lng.toFixed(5);document.getElementById('locationDisplay').textContent=surveyLocation.name||surveyLocation.lat.toFixed(5)+', '+surveyLocation.lng.toFixed(5);document.getElementById('inspectorInput').value=inspectorName;document.getElementById('notesField').value=notes;updatePotMarker();if(map)map.setView([surveyLocation.lat,surveyLocation.lng],16);renderAll();showToast(t('pot_resumed'));}
 
 function toggleHistoricalFlights(d){historicalVisibility[d]=!historicalVisibility[d];drawAnalysis(getHist());}
@@ -1118,14 +1153,16 @@ function checkFirstLaunch(){}
 function initSupabase() {
   try {
     if (window.supabase && window.supabase.createClient && !sbClient) {
-      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { 
     persistSession: true, 
     autoRefreshToken: true, 
     detectSessionInUrl: false,
-    storageKey: SB_STORAGE_KEY // <--- This isolates the login!
+    storageKey: SB_STORAGE_KEY,
+    experimental: { passkey: true } // <-- ADD THIS LINE
   }
 });
+        
       if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
         window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function(available) {
           biometricAvailable = !!available;
@@ -1367,9 +1404,34 @@ function renderAccountState() {
 }
 
 function checkIOSInstall(){}
-
+function checkPasswordReset() {
+    var hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+        var params = new URLSearchParams(hash.substring(1));
+        var accessToken = params.get('access_token');
+        
+        if (accessToken) {
+            // Show a prompt for the new password
+            setTimeout(function() {
+                var newPassword = prompt("Entrez votre nouveau mot de passe (min. 6 caractères) :");
+                if (newPassword && newPassword.length >= 6) {
+                    sbClient.auth.updateUser({ password: newPassword }).then(function(res) {
+                        if (res.error) {
+                            showAlert("Erreur : " + res.error.message, "❌");
+                        } else {
+                            showAlert("✅ Mot de passe mis à jour avec succès !", "🐝");
+                            window.location.hash = ''; // Clear the hash
+                            window.location.reload();
+                        }
+                    });
+                }
+            }, 1000);
+        }
+    }
+}
 function boot(){
-  loadAll();
+  checkPasswordReset(); // <-- ADD THIS LINE
+    loadAll();
   updateNotifButton();
   applyTranslations();
   renderAll();
