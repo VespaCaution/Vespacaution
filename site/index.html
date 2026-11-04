@@ -416,7 +416,7 @@
                 member_gregoire_name: "Grégoire Hupka",
                 member_gregoire_role: "Vice President of Vespacaution and the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.",
                 member_ben_name: "Ben Hupka",
-                member_ben_role: "President of Vespacaution, Developer."
+                member_ben_role: "President of Vespacaution, Developer.",
                 nav_home: "Home", nav_apps: "Apps", nav_resources: "Resources", nav_contact: "Contact", nav_privacy: "Privacy Policy", nav_support: "Support",
                 nav_links: "Useful Links", nav_credits: "Credits", nav_language: "Language",
                 footer_desc: "Tools for beekeepers and hornet hunters.", footer_legal: "Legal", footer_credit: "Created by Ben Hupka.", nav_menu: "Menu",
@@ -456,7 +456,7 @@
                 member_gregoire_name: "Grégoire Hupka",
                 member_gregoire_role: "Vice président de Vespacaution et de la société apicole de Morges, Spécialiste destructeur et télémètre.",
                 member_ben_name: "Ben Hupka",
-                member_ben_role: "Président de Vespacaution, Développeur."
+                member_ben_role: "Président de Vespacaution, Développeur.",
                 nav_home: "Accueil", nav_apps: "Apps", nav_resources: "Ressources", nav_contact: "Contact", nav_privacy: "Confidentialité", nav_support: "Soutenir",
                 nav_links: "Liens utiles", nav_credits: "Crédits", nav_language: "Langue",
                 footer_desc: "Outils pour apiculteurs et chasseurs de frelons.", footer_legal: "Légal", footer_credit: "Créé par Ben Hupka.", nav_menu: "Menu",
@@ -496,7 +496,7 @@
                 member_gregoire_name: "Grégoire Hupka",
                 member_gregoire_role: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.",
                 member_ben_name: "Ben Hupka",
-                member_ben_role: "Präsident von Vespacaution, Entwickler."
+                member_ben_role: "Präsident von Vespacaution, Entwickler.",
                 nav_home: "Startseite", nav_apps: "Apps", nav_resources: "Ressourcen", nav_contact: "Kontakt", nav_privacy: "Datenschutz", nav_support: "Unterstützen",
                 nav_links: "Nützliche Links", nav_credits: "Credits", nav_language: "Sprache",
                 footer_desc: "Werkzeuge für Imker und Hornissenjäger.", footer_legal: "Rechtliches", footer_credit: "Erstellt von Ben Hupka.", nav_menu: "Menü",
@@ -536,7 +536,7 @@
                 member_gregoire_name: "Grégoire Hupka",
                 member_gregoire_role: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.",
                 member_ben_name: "Ben Hupka",
-                member_ben_role: "Presidente di Vespacaution, Sviluppatore."
+                member_ben_role: "Presidente di Vespacaution, Sviluppatore.",
                 nav_home: "Home", nav_apps: "App", nav_resources: "Risorse", nav_contact: "Contatto", nav_privacy: "Privacy", nav_support: "Sostieni",
                 nav_links: "Link utili", nav_credits: "Crediti", nav_language: "Lingua",
                 footer_desc: "Strumenti per apicoltori e cacciatori di calabroni.", footer_legal: "Legale", footer_credit: "Creato da Ben Hupka.", nav_menu: "Menu",
@@ -576,7 +576,7 @@
                 member_gregoire_name: "Grégoire Hupka",
                 member_gregoire_role: "Vicepresident da Vespacaution e da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter.",
                 member_ben_name: "Ben Hupka",
-                member_ben_role: "President da Vespacaution, Sviluppader."
+                member_ben_role: "President da Vespacaution, Sviluppader.",
                 nav_home: "Chasa", nav_apps: "Apps", nav_resources: "Resursas", nav_contact: "Contact", nav_privacy: "Protecziun da datas", nav_support: "Sustegn",
                 nav_links: "Colliaziuns", nav_credits: "Credits", nav_language: "Lingua",
                 footer_desc: "Instruments per apiculturs e chatschaders da vespras.", footer_legal: "Legal", footer_credit: "Creà da Ben Hupka.", nav_menu: "Menu",
@@ -1159,7 +1159,7 @@ const appsConfig = {
             }
         }
 
-        function render() {
+                 function render() {
             const hash = window.location.hash.replace('#', '') || 'home';
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -1170,12 +1170,11 @@ const appsConfig = {
                 const el = document.getElementById('apps');
                 if(el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
             } else if (hash === 'resources') {
-                // Si on est sur la page resources mais qu'on n'a pas cliqué sur un bouton du menu, on affiche les liens
                 mainContent.innerHTML = getResourcesHtml('links');
             } else if (hash === 'support') {
                 mainContent.innerHTML = getSupportHtml();
-            } else if (hash === 'contact') {
-               mainContent.innerHTML = getMembersHtml();
+            } else if (hash === 'members') {
+                mainContent.innerHTML = getMembersHtml();
             } else if (hash === 'contact') {
                 mainContent.innerHTML = getContactHtml();
                 setupContactForm();
@@ -1185,7 +1184,6 @@ const appsConfig = {
                 mainContent.innerHTML = getHomeHtml();
             }
         }
-
         // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
