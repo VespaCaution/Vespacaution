@@ -344,11 +344,11 @@
     <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown(event)" data-i18n="nav_resources">Ressources <span id="dropdownTriangle" style="font-size:0.7rem; transition: transform 0.3s; display: inline-block;">▼</span></button>
         <div class="dropdown-content" id="resourcesDropdown">
-            <button onclick="renderStaticPage('links'); closeDropdown(); closeMobileMenu();" data-i18n="nav_links">🔗 Liens utiles</button>
-            <button onclick="renderStaticPage('credits'); closeDropdown(); closeMobileMenu();" data-i18n="nav_credits">🏆 Crédits</button>
-            <div class="dropdown-divider"></div>
-            <button onclick="openPdf('status.pdf'); closeDropdown(); closeMobileMenu();" data-i18n="file_status">📄 Fichier Status (PDF)</button>
-            <button onclick="openPdf('imprimable.pdf'); closeDropdown(); closeMobileMenu();" data-i18n="file_printables">🖨️ Imprimables (PDF)</button>
+    <button onclick="renderStaticPage('links'); closeDropdown()" data-i18n="nav_links">🔗 Liens utiles</button>
+    <button onclick="renderStaticPage('credits'); closeDropdown()" data-i18n="nav_credits">🏆 Crédits</button>
+    <div class="dropdown-divider"></div>
+    <button onclick="openPdf('status.pdf'); closeDropdown()">📄 <span data-i18n="file_status">Fichier Status (PDF)</span></button>
+    <button onclick="openPdf('imprimable.pdf'); closeDropdown()">🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></button>
         </div>
     </div>
 
