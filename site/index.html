@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vespacaution — Outils pour apiculteurs</title>
 
-<!-- LIGNES À AJOUTER POUR LA PWA ET LES ICÔNES -->
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
-<meta name="theme-color" content="#c99b48">
+    <!-- PWA ET ICÔNES -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+    <meta name="theme-color" content="#c99b48">
     <meta name="description" content="Outils numériques pour apiculteurs et chasseurs de frelons. VespaTimer, ApiGuide, AlvearCheck.">
     
     <!-- UMAMI ANALYTICS -->
@@ -101,14 +101,14 @@
             transition: all 0.2s;
         }
         .lang-btn:hover { color: var(--primary); }
-        .lang-btn.active { background: var(--white); color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .lang-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
         /* --- DROPDOWN MENU --- */
         .dropdown { position: relative; display: inline-block; }
         .dropdown-btn { 
-    background: none; border: none; font-family: inherit; font-size: 0.9rem; font-weight: 600; 
-    color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 5px; 
-    padding: 5px 0; height: 28px; /* <-- Ajout de la hauteur fixe */
+            background: none; border: none; font-family: inherit; font-size: 0.9rem; font-weight: 600; 
+            color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 5px; 
+            padding: 5px 0; height: 28px;
         }
         .dropdown-btn:hover { color: var(--primary); }
         .dropdown-content {
@@ -214,14 +214,6 @@
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 30px 0; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        .account-notice {
-            display: flex; align-items: flex-start; gap: 15px;
-            padding: 20px; border-radius: 12px; margin: 25px 0; font-weight: 600; line-height: 1.5; font-size: 0.95rem;
-        }
-        .account-notice.optional { background: #eef7ee; color: #2e7d32; border: 1px solid #c8e6c9; }
-        .account-notice.mandatory { background: var(--danger-bg); color: var(--danger); border: 1px solid #f5c6cb; }
-        .account-notice span { flex-shrink: 0; font-size: 1.2rem; }
-
         .contact-action { text-align: center; margin-top: 20px; }
 
         /* --- FORMS & OTHER PAGES --- */
@@ -239,7 +231,39 @@
             width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--bg-color); color: var(--text-main); transition: border-color 0.2s;
         }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
-        
+
+        /* --- MEMBRES CSS --- */
+        .member-line {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0 20px 0;
+            width: 100%;
+        }
+        .member-line h2 { white-space: nowrap; font-size: 1.2rem; color: var(--primary); }
+        .member-line hr { flex-grow: 1; border: none; border-top: 2px solid var(--border); }
+        .member-circle {
+            width: 70px; height: 70px; border-radius: 50%;
+            background: var(--primary); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold; flex-shrink: 0; overflow: hidden;
+        }
+        .member-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- PDF MODAL --- */
+        .pdf-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 9999; flex-direction: column;
+        }
+        .pdf-overlay.active { display: flex; }
+        .pdf-header { padding: 15px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+        .pdf-close-btn {
+            background: var(--danger); color: white; border: none; font-size: 1.5rem;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+        .pdf-iframe { flex-grow: 1; width: 100%; border: none; }
+
         /* --- FOOTER --- */
         footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 20px 20px 20px; margin-top: 60px; }
         .footer-content { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
@@ -254,29 +278,37 @@
         .alert-success { background: #d4edda; color: #155724; }
         .alert-error { background: #f8d7da; color: #721c24; }
 
+        /* --- BURGER MENU --- */
+        .burger-menu {
+            display: none; font-size: 1.8rem; cursor: pointer;
+            color: var(--primary); background: none; border: none; z-index: 1002;
+        }
+
         @media (max-width: 768px) {
-    header { flex-direction: column; padding: 12px; gap: 12px; }
-    .header-left { width: 100%; justify-content: space-between; }
-    .logo-container img { height: 35px; }
-    nav { width: 100%; justify-content: center; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
-    .social-icons { margin-left: 0; }
-    main { padding: 0 12px; margin: 20px auto; }
-    .hero h1 { font-size: 1.8rem; }
-    .app-grid { grid-template-columns: 1fr; gap: 15px; }
-    .app-content-box { padding: 20px 15px; }
-    .footer-content { grid-template-columns: 1fr; text-align: center; gap: 20px; }
-    
-    /* LA CORRECTION EST ICI : On laisse le menu flotter (absolute) */
-    .dropdown-content { 
-        position: absolute; 
-        top: 100%; 
-        left: 50%; 
-        transform: translateX(-50%); /* Centre le menu sous le bouton */
-        width: 220px; 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-        border: 1px solid var(--border); 
-        background: var(--surface);
-    }
+            header { padding: 10px 15px; justify-content: space-between; flex-direction: row; }
+            .header-left { width: auto; }
+            .logo-container img { height: 35px; }
+            .burger-menu { display: block; }
+            
+            nav {
+                display: none; flex-direction: column; width: 100%;
+                background: var(--surface); padding: 15px 0; gap: 15px;
+                border-top: 1px solid var(--border); margin-top: 10px;
+            }
+            nav.active { display: flex; }
+            nav a { font-size: 1.1rem; width: 100%; text-align: center; }
+            .social-icons { justify-content: center; width: 100%; margin-top: 10px; }
+
+            main { padding: 0 12px; margin: 20px auto; }
+            .hero h1 { font-size: 1.8rem; }
+            .app-grid { grid-template-columns: 1fr; gap: 15px; }
+            .app-content-box { padding: 20px 15px; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; gap: 20px; }
+            .dropdown-content { 
+                position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+                width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
+                border: 1px solid var(--border); background: var(--surface);
+            }
         }
     </style>
 </head>
@@ -287,42 +319,39 @@
             <a href="#" class="logo-container" onclick="window.location.hash=''">
                 <img src="logo.png" alt="Vespacaution Logo" onerror="this.src='https://drive.google.com/uc?export=download&id=1_3Qc1Qbh36B4NTPlqPXumKHQg05Rq3NX'">
             </a>
+        </div>
+        
+        <button class="burger-menu" onclick="document.querySelector('nav').classList.toggle('active')">☰</button>
+
+        <nav>
             <div class="lang-selector">
                 <button class="lang-btn" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn active" onclick="setLanguage('fr')">FR</button>
+                <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
                 <button class="lang-btn" onclick="setLanguage('de')">DE</button>
                 <button class="lang-btn" onclick="setLanguage('it')">IT</button>
                 <button class="lang-btn" onclick="setLanguage('rm')">RM</button>
             </div>
-        </div>
-        
-        <nav>
             <a href="#" data-i18n="nav_home">Accueil</a>
             <a href="#apps" data-i18n="nav_apps">Apps</a>
             <a href="#members" data-i18n="nav_members">Membres</a>
             
-            <!-- MENU DÉROULANT RESSOURCES -->
             <div class="dropdown">
-                <button class="dropdown-btn" onclick="toggleDropdown(event)" data-i18n="nav_resources">Ressources <span style="font-size:0.7rem;">▼</span></button>
+                <button class="dropdown-btn" onclick="toggleDropdown(event)" data-i18n="nav_resources">Ressources ▼</button>
                 <div class="dropdown-content" id="resourcesDropdown">
                     <button onclick="renderStaticPage('links'); closeDropdown()" data-i18n="nav_links">🔗 Liens utiles</button>
                     <button onclick="renderStaticPage('credits'); closeDropdown()" data-i18n="nav_credits">🏆 Crédits</button>
                     <div class="dropdown-divider"></div>
-                    
-                <a href="./status.pdf" download>📄 <span data-i18n="file_status">Fichier Status (PDF)</span></a>
-                    <a href="./imprimable.pdf" download>🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></a></div>
+                    <button onclick="openPdf('status.pdf'); closeDropdown()" data-i18n="file_status">📄 Fichier Status (PDF)</button>
+                    <button onclick="openPdf('imprimable.pdf'); closeDropdown()" data-i18n="file_printables">🖨️ Imprimables (PDF)</button>
+                </div>
             </div>
 
             <a href="#support" data-i18n="nav_support">Soutenir</a>
             <a href="#contact" data-i18n="nav_contact">Contact</a>
             
             <div class="social-icons">
-                <a href="https://youtube.com/@hornetjunkie?si=8nSpCgGxehuk5r39" target="_blank" title="YouTube">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube">
-                </a>
-                <a href="https://whatsapp.com/channel/0029VbDichqDuMRfA1Yitr2b" target="_blank" title="WhatsApp">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-                </a>
+                <a href="https://youtube.com/@hornetjunkie?si=8nSpCgGxehuk5r39" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
+                <a href="https://whatsapp.com/channel/0029VbDichqDuMRfA1Yitr2b" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"></a>
             </div>
         </nav>
     </header>
@@ -332,46 +361,43 @@
     <footer>
         <div class="footer-content">
             <div>
-    <h3 data-i18n="nav_menu">Menu</h3>
-    <ul>
-        <li><a href="#" data-i18n="nav_home">Accueil</a></li>
-        <li><a href="#apps" data-i18n="nav_apps">Apps</a></li>
-       <li><a href="#members" data-i18n="nav_members">Membres</a></li>
-        <li><a href="#support" data-i18n="nav_support">Soutenir</a></li>
-        <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-        
-        <!-- AJOUTER CES 4 LIGNES -->
-        <li><a href="#resources" onclick="renderStaticPage('links')" data-i18n="nav_links">Liens utiles</a></li>
-        <li><a href="#resources" onclick="renderStaticPage('credits')" data-i18n="nav_credits">Crédits</a></li>
-        <li><a href="./status.pdf" download>📄 <span data-i18n="file_status">Fichier Status (PDF)</span></a></li>
-        <li><a href="./imprimable.pdf" download>🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></a></li>
-        <!-- FIN DE L'AJOUT -->
-        
-    </ul>
+                <h3 data-i18n="nav_menu">Menu</h3>
+                <ul>
+                    <li><a href="#" data-i18n="nav_home">Accueil</a></li>
+                    <li><a href="#apps" data-i18n="nav_apps">Apps</a></li>
+                    <li><a href="#members" data-i18n="nav_members">Membres</a></li>
+                    <li><a href="#support" data-i18n="nav_support">Soutenir</a></li>
+                    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                    
+                    <li style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;"><a href="#resources" onclick="renderStaticPage('links')" data-i18n="nav_links">Liens utiles</a></li>
+                    <li><a href="#resources" onclick="renderStaticPage('credits')" data-i18n="nav_credits">Crédits</a></li>
+                    <li><a href="#" onclick="openPdf('status.pdf'); return false;">📄 <span data-i18n="file_status">Fichier Status (PDF)</span></a></li>
+                    <li><a href="#" onclick="openPdf('imprimable.pdf'); return false;">🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></a></li>
+                </ul>
             </div>
-
-                      <div>
+            <div>
                 <h3 data-i18n="footer_legal">Légal</h3>
                 <ul>
                     <li><a href="#privacy" data-i18n="nav_privacy">Politique de confidentialité</a></li>
                 </ul>
 
-                             <div>
-                <h3 data-i18n="nav_follow">Suivez-nous</h3>
-                <div style="display: flex; gap: 15px; margin-top: 10px; justify-content: center;">
-                    <a href="https://youtube.com/@hornetjunkie?si=8nSpCgGxehuk5r39" target="_blank" style="display: inline-block;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="height: 30px; width: auto; filter: grayscale(100%) opacity(0.7); transition: 0.2s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
-                    </a>
-                    <a href="https://whatsapp.com/channel/0029VbDichqDuMRfA1Yitr2b" target="_blank" style="display: inline-block;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height: 30px; width: auto; filter: grayscale(100%) opacity(0.7); transition: 0.2s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
-                    </a>
-                </div>
-            </div>         
-                                <!-- SÉLECTEUR DE LANGUE CORRIGÉ -->
                 <div style="margin-top: 20px;">
+                    <h3 data-i18n="nav_follow">Suivez-nous</h3>
+                    <div style="display: flex; gap: 15px; margin-top: 10px; justify-content: center;">
+                        <a href="https://youtube.com/@hornetjunkie?si=8nSpCgGxehuk5r39" target="_blank">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="height: 20px; width: 20px; filter: grayscale(100%) opacity(0.7);">
+                        </a>
+                        <a href="https://whatsapp.com/channel/0029VbDichqDuMRfA1Yitr2b" target="_blank">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height: 20px; width: 20px; filter: grayscale(100%) opacity(0.7);">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div style="margin-top: 10px;">
                     <h3 data-i18n="nav_language" style="font-size: 1rem; margin-bottom: 10px;">Langue</h3>
                     <div style="text-align: center;">
-                        <div class="lang-selector" style="display: inline-flex; width: auto;">
+                        <div class="lang-selector" style="display: inline-flex; width: auto; background: var(--bg-color);">
                             <button class="lang-btn" onclick="setLanguage('en')">EN</button>
                             <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
                             <button class="lang-btn" onclick="setLanguage('de')">DE</button>
@@ -380,6 +406,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
         <div class="footer-bottom">
             <p style="margin-bottom: 10px; font-size: 1rem; color: var(--text-main);">
                 Contact: <a href="mailto:info@vespacaution.ch" style="color: var(--primary); font-weight: bold;">info@vespacaution.ch</a>
@@ -388,10 +416,18 @@
         </div>
     </footer>
 
+    <!-- OVERLAY PDF -->
+    <div class="pdf-overlay" id="pdfOverlay">
+        <div class="pdf-header">
+            <button class="pdf-close-btn" onclick="closePdf()">✕</button>
+        </div>
+        <iframe id="pdfIframe" class="pdf-iframe" src=""></iframe>
+    </div>
+
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // --- LOGIQUE MENU DÉROULANT ---
+        // --- LOGIQUE MENU DÉROULANT & PDF ---
         function toggleDropdown(event) {
             event.stopPropagation();
             document.getElementById('resourcesDropdown').classList.toggle('show');
@@ -405,7 +441,16 @@
             }
         }
 
-          // ==========================================
+        function openPdf(url) {
+            document.getElementById('pdfIframe').src = url;
+            document.getElementById('pdfOverlay').classList.add('active');
+        }
+        function closePdf() {
+            document.getElementById('pdfOverlay').classList.remove('active');
+            document.getElementById('pdfIframe').src = "";
+        }
+
+        // ==========================================
         // 1. TRANSLATIONS (i18n)
         // ==========================================
         const translations = {
@@ -413,8 +458,10 @@
                 nav_follow: "Follow us",                
                 nav_members: "Members",
                 members_title: "The Team",
+                members_committee: "Committee",
+                members_all: "All members",
                 member_gregoire_name: "Grégoire Hupka",
-                member_gregoire_role: "Vice President of Vespacaution and the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.",
+                member_gregoire_role: "Vice President of Vespacaution and the Beekeeping Society of Morges, Representative of the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.",
                 member_ben_name: "Ben Hupka",
                 member_ben_role: "President of Vespacaution, Developer.",
                 nav_home: "Home", nav_apps: "Apps", nav_resources: "Resources", nav_contact: "Contact", nav_privacy: "Privacy Policy", nav_support: "Support",
@@ -453,8 +500,10 @@
                 nav_follow: "Suivez-nous",               
                 nav_members: "Membres",
                 members_title: "L'Équipe",
+                members_committee: "Au comité",
+                members_all: "Tous les membres",
                 member_gregoire_name: "Grégoire Hupka",
-                member_gregoire_role: "Vice président de Vespacaution et de la société apicole de Morges, Spécialiste destructeur et télémètre.",
+                member_gregoire_role: "Vice président de Vespacaution et de la société apicole de Morges, Référent de la société apicole de Morges, Spécialiste destructeur et télémètre.",
                 member_ben_name: "Ben Hupka",
                 member_ben_role: "Président de Vespacaution, Développeur.",
                 nav_home: "Accueil", nav_apps: "Apps", nav_resources: "Ressources", nav_contact: "Contact", nav_privacy: "Confidentialité", nav_support: "Soutenir",
@@ -493,8 +542,10 @@
                 nav_follow: "Folgen Sie uns",             
                 nav_members: "Mitglieder",
                 members_title: "Das Team",
+                members_committee: "Komitee",
+                members_all: "Alle Mitglieder",
                 member_gregoire_name: "Grégoire Hupka",
-                member_gregoire_role: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.",
+                member_gregoire_role: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Ansprechpartner der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.",
                 member_ben_name: "Ben Hupka",
                 member_ben_role: "Präsident von Vespacaution, Entwickler.",
                 nav_home: "Startseite", nav_apps: "Apps", nav_resources: "Ressourcen", nav_contact: "Kontakt", nav_privacy: "Datenschutz", nav_support: "Unterstützen",
@@ -530,11 +581,13 @@
                 contact_me: "📬 Kontaktieren Sie uns", file_status: "Status-Datei (PDF)", file_printables: "Druckvorlagen (PDF)"
             },
             it: {
-                 nav_follow: "Seguici",              
+                nav_follow: "Seguici",              
                 nav_members: "Membri",
                 members_title: "Il Team",
+                members_committee: "Comitato",
+                members_all: "Tutti i membri",
                 member_gregoire_name: "Grégoire Hupka",
-                member_gregoire_role: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.",
+                member_gregoire_role: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Referente della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.",
                 member_ben_name: "Ben Hupka",
                 member_ben_role: "Presidente di Vespacaution, Sviluppatore.",
                 nav_home: "Home", nav_apps: "App", nav_resources: "Risorse", nav_contact: "Contatto", nav_privacy: "Privacy", nav_support: "Sostieni",
@@ -573,8 +626,10 @@
                 nav_follow: "Suonda nus",              
                 nav_members: "Commembers",
                 members_title: "La Squadra",
+                members_committee: "Comité",
+                members_all: "Tuts ils commembers",
                 member_gregoire_name: "Grégoire Hupka",
-                member_gregoire_role: "Vicepresident da Vespacaution e da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter.",
+                member_gregoire_role: "Vicepresident da Vespacaution e da la societad apicola da Morges, Referent da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter.",
                 member_ben_name: "Ben Hupka",
                 member_ben_role: "President da Vespacaution, Sviluppader.",
                 nav_home: "Chasa", nav_apps: "Apps", nav_resources: "Resursas", nav_contact: "Contact", nav_privacy: "Protecziun da datas", nav_support: "Sustegn",
@@ -611,398 +666,400 @@
             }
         };
            
-let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
+        let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
 
-function setLanguage(lang) {
-    currentLang = lang;
-    localStorage.setItem('vespacaution_lang', lang);
-    
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtns = document.querySelectorAll(`.lang-btn[onclick="setLanguage('${lang}')"]`);
-activeBtns.forEach(btn => btn.classList.add('active'));
-    
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) {
-            el.innerHTML = translations[lang][key];
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('vespacaution_lang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtns = document.querySelectorAll(`.lang-btn[onclick="setLanguage('${lang}')"]`);
+            activeBtns.forEach(btn => btn.classList.add('active'));
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            render();
         }
-    });
-    render();
-}
 
-function t(key) {
-    return (translations[currentLang] && translations[currentLang][key]) ? translations[currentLang][key] : key;
-}
-       // ==========================================
-// 2. APP CONFIGURATION & FULL DESCRIPTIONS
-// ==========================================
-const appsConfig = {
-    'vespatimer': {
-        title: 'VespaTimer',
-        icon: '<img src="../apps/vespatimer/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
-        shortDesc: {
-            en: "Digital assistant for the Pot-à-Mèche",
-            fr: "L'assistant digital du Pot-à-Mèche",
-            de: "Der digitale Assistent für den Pot-à-Mèche",
-            it: "L'assistente digitale per il Pot-à-Mèche",
-            rm: "L'assistent digital dal Pot-à-Mèche"
-        },
-        html: {
-            en: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.en}</p></div>
-            <div class="app-content-box">
-                <p>VespaTimer is a web tool (and mobile PWA) designed specifically to facilitate the field work of volunteers fighting the Asian hornet.</p>
-                <h3>⏱️ 1. Multi-Stopwatch</h3>
-                <ul><li>Track up to 13 hornets simultaneously.</li><li>Instantly calculates average flight time.</li><li>Customize each hornet with a unique color.</li></ul>
-                <h3>🗺️ 2. Triangulation</h3>
-                <ul><li>Based on the Pot-à-Mèche technique.</li><li>Automatically calculates estimated distance.</li><li>Interactive map shows the search zone (oval) for each nest.</li></ul>
-                <h3>🧭 3. Built-in Compass</h3>
-                <p>Uses phone sensors for exact takeoff direction.</p>
-                <h3>📤 4. Multi-Format Export</h3>
-                <ul><li>PDF: Complete report with map.</li><li>VCFLASH: Save and resume later.</li><li>GPX/KML: View nests on Google Earth or GPS.</li></ul>
-                <h3>📋 5. History & 👤 6. Optional Account</h3>
-                <p>Saves 90 days of data. Create a free account for cloud sync and unlimited history.</p>
-                <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Setup and Timer</h4><p>Place your trap. When a hornet is captured, start the timer. Stop it when it leaves.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
-                        <div class="instruction-step"><h4>2. Triangulation</h4><p>Enter departure direction using the compass. The app calculates the search zone.</p><img src="../apps/vespatimer/2.png" alt="Map"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            fr: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.fr}</p></div>
-            <div class="app-content-box">
-                <p>VespaTimer est un outil web (et application mobile PWA) conçu spécifiquement pour faciliter le travail de terrain des télémètres et des bénévoles qui luttent contre le frelon asiatique.</p>
-                <h3>⏱️ 1. Le Multi-Chronomètre</h3>
-                <ul><li>Suivez jusqu'à 13 frelons simultanément.</li><li>Calcule instantanément le temps de vol moyen.</li><li>Personnalisez chaque frelon avec une couleur unique.</li></ul>
-                <h3>🗺️ 2. La Triangulation Automatique</h3>
-                <ul><li>Basé sur la technique du Pot-à-Mèche.</li><li>Calcule automatiquement la distance estimée.</li><li>Une carte interactive affiche la zone de recherche (ovale) pour chaque nid potentiel.</li></ul>
-                <h3>🧭 3. Boussole Intégrée</h3>
-                <p>Utilise les capteurs de votre téléphone pour donner la direction exacte de l'envol.</p>
-                <h3>📤 4. Exportation et Partage</h3>
-                <ul><li>PDF : Rapport complet avec carte.</li><li>VCFLASH : Sauvegarder et reprendre plus tard.</li><li>GPX / KML : Voir les nids sur Google Earth ou GPS.</li></ul>
-                <h3>📋 5. Historique & 👤 6. Compte Optionnel</h3>
-                <p>Sauvegarde automatique des 90 derniers jours. Créez un compte gratuit pour la synchronisation cloud et l'historique illimité.</p>
-                <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Configuration et Chrono</h4><p>Installez votre pot-à-mèche. Quand un frelon est capturé, lancez le chrono. Arrêtez-le à l'envol.</p><img src="../apps/vespatimer/1.png" alt="Chrono"></div>
-                        <div class="instruction-step"><h4>2. Triangulation</h4><p>Entrez la direction d'envol grâce à la boussole. L'application calcule la distance et la zone de recherche.</p><img src="../apps/vespatimer/2.png" alt="Carte"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            de: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.de}</p></div>
-            <div class="app-content-box">
-                <p>VespaTimer ist ein Web-Tool (und eine mobile PWA), das speziell entwickelt wurde, um die Feldarbeit von Freiwilligen im Kampf gegen die Asiatische Hornisse zu erleichtern.</p>
-                <h3>⏱️ 1. Multi-Stoppuhr</h3>
-                <ul><li>Verfolgen Sie bis zu 13 Hornissen gleichzeitig.</li><li>Berechnet sofort die durchschnittliche Flugzeit.</li><li>Passen Sie jede Hornisse mit einer einzigartigen Farbe an.</li></ul>
-                <h3>🗺️ 2. Triangulation</h3>
-                <ul><li>Basierend auf der Pot-à-Mèche-Technik.</li><li>Berechnet automatisch die geschätzte Entfernung.</li><li>Interaktive Karte zeigt die Suchzone (Oval) für jedes Nest.</li></ul>
-                <h3>🧭 3. Integrierter Kompass</h3>
-                <p>Verwendet Telefonsensoren für die genaue Startrichtung.</p>
-                <h3>📤 4. Multi-Format-Export</h3>
-                <ul><li>PDF: Vollständiger Bericht mit Karte.</li><li>VCFLASH: Speichern und später fortsetzen.</li><li>GPX/KML: Nester auf Google Earth anzeigen.</li></ul>
-                <h3>📋 5. Verlauf & 👤 6. Optionales Konto</h3>
-                <p>Speichert Daten für 90 Tage. Erstellen Sie ein kostenloses Konto für Cloud-Synchronisierung und unbegrenzten Verlauf.</p>
-                <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Einrichtung und Timer</h4><p>Stellen Sie die Falle auf. Starten Sie den Timer, wenn eine Hornisse gefangen wird. Stoppen Sie ihn beim Verlassen.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
-                        <div class="instruction-step"><h4>2. Triangulation</h4><p>Geben Sie die Richtung mit dem Kompass ein. Die App berechnet die Suchzone.</p><img src="../apps/vespatimer/2.png" alt="Karte"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            it: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.it}</p></div>
-            <div class="app-content-box">
-                <p>VespaTimer è uno strumento web (e PWA mobile) progettato specificamente per facilitare il lavoro sul campo dei volontari che combattono il calabrone asiatico.</p>
-                <h3>⏱️ 1. Multi-Cronometro</h3>
-                <ul><li>Tieni traccia fino a 13 calabroni contemporaneamente.</li><li>Calcola istantaneamente il tempo di volo medio.</li><li>Personalizza ogni calabrone con un colore unico.</li></ul>
-                <h3>🗺️ 2. Triangolazione</h3>
-                <ul><li>Basato sulla tecnica del Pot-à-Mèche.</li><li>Calcola automaticamente la distanza stimata.</li><li>La mappa interattiva mostra la zona di ricerca (ovale) per ogni nido.</li></ul>
-                <h3>🧭 3. Bussola Integrata</h3>
-                <p>Utilizza i sensori del telefono per la direzione esatta del decollo.</p>
-                <h3>📤 4. Esportazione Multi-Formato</h3>
-                <ul><li>PDF: Report completo con mappa.</li><li>VCFLASH: Salva e riprendi più tardi.</li><li>GPX/KML: Visualizza i nidi su Google Earth.</li></ul>
-                <h3>📋 5. Cronologia e 👤 6. Account Opzionale</h3>
-                <p>Salva i dati per 90 giorni. Crea un account gratuito per la sincronizzazione cloud e la cronologia illimitata.</p>
-                <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Configurazione e Timer</h4><p>Posiziona la trappola. Quando un calabrone viene catturato, avvia il timer. Fermalo quando esce.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
-                        <div class="instruction-step"><h4>2. Triangolazione</h4><p>Inserisci la direzione di partenza usando la bussola. L'app calcola la zona di ricerca.</p><img src="../apps/vespatimer/2.png" alt="Mappa"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                        <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            rm: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.rm}</p></div>
-            <div class="app-content-box">
-                <p>VespaTimer è in instrument web (ed ina PWA mobila) concepid specificamain per facilitar la lavur da champ da voluntaris en la cumbat cunter la vespra asiatica.</p>
-                <h3>⏱️ 1. Multi-Cronometer</h3>
-                <ul><li>Fastizar fin a 13 vespras en il medem temp.</li><li>Calculescha instantanamain il temp da sgol mesaun.</li><li>Persunalisar mintga vespra cun ina colur unica.</li></ul>
-                <h3>🗺️ 2. Triangulaziun</h3>
-                <ul><li>Basa sin la tecnica dal Pot-à-Mèche.</li><li>Calculescha automaticamain la distanza stimada.</li><li>Ina carta interactiva mussa la zona da tschertgar (oval) per mintga gnieu.</li></ul>
-                <h3>🧭 3. Bussola Integrada</h3>
-                <p>Duvra ils sensors dal telefon per la direcziun exacta da l'entschatta.</p>
-                <h3>📤 4. Export Multi-Format</h3>
-                <ul><li>PDF: Rapport cumplet cun carta.</li><li>VCFLASH: Memorisar e cuntinuar pli tard.</li><li>GPX/KML: Mussar ils gnieus sin Google Earth.</li></ul>
-                <h3>📋 5. Istorgia & 👤 6. Conto Opzional</h3>
-                <p>Memorisescha datas per 90 dis. Creescha in conto gratuit per la sincronisaziun cloud e l'istorgia illimitada.</p>
-                <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Configuraziun e Timer</h4><p>Installescha il pot. Avrir il timer cura che ina vespra vegn crittada. Arrivar el cura ch'ella parta.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
-                        <div class="instruction-step"><h4>2. Triangulaziun</h4><p>Endatar la direcziun cun la bussola. L'app calculescha la zona da tschertgar.</p><img src="../apps/vespatimer/2.png" alt="Map"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                        <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; }
+        function t(key) {
+            return (translations[currentLang] && translations[currentLang][key]) ? translations[currentLang][key] : key;
         }
-    },
-    'apiguide': {
-        title: 'ApiGuide',
-        icon: '<img src="../apps/apiguide/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
-        shortDesc: {
-            en: "Guide to seasons and beekeeping activities",
-            fr: "Guide des saisons et activités apicoles",
-            de: "Leitfaden für Jahreszeiten und Imkerei",
-            it: "Guida alle stagioni e attività apistiche",
-            rm: "Cudesch da las stagiuns e activitats da las avieuls"
-        },
-        html: {
-            en: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.en}</p></div>
-            <div class="app-content-box">
-                <p>ApiGuide is a PWA designed to accompany beekeepers throughout the year, organizing activities by season.</p>
-                <h3>Structure de navigation</h3>
-                <ul><li><strong>Seasons:</strong> Spring, Summer, Autumn, Winter.</li><li><strong>Activities:</strong> 10 main activities per season.</li><li><strong>Sub-activities:</strong> Detailed breakdown.</li><li><strong>Sheets:</strong> Read-only text sheets with advice.</li></ul>
-                <h3>🌍 Multilingual & Offline</h3>
-                <p>Available in 5 independent languages (FR, EN, DE, IT, RM) and works 100% offline.</p>
-                <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Navigation</h4><p>Select a season, then choose an activity. Read the detailed text sheets.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                        <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            fr: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.fr}</p></div>
-            <div class="app-content-box">
-                <p>ApiGuide est une application web (PWA) conçue pour accompagner les apiculteurs tout au long de l'année, en organisant les activités selon les quatre saisons.</p>
-                <h3>Structure de navigation</h3>
-                <ul><li><strong>Saisons :</strong> Printemps, Été, Automne, Hiver.</li><li><strong>Activités :</strong> 10 activités principales par saison.</li><li><strong>Sous-activités :</strong> Affinage des sujets.</li><li><strong>Fiches :</strong> Textes de conseils en lecture seule.</li></ul>
-                <h3>🌍 Multilingue & Hors ligne</h3>
-                <p>Disponible en 5 langues indépendantes (FR, EN, DE, IT, RM) et fonctionne 100% hors ligne.</p>
-                <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Navigation</h4><p>Sélectionnez une saison, puis une activité pour lire les fiches détaillées.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                                       <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            de: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.de}</p></div>
-            <div class="app-content-box">
-                            <p>ApiGuide ist eine PWA, die Imker das ganze Jahr über begleiten soll und die Aktivitäten nach Jahreszeiten organisiert.</p>
-                <h3>Navigationsstruktur</h3>
-                <ul><li><strong>Jahreszeiten:</strong> Frühling, Sommer, Herbst, Winter.</li><li><strong>Aktivitäten:</strong> 10 Hauptaktivitäten pro Jahreszeit.</li><li><strong>Unteraktivitäten:</strong> Detaillierte Aufschlüsselung.</li><li><strong>Textblätter:</strong> Read-only Textblätter mit Ratschlägen.</li></ul>
-                <h3>🌍 Mehrsprachig & Offline</h3>
-                <p>Verfügbar in 5 unabhängigen Sprachen (FR, EN, DE, IT, RM) und funktioniert 100% offline.</p>
-                <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Navigation</h4><p>Wählen Sie eine Jahreszeit und dann eine Aktivität. Lesen Sie die detaillierten Textblätter.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                        <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            it: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.it}</p></div>
-            <div class="app-content-box">
-                <p>ApiGuide è una PWA progettata per accompagnare gli apicoltori durante tutto l'anno, organizzando le attività per stagione.</p>
-                <h3>Struttura di navigazione</h3>
-                <ul><li><strong>Stagioni:</strong> Primavera, Estate, Autunno, Inverno.</li><li><strong>Attività:</strong> 10 attività principali per stagione.</li><li><strong>Sotto-attività:</strong> Suddivisione dettagliata.</li><li><strong>Schede:</strong> Schede di testo in sola lettura con consigli.</li></ul>
-                <h3>🌍 Multilingue e Offline</h3>
-                <p>Disponibile in 5 lingue indipendenti (FR, EN, DE, IT, RM) e funziona 100% offline.</p>
-                <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Navigazione</h4><p>Seleziona una stagione, poi un'attività. Leggi le schede di testo dettagliate.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                               <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            rm: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.rm}</p></div>
-            <div class="app-content-box">
-                <p>ApiGuide è ina PWA concepidà per accumpagnar ils apiculturs durant tut l'on, organisond las activitats per stagiun.</p>
-                <h3>Structura da navigaziun</h3>
-                <ul><li><strong>Stagiuns:</strong> Primavaira, Stad, Atun, Enviern.</li><li><strong>Activitats:</strong> 10 activitats principalas per stagiun.</li><li><strong>Sut-activitats:</strong> Detaglià.</li><li><strong>Fichas:</strong> Fichas da text cun cussegls.</li></ul>
-                <h3>🌍 Multilingua & Offline</h3>
-                <p>Disponibel en 5 linguas independentas (FR, EN, DE, IT, RM) e funcziunescha 100% offline.</p>
-                <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Navigaziun</h4><p>Tscherna ina stagiun, lura in'activitad. Legia las fichas detagliadas.</p><img src="../apps/apiguide/1.png" alt="Navigaziun"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                            <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; }
-        }
-    },
-    'alvearcheck': {
-        title: 'AlvearCheck',
-        icon: '<img src="../apps/alvearcheck/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
-        shortDesc: {
-            en: "The digital apiary notebook",
-            fr: "Le carnet de rucher numérique",
-            de: "Das digitale Bienenstock-Notizbuch",
-            it: "Il quaderno digitale dell'apiario",
-            rm: "Il cudesch digital da l'apiari"
-        },
-        html: {
-            en: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.en}</p></div>
-            <div class="app-content-box">
-                <p>A standalone web app replacing the paper notebook. <strong>An account is now mandatory to save and sync your data securely.</strong></p>
-                <h3>1. Apiaries & 2. Hives</h3>
-                <p>Create apiaries with automatic GPS. Track individual hives: frames (male, honey, brood), queen color, varroa counts, and notes.</p>
-                <h3>3. Swarm Alerts</h3>
-                <p>Visual warning (⚠️) after 14 days if a hive is at risk.</p>
-                <h3>4. History & CSV Export</h3>
-                <p>Automatic logbook of all visits. Export to CSV for Excel/Google Sheets.</p>
-                <h3>5. AI Dictaphone</h3>
-                <p>Hands-free voice input. Speak naturally ("3 honey frames, queen is red") and AI fills the form for you.</p>
-                <h3>6. Multilingual</h3>
-                <p>Instant switch between EN, FR, DE, IT, RM.</p>
-                <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Account & Apiaries</h4><p>Log in to sync your data. Create an apiary and automatically fill in its GPS coordinates.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
-                        <div class="instruction-step"><h4>2. Hives & AI</h4><p>Add hives and record frames. Use the AI microphone to dictate your notes hands-free!</p><img src="../apps/alvearcheck/2.png" alt="Hives"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                             <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            fr: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.fr}</p></div>
-            <div class="app-content-box">
-                <p>Une application web autonome remplaçant le carnet papier. <strong>Un compte est désormais obligatoire pour sauvegarder et synchroniser vos données.</strong></p>
-                <h3>1. Ruchers & 2. Ruches</h3>
-                <p>Créez des ruchers avec GPS automatique. Suivez chaque ruche : cadres (mâles, miel, couvain), couleur de la reine, varroas, et remarques.</p>
-                <h3>3. Alertes d'Essaimage</h3>
-                <p>Alerte visuelle (⚠️) après 14 jours si une ruche est à risque.</p>
-                <h3>4. Historique & Export CSV</h3>
-                <p>Journal de bord automatique de toutes les visites. Exportation CSV pour Excel.</p>
-                <h3>5. Dictaphone IA</h3>
-                <p>Saisie vocale mains libres. Parlez naturellement ("3 cadres de miel, reine rouge") et l'IA remplit le formulaire.</p>
-                <h3>6. Multilingue</h3>
-                <p>Basculez instantanément entre FR, EN, DE, IT, RM.</p>
-                <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Compte et Ruchers</h4><p>Connectez-vous pour synchroniser vos données. Créez un rucher et remplissez ses coordonnées GPS.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
-                        <div class="instruction-step"><h4>2. Ruches et IA</h4><p>Ajoutez des ruches, notez les cadres. Utilisez le micro IA pour dicter vos notes !</p><img src="../apps/alvearcheck/2.png" alt="Ruches"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                             <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            de: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.de}</p></div>
-            <div class="app-content-box">
-                <p>Eine eigenständige Web-App, die das Papier-Notizbuch ersetzt. <strong>Ein Konto ist jetzt obligatorisch, um Ihre Daten sicher zu speichern und zu synchronisieren.</strong></p>
-                <h3>1. Bienenstände & 2. Völker</h3>
-                <p>Erstellen Sie Bienenstände mit automatischem GPS. Verfolgen Sie einzelne Völker: Rahmen (Drohnen, Honig, Brut), Königinfarbe, Varroa-Zählungen und Notizen.</p>
-                <h3>3. Schwarmalarm</h3>
-                <p>Visuelle Warnung (⚠️) nach 14 Tagen, wenn ein Volk gefährdet ist.</p>
-                <h3>4. Verlauf & CSV-Export</h3>
-                <p>Automatisches Logbuch aller Besuche. Exportieren Sie als CSV für Excel/Google Sheets.</p>
-                <h3>5. KI-Diktiergerät</h3>
-                <p>Freisprech-Spracheingabe. Sprechen Sie natürlich ("3 Honigrahmen, Königin ist rot") und die KI füllt das Formular für Sie aus.</p>
-                <h3>6. Mehrsprachig</h3>
-                <p>Nahtloses Umschalten zwischen EN, FR, DE, IT, RM.</p>
-                <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Konto & Stände</h4><p>Melden Sie sich an, um Ihre Daten zu synchronisieren. Erstellen Sie einen Bienenstand und füllen Sie die GPS-Koordinaten automatisch aus.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
-                        <div class="instruction-step"><h4>2. Völker & KI</h4><p>Fügen Sie Völker hinzu und zeichnen Sie Rahmen auf. Verwenden Sie das KI-Mikrofon, um Ihre Notizen freihändig zu diktieren!</p><img src="../apps/alvearcheck/2.png" alt="Völker"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                              <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            it: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.it}</p></div>
-            <div class="app-content-box">
-                <p>Un'app web autonoma che sostituisce il quaderno cartaceo. <strong>Un account è ora obbligatorio per salvare e sincronizzare i tuoi dati in modo sicuro.</strong></p>
-                <h3>1. Apiari e 2. Arnie</h3>
-                <p>Crea apiari con GPS automatico. Tieni traccia delle singole arnie: telai (maschi, miele, covata), colore della regina, conteggi varroa e note.</p>
-                <h3>3. Avvisi di Sciamatura</h3>
-                <p>Avviso visivo (⚠️) dopo 14 giorni se un'arnia è a rischio.</p>
-                <h3>4. Cronologia ed Esportazione CSV</h3>
-                <p>Registro automatico di tutte le visite. Esporta in CSV per Excel/Google Sheets.</p>
-                <h3>5. Dittafono AI</h3>
-                <p>Input vocale a mani libere. Parla naturalmente ("3 telai di miele, la regina è rossa") e l'IA compilerà il modulo per te.</p>
-                <h3>6. Multilingue</h3>
-                <p>Passa istantaneamente tra EN, FR, DE, IT, RM.</p>
-                <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Account e Apiari</h4><p>Accedi per sincronizzare i tuoi dati. Crea un apiario e compila automaticamente le sue coordinate GPS.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
-                        <div class="instruction-step"><h4>2. Arnie e IA</h4><p>Aggiungi arnie e registra i telai. Usa il microfono AI per dettare i tuoi appunti a mani libere!</p><img src="../apps/alvearcheck/2.png" alt="Arnie"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                              <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; },
-            rm: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.rm}</p></div>
-            <div class="app-content-box">
-                <p>Ina web-app autonoma che remplazza il cudesch da palpiri. <strong>In conto è ussa obligatoric per memorisar e sincronisar tes datas en tutta segirezza.</strong></p>
-                <h3>1. Apiaris & 2. Avieuls</h3>
-                <p>Creescha apiaries cun GPS automatic. Fastiza mintga avieul: caders (masculins, mel, cova), colur da la regina, varroa e notizias.</p>
-                <h3>3. Avvis da Schigientar</h3>
-                <p>Avvis visual (⚠️) suenter 14 dis sche in avieul è en privel.</p>
-                <h3>4. Istorgia & Export CSV</h3>
-                <p>Cudesch automatic da tut las visitas. Export en CSV per Excel.</p>
-                <h3>5. Dictafon AI</h3>
-                <p>Entrada vocala a mauns libers. Discuorra naturalmain ("3 caders da mel, regina cotschna") e l'IA emplenescha il formular per tai.</p>
-                <h3>6. Multilingua</h3>
-                <p>Midar instantanamain tranter EN, FR, DE, IT, RM.</p>
-                <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="instruction-step"><h4>1. Conto ed Apiaris</h4><p>S'annunzia per sincronisar tes datas. Creescha in apiari ed emplena automaticamain sias coordinatas GPS.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
-                        <div class="instruction-step"><h4>2. Avieuls ed IA</h4><p>Agiunta avieuls e registrescha ils caders. Duvra il microfon IA per dictar tes notizias a mauns libers!</p><img src="../apps/alvearcheck/2.png" alt="Avieuls"></div>
-                        <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
-                              <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
-                    </div>
-                </div>
-            </div>`; }
-        }
-    }
-};
-               // ==========================================
+
+        // ==========================================
+        // 2. APP CONFIGURATION & FULL DESCRIPTIONS
+        // ==========================================
+        const appsConfig = {
+            'vespatimer': {
+                title: 'VespaTimer',
+                icon: '<img src="../apps/vespatimer/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
+                shortDesc: {
+                    en: "Digital assistant for the Pot-à-Mèche",
+                    fr: "L'assistant digital du Pot-à-Mèche",
+                    de: "Der digitale Assistent für den Pot-à-Mèche",
+                    it: "L'assistente digitale per il Pot-à-Mèche",
+                    rm: "L'assistent digital dal Pot-à-Mèche"
+                },
+                html: {
+                    en: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.en}</p></div>
+                    <div class="app-content-box">
+                        <p>VespaTimer is a web tool (and mobile PWA) designed specifically to facilitate the field work of volunteers fighting the Asian hornet.</p>
+                        <h3>⏱️ 1. Multi-Stopwatch</h3>
+                        <ul><li>Track up to 13 hornets simultaneously.</li><li>Instantly calculates average flight time.</li><li>Customize each hornet with a unique color.</li></ul>
+                        <h3>🗺️ 2. Triangulation</h3>
+                        <ul><li>Based on the Pot-à-Mèche technique.</li><li>Automatically calculates estimated distance.</li><li>Interactive map shows the search zone (oval) for each nest.</li></ul>
+                        <h3>🧭 3. Built-in Compass</h3>
+                        <p>Uses phone sensors for exact takeoff direction.</p>
+                        <h3>📤 4. Multi-Format Export</h3>
+                        <ul><li>PDF: Complete report with map.</li><li>VCFLASH: Save and resume later.</li><li>GPX/KML: View nests on Google Earth or GPS.</li></ul>
+                        <h3>📋 5. History & 👤 6. Optional Account</h3>
+                        <p>Saves 90 days of data. Create a free account for cloud sync and unlimited history.</p>
+                        <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Setup and Timer</h4><p>Place your trap. When a hornet is captured, start the timer. Stop it when it leaves.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
+                                <div class="instruction-step"><h4>2. Triangulation</h4><p>Enter departure direction using the compass. The app calculates the search zone.</p><img src="../apps/vespatimer/2.png" alt="Map"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    fr: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.fr}</p></div>
+                    <div class="app-content-box">
+                        <p>VespaTimer est un outil web (et application mobile PWA) conçu spécifiquement pour faciliter le travail de terrain des télémètres et des bénévoles qui luttent contre le frelon asiatique.</p>
+                        <h3>⏱️ 1. Le Multi-Chronomètre</h3>
+                        <ul><li>Suivez jusqu'à 13 frelons simultanément.</li><li>Calcule instantanément le temps de vol moyen.</li><li>Personnalisez chaque frelon avec une couleur unique.</li></ul>
+                        <h3>🗺️ 2. La Triangulation Automatique</h3>
+                        <ul><li>Basé sur la technique du Pot-à-Mèche.</li><li>Calcule automatiquement la distance estimée.</li><li>Une carte interactive affiche la zone de recherche (ovale) pour chaque nid potentiel.</li></ul>
+                        <h3>🧭 3. Boussole Intégrée</h3>
+                        <p>Utilise les capteurs de votre téléphone pour donner la direction exacte de l'envol.</p>
+                        <h3>📤 4. Exportation et Partage</h3>
+                        <ul><li>PDF : Rapport complet avec carte.</li><li>VCFLASH : Sauvegarder et reprendre plus tard.</li><li>GPX / KML : Voir les nids sur Google Earth ou GPS.</li></ul>
+                        <h3>📋 5. Historique & 👤 6. Compte Optionnel</h3>
+                        <p>Sauvegarde automatique des 90 derniers jours. Créez un compte gratuit pour la synchronisation cloud et l'historique illimité.</p>
+                        <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Configuration et Chrono</h4><p>Installez votre pot-à-mèche. Quand un frelon est capturé, lancez le chrono. Arrêtez-le à l'envol.</p><img src="../apps/vespatimer/1.png" alt="Chrono"></div>
+                                <div class="instruction-step"><h4>2. Triangulation</h4><p>Entrez la direction d'envol grâce à la boussole. L'application calcule la distance et la zone de recherche.</p><img src="../apps/vespatimer/2.png" alt="Carte"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    de: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.de}</p></div>
+                    <div class="app-content-box">
+                        <p>VespaTimer ist ein Web-Tool (und eine mobile PWA), das speziell entwickelt wurde, um die Feldarbeit von Freiwilligen im Kampf gegen die Asiatische Hornisse zu erleichtern.</p>
+                        <h3>⏱️ 1. Multi-Stoppuhr</h3>
+                        <ul><li>Verfolgen Sie bis zu 13 Hornissen gleichzeitig.</li><li>Berechnet sofort die durchschnittliche Flugzeit.</li><li>Passen Sie jede Hornisse mit einer einzigartigen Farbe an.</li></ul>
+                        <h3>🗺️ 2. Triangulation</h3>
+                        <ul><li>Basierend auf der Pot-à-Mèche-Technik.</li><li>Berechnet automatisch die geschätzte Entfernung.</li><li>Interaktive Karte zeigt die Suchzone (Oval) für jedes Nest.</li></ul>
+                        <h3>🧭 3. Integrierter Kompass</h3>
+                        <p>Verwendet Telefonsensoren für die genaue Startrichtung.</p>
+                        <h3>📤 4. Multi-Format-Export</h3>
+                        <ul><li>PDF: Vollständiger Bericht mit Karte.</li><li>VCFLASH: Speichern und später fortsetzen.</li><li>GPX/KML: Nester auf Google Earth anzeigen.</li></ul>
+                        <h3>📋 5. Verlauf & 👤 6. Optionales Konto</h3>
+                        <p>Speichert Daten für 90 Tage. Erstellen Sie ein kostenloses Konto für Cloud-Synchronisierung und unbegrenzten Verlauf.</p>
+                        <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Einrichtung und Timer</h4><p>Stellen Sie die Falle auf. Starten Sie den Timer, wenn eine Hornisse gefangen wird. Stoppen Sie ihn beim Verlassen.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
+                                <div class="instruction-step"><h4>2. Triangulation</h4><p>Geben Sie die Richtung mit dem Kompass ein. Die App berechnet die Suchzone.</p><img src="../apps/vespatimer/2.png" alt="Karte"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    it: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.it}</p></div>
+                    <div class="app-content-box">
+                        <p>VespaTimer è uno strumento web (e PWA mobile) progettato specificamente per facilitare il lavoro sul campo dei volontari che combattono il calabrone asiatico.</p>
+                        <h3>⏱️ 1. Multi-Cronometro</h3>
+                        <ul><li>Tieni traccia fino a 13 calabroni contemporaneamente.</li><li>Calcola istantaneamente il tempo di volo medio.</li><li>Personalizza ogni calabrone con un colore unico.</li></ul>
+                        <h3>🗺️ 2. Triangolazione</h3>
+                        <ul><li>Basato sulla tecnica del Pot-à-Mèche.</li><li>Calcola automaticamente la distanza stimata.</li><li>La mappa interattiva mostra la zona di ricerca (ovale) per ogni nido.</li></ul>
+                        <h3>🧭 3. Bussola Integrata</h3>
+                        <p>Utilizza i sensori del telefono per la direzione esatta del decollo.</p>
+                        <h3>📤 4. Esportazione Multi-Formato</h3>
+                        <ul><li>PDF: Report completo con mappa.</li><li>VCFLASH: Salva e riprendi più tardi.</li><li>GPX/KML: Visualizza i nidi su Google Earth.</li></ul>
+                        <h3>📋 5. Cronologia e 👤 6. Account Opzionale</h3>
+                        <p>Salva i dati per 90 giorni. Crea un account gratuito per la sincronizzazione cloud e la cronologia illimitata.</p>
+                        <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Configurazione e Timer</h4><p>Posiziona la trappola. Quando un calabrone viene catturato, avvia il timer. Fermalo quando esce.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
+                                <div class="instruction-step"><h4>2. Triangolazione</h4><p>Inserisci la direzione di partenza usando la bussola. L'app calcola la zona di ricerca.</p><img src="../apps/vespatimer/2.png" alt="Mappa"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    rm: function() { return `<div class="app-header"><h1><img src="../apps/vespatimer/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> VespaTimer</h1><p>${appsConfig['vespatimer'].shortDesc.rm}</p></div>
+                    <div class="app-content-box">
+                        <p>VespaTimer è in instrument web (ed ina PWA mobila) concepid specificamain per facilitar la lavur da champ da voluntaris en la cumbat cunter la vespra asiatica.</p>
+                        <h3>⏱️ 1. Multi-Cronometer</h3>
+                        <ul><li>Fastizar fin a 13 vespras en il medem temp.</li><li>Calculescha instantanamain il temp da sgol mesaun.</li><li>Persunalisar mintga vespra cun ina colur unica.</li></ul>
+                        <h3>🗺️ 2. Triangulaziun</h3>
+                        <ul><li>Basa sin la tecnica dal Pot-à-Mèche.</li><li>Calculescha automaticamain la distanza stimada.</li><li>Ina carta interactiva mussa la zona da tschertgar (oval) per mintga gnieu.</li></ul>
+                        <h3>🧭 3. Bussola Integrada</h3>
+                        <p>Duvra ils sensors dal telefon per la direcziun exacta da l'entschatta.</p>
+                        <h3>📤 4. Export Multi-Format</h3>
+                        <ul><li>PDF: Rapport cumplet cun carta.</li><li>VCFLASH: Memorisar e cuntinuar pli tard.</li><li>GPX/KML: Mussar ils gnieus sin Google Earth.</li></ul>
+                        <h3>📋 5. Istorgia & 👤 6. Conto Opzional</h3>
+                        <p>Memorisescha datas per 90 dis. Creescha in conto gratuit per la sincronisaziun cloud e l'istorgia illimitada.</p>
+                        <div style="text-align:center"><a href="../apps/vespatimer/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Configuraziun e Timer</h4><p>Installescha il pot. Avrir il timer cura che ina vespra vegn crittada. Arrivar el cura ch'ella parta.</p><img src="../apps/vespatimer/1.png" alt="Timer"></div>
+                                <div class="instruction-step"><h4>2. Triangulaziun</h4><p>Endatar la direcziun cun la bussola. L'app calculescha la zona da tschertgar.</p><img src="../apps/vespatimer/2.png" alt="Map"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; }
+                }
+            },
+            'apiguide': {
+                title: 'ApiGuide',
+                icon: '<img src="../apps/apiguide/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
+                shortDesc: {
+                    en: "Guide to seasons and beekeeping activities",
+                    fr: "Guide des saisons et activités apicoles",
+                    de: "Leitfaden für Jahreszeiten und Imkerei",
+                    it: "Guida alle stagioni e attività apistiche",
+                    rm: "Cudesch da las stagiuns e activitats da las avieuls"
+                },
+                html: {
+                    en: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.en}</p></div>
+                    <div class="app-content-box">
+                        <p>ApiGuide is a PWA designed to accompany beekeepers throughout the year, organizing activities by season.</p>
+                        <h3>Structure de navigation</h3>
+                        <ul><li><strong>Seasons:</strong> Spring, Summer, Autumn, Winter.</li><li><strong>Activities:</strong> 10 main activities per season.</li><li><strong>Sub-activities:</strong> Detailed breakdown.</li><li><strong>Sheets:</strong> Read-only text sheets with advice.</li></ul>
+                        <h3>🌍 Multilingual & Offline</h3>
+                        <p>Available in 5 independent languages (FR, EN, DE, IT, RM) and works 100% offline.</p>
+                        <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Navigation</h4><p>Select a season, then choose an activity. Read the detailed text sheets.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    fr: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.fr}</p></div>
+                    <div class="app-content-box">
+                        <p>ApiGuide est une application web (PWA) conçue pour accompagner les apiculteurs tout au long de l'année, en organisant les activités selon les quatre saisons.</p>
+                        <h3>Structure de navigation</h3>
+                        <ul><li><strong>Saisons :</strong> Printemps, Été, Automne, Hiver.</li><li><strong>Activités :</strong> 10 activités principales par saison.</li><li><strong>Sous-activités :</strong> Affinage des sujets.</li><li><strong>Fiches :</strong> Textes de conseils en lecture seule.</li></ul>
+                        <h3>🌍 Multilingue & Hors ligne</h3>
+                        <p>Disponible en 5 langues indépendantes (FR, EN, DE, IT, RM) et fonctionne 100% hors ligne.</p>
+                        <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Navigation</h4><p>Sélectionnez une saison, puis une activité pour lire les fiches détaillées.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    de: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.de}</p></div>
+                    <div class="app-content-box">
+                        <p>ApiGuide ist eine PWA, die Imker das ganze Jahr über begleiten soll und die Aktivitäten nach Jahreszeiten organisiert.</p>
+                        <h3>Navigationsstruktur</h3>
+                        <ul><li><strong>Jahreszeiten:</strong> Frühling, Sommer, Herbst, Winter.</li><li><strong>Aktivitäten:</strong> 10 Hauptaktivitäten pro Jahreszeit.</li><li><strong>Unteraktivitäten:</strong> Detaillierte Aufschlüsselung.</li><li><strong>Textblätter:</strong> Read-only Textblätter mit Ratschlägen.</li></ul>
+                        <h3>🌍 Mehrsprachig & Offline</h3>
+                        <p>Verfügbar in 5 unabhängigen Sprachen (FR, EN, DE, IT, RM) und funktioniert 100% offline.</p>
+                        <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Navigation</h4><p>Wählen Sie eine Jahreszeit und dann eine Aktivität. Lesen Sie die detaillierten Textblätter.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    it: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.it}</p></div>
+                    <div class="app-content-box">
+                        <p>ApiGuide è una PWA progettata per accompagnare gli apicoltori durante tutto l'anno, organizzando le attività per stagione.</p>
+                        <h3>Struttura di navigazione</h3>
+                        <ul><li><strong>Stagioni:</strong> Primavera, Estate, Autunno, Inverno.</li><li><strong>Attività:</strong> 10 attività principali per stagione.</li><li><strong>Sotto-attività:</strong> Suddivisione dettagliata.</li><li><strong>Schede:</strong> Schede di testo in sola lettura con consigli.</li></ul>
+                        <h3>🌍 Multilingue e Offline</h3>
+                        <p>Disponibile in 5 lingue indipendenti (FR, EN, DE, IT, RM) e funziona 100% offline.</p>
+                        <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Navigazione</h4><p>Seleziona una stagione, poi un'attività. Leggi le schede di testo dettagliate.</p><img src="../apps/apiguide/1.png" alt="Navigation"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    rm: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.rm}</p></div>
+                    <div class="app-content-box">
+                        <p>ApiGuide è ina PWA concepidà per accumpagnar ils apiculturs durant tut l'on, organisond las activitats per stagiun.</p>
+                        <h3>Structura da navigaziun</h3>
+                        <ul><li><strong>Stagiuns:</strong> Primavaira, Stad, Atun, Enviern.</li><li><strong>Activitats:</strong> 10 activitats principalas per stagiun.</li><li><strong>Sut-activitats:</strong> Detaglià.</li><li><strong>Fichas:</strong> Fichas da text cun cussegls.</li></ul>
+                        <h3>🌍 Multilingua & Offline</h3>
+                        <p>Disponibel en 5 linguas independentas (FR, EN, DE, IT, RM) e funcziunescha 100% offline.</p>
+                        <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Navigaziun</h4><p>Tscherna ina stagiun, lura in'activitad. Legia las fichas detagliadas.</p><img src="../apps/apiguide/1.png" alt="Navigaziun"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; }
+                }
+            },
+            'alvearcheck': {
+                title: 'AlvearCheck',
+                icon: '<img src="../apps/alvearcheck/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
+                shortDesc: {
+                    en: "The digital apiary notebook",
+                    fr: "Le carnet de rucher numérique",
+                    de: "Das digitale Bienenstock-Notizbuch",
+                    it: "Il quaderno digitale dell'apiario",
+                    rm: "Il cudesch digital da l'apiari"
+                },
+                html: {
+                    en: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.en}</p></div>
+                    <div class="app-content-box">
+                        <p>A standalone web app replacing the paper notebook. <strong>An account is now mandatory to save and sync your data securely.</strong></p>
+                        <h3>1. Apiaries & 2. Hives</h3>
+                        <p>Create apiaries with automatic GPS. Track individual hives: frames (male, honey, brood), queen color, varroa counts, and notes.</p>
+                        <h3>3. Swarm Alerts</h3>
+                        <p>Visual warning (⚠️) after 14 days if a hive is at risk.</p>
+                        <h3>4. History & CSV Export</h3>
+                        <p>Automatic logbook of all visits. Export to CSV for Excel/Google Sheets.</p>
+                        <h3>5. AI Dictaphone</h3>
+                        <p>Hands-free voice input. Speak naturally ("3 honey frames, queen is red") and AI fills the form for you.</p>
+                        <h3>6. Multilingual</h3>
+                        <p>Instant switch between EN, FR, DE, IT, RM.</p>
+                        <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Account & Apiaries</h4><p>Log in to sync your data. Create an apiary and automatically fill in its GPS coordinates.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
+                                <div class="instruction-step"><h4>2. Hives & AI</h4><p>Add hives and record frames. Use the AI microphone to dictate your notes hands-free!</p><img src="../apps/alvearcheck/2.png" alt="Hives"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    fr: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.fr}</p></div>
+                    <div class="app-content-box">
+                        <p>Une application web autonome remplaçant le carnet papier. <strong>Un compte est désormais obligatoire pour sauvegarder et synchroniser vos données.</strong></p>
+                        <h3>1. Ruchers & 2. Ruches</h3>
+                        <p>Créez des ruchers avec GPS automatique. Suivez chaque ruche : cadres (mâles, miel, couvain), couleur de la reine, varroas, et remarques.</p>
+                        <h3>3. Alertes d'Essaimage</h3>
+                        <p>Alerte visuelle (⚠️) après 14 jours si une ruche est à risque.</p>
+                        <h3>4. Historique & Export CSV</h3>
+                        <p>Journal de bord automatique de toutes les visites. Exportation CSV pour Excel.</p>
+                        <h3>5. Dictaphone IA</h3>
+                        <p>Saisie vocale mains libres. Parlez naturellement ("3 cadres de miel, reine rouge") et l'IA remplit le formulaire.</p>
+                        <h3>6. Multilingue</h3>
+                        <p>Basculez instantanément entre FR, EN, DE, IT, RM.</p>
+                        <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Compte et Ruchers</h4><p>Connectez-vous pour synchroniser vos données. Créez un rucher et remplissez ses coordonnées GPS.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
+                                <div class="instruction-step"><h4>2. Ruches et IA</h4><p>Ajoutez des ruches, notez les cadres. Utilisez le micro IA pour dicter vos notes !</p><img src="../apps/alvearcheck/2.png" alt="Ruches"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    de: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.de}</p></div>
+                    <div class="app-content-box">
+                        <p>Eine eigenständige Web-App, die das Papier-Notizbuch ersetzt. <strong>Ein Konto ist jetzt obligatorisch, um Ihre Daten sicher zu speichern und zu synchronisieren.</strong></p>
+                        <h3>1. Bienenstände & 2. Völker</h3>
+                        <p>Erstellen Sie Bienenstände mit automatischem GPS. Verfolgen Sie einzelne Völker: Rahmen (Drohnen, Honig, Brut), Königinfarbe, Varroa-Zählungen und Notizen.</p>
+                        <h3>3. Schwarmalarm</h3>
+                        <p>Visuelle Warnung (⚠️) nach 14 Tagen, wenn ein Volk gefährdet ist.</p>
+                        <h3>4. Verlauf & CSV-Export</h3>
+                        <p>Automatisches Logbuch aller Besuche. Exportieren Sie als CSV für Excel/Google Sheets.</p>
+                        <h3>5. KI-Diktiergerät</h3>
+                        <p>Freisprech-Spracheingabe. Sprechen Sie natürlich ("3 Honigrahmen, Königin ist rot") und die KI füllt das Formular für Sie aus.</p>
+                        <h3>6. Mehrsprachig</h3>
+                        <p>Nahtloses Umschalten zwischen EN, FR, DE, IT, RM.</p>
+                        <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Konto & Stände</h4><p>Melden Sie sich an, um Ihre Daten zu synchronisieren. Erstellen Sie einen Bienenstand und füllen Sie die GPS-Koordinaten automatisch aus.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
+                                <div class="instruction-step"><h4>2. Völker & KI</h4><p>Fügen Sie Völker hinzu und zeichnen Sie Rahmen auf. Verwenden Sie das KI-Mikrofon, um Ihre Notizen freihändig zu diktieren!</p><img src="../apps/alvearcheck/2.png" alt="Völker"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    it: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.it}</p></div>
+                    <div class="app-content-box">
+                        <p>Un'app web autonoma che sostituisce il quaderno cartaceo. <strong>Un account è ora obbligatorio per salvare e sincronizzare i tuoi dati in modo sicuro.</strong></p>
+                        <h3>1. Apiari e 2. Arnie</h3>
+                        <p>Crea apiari con GPS automatico. Tieni traccia delle singole arnie: telai (maschi, miele, covata), colore della regina, conteggi varroa e note.</p>
+                        <h3>3. Avvisi di Sciamatura</h3>
+                        <p>Avviso visivo (⚠️) dopo 14 giorni se un'arnia è a rischio.</p>
+                        <h3>4. Cronologia ed Esportazione CSV</h3>
+                        <p>Registro automatico di tutte le visite. Esporta in CSV per Excel/Google Sheets.</p>
+                        <h3>5. Dittafono AI</h3>
+                        <p>Input vocale a mani libere. Parla naturalmente ("3 telai di miele, la regina è rossa") e l'IA compilerà il modulo per te.</p>
+                        <h3>6. Multilingue</h3>
+                        <p>Passa istantaneamente tra EN, FR, DE, IT, RM.</p>
+                        <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Account e Apiari</h4><p>Accedi per sincronizzare i tuoi dati. Crea un apiario e compila automaticamente le sue coordinate GPS.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
+                                <div class="instruction-step"><h4>2. Arnie e IA</h4><p>Aggiungi arnie e registra i telai. Usa il microfono AI per dettare i tuoi appunti a mani libere!</p><img src="../apps/alvearcheck/2.png" alt="Arnie"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; },
+                    rm: function() { return `<div class="app-header"><h1><img src="../apps/alvearcheck/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> AlvearCheck</h1><p>${appsConfig['alvearcheck'].shortDesc.rm}</p></div>
+                    <div class="app-content-box">
+                        <p>Ina web-app autonoma che remplazza il cudesch da palpiri. <strong>In conto è ussa obligatoric per memorisar e sincronisar tes datas en tutta segirezza.</strong></p>
+                        <h3>1. Apiaris & 2. Avieuls</h3>
+                        <p>Creescha apiaries cun GPS automatic. Fastiza mintga avieul: caders (masculins, mel, cova), colur da la regina, varroa e notizias.</p>
+                        <h3>3. Avvis da Schigientar</h3>
+                        <p>Avvis visual (⚠️) suenter 14 dis sche in avieul è en privel.</p>
+                        <h3>4. Istorgia & Export CSV</h3>
+                        <p>Cudesch automatic da tut las visitas. Export en CSV per Excel.</p>
+                        <h3>5. Dictafon AI</h3>
+                        <p>Entrada vocala a mauns libers. Discuorra naturalmain ("3 caders da mel, regina cotschna") e l'IA emplenescha il formular per tai.</p>
+                        <h3>6. Multilingua</h3>
+                        <p>Midar instantanamain tranter EN, FR, DE, IT, RM.</p>
+                        <div style="text-align:center"><a href="../apps/alvearcheck/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
+                        <div class="accordion">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">${t('btn_instructions')} <span class="accordion-icon">+</span></div>
+                            <div class="accordion-content">
+                                <div class="instruction-step"><h4>1. Conto ed Apiaris</h4><p>S'annunzia per sincronisar tes datas. Creescha in apiari ed emplena automaticamain sias coordinatas GPS.</p><img src="../apps/alvearcheck/1.png" alt="Login"></div>
+                                <div class="instruction-step"><h4>2. Avieuls ed IA</h4><p>Agiunta avieuls e registrescha ils caders. Duvra il microfon IA per dictar tes notizias a mauns libers!</p><img src="../apps/alvearcheck/2.png" alt="Avieuls"></div>
+                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/gjpxqVj7Qxw" allowfullscreen></iframe></div>
+                                <div class="contact-action"><a href="#contact" class="btn">${t('contact_me')}</a></div>
+                            </div>
+                        </div>
+                    </div>`; }
+                }
+            }
+        };
+
+        // ==========================================
         // 3. PAGE TEMPLATES
         // ==========================================
         
@@ -1034,12 +1091,11 @@ const appsConfig = {
                             <li><strong>${t('res_video')}</strong> Grégoire Hupka</li>
                             <li><strong>${t('res_code')}</strong> DeepSeek AI</li>
                             <li><strong>${t('res_base')}</strong> ${t('credit_sar')}</li>
-                           <li><strong>${t('res_printables')}</strong> ${t('credit_files_in_file')}</li>
-                                            </ul>
+                            <li><strong>${t('res_printables')}</strong> ${t('credit_files_in_file')}</li>
+                        </ul>
                     </div>
                 `;
             }
-            // Par défaut, on affiche les liens utiles
             return `
                 <h1 class="page-title">${t('nav_links')}</h1>
                 <div class="app-content-box" style="margin-top:20px;">
@@ -1051,21 +1107,19 @@ const appsConfig = {
             `;
         };
 
-       const getSupportHtml = () => `
-    <h1 class="page-title">${t('support_title')}</h1>
-    <div class="app-content-box" style="text-align: center; padding: 50px 20px;">
-        <p style="font-size: 1.1rem; margin-bottom: 30px;">${t('support_desc')}</p>
-        <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; font-family:'Outfit', sans-serif; margin-bottom: 30px;">
-            📱 079 938 41 98
-        </div>
-        
-        <!-- NOUVEAU BLOC DE REMERCIEMENTS -->
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border);">
-            <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 15px;">${t('support_thanks_title')}</h3>
-            <p style="font-size: 0.95rem; color: var(--text-main);">${t('support_thanks_list')}</p>
-        </div>
-    </div>
-`;
+        const getSupportHtml = () => `
+            <h1 class="page-title">${t('support_title')}</h1>
+            <div class="app-content-box" style="text-align: center; padding: 50px 20px;">
+                <p style="font-size: 1.1rem; margin-bottom: 30px;">${t('support_desc')}</p>
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; font-family:'Outfit', sans-serif; margin-bottom: 30px;">
+                    📱 079 938 41 98
+                </div>
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border);">
+                    <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 15px;">${t('support_thanks_title')}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('support_thanks_list')}</p>
+                </div>
+            </div>
+        `;
 
         const getContactHtml = () => `
             <h1 class="page-title">${t('contact_title')}</h1>
@@ -1077,15 +1131,15 @@ const appsConfig = {
                     <div class="form-group"><label>${t('contact_email')}</label><input type="email" name="email" required></div>
                     <div class="form-group"><label>${t('contact_app')}</label><select name="app"><option value="General">${t('contact_general')}</option>${Object.keys(appsConfig).map(key => `<option value="${appsConfig[key].title}">${appsConfig[key].title}</option>`).join('')}</select></div>
                     <div class="form-group">
-    <label>${t('contact_type')}</label>
-    <select name="type">
-        <option value="Question">${t('contact_opt_q')}</option>
-        <option value="Bug Report">${t('contact_opt_bug')}</option>
-        <option value="Feature Request">${t('contact_opt_feat')}</option>
-        <option value="Become Member">${t('contact_opt_member')}</option> <!-- NOUVEAU -->
-        <option value="Other">${t('contact_opt_other')}</option>
-    </select>
-</div>
+                        <label>${t('contact_type')}</label>
+                        <select name="type">
+                            <option value="Question">${t('contact_opt_q')}</option>
+                            <option value="Bug Report">${t('contact_opt_bug')}</option>
+                            <option value="Feature Request">${t('contact_opt_feat')}</option>
+                            <option value="Become Member">${t('contact_opt_member')}</option>
+                            <option value="Other">${t('contact_opt_other')}</option>
+                        </select>
+                    </div>
                     <div class="form-group"><label>${t('contact_msg')}</label><textarea name="message" required></textarea></div>
                     <button type="submit" class="btn" id="submitBtn" style="width:100%;">${t('contact_send')}</button>
                     <p id="formStatus" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
@@ -1093,35 +1147,70 @@ const appsConfig = {
             </div>
         `;
 
-                const getMembersHtml = () => `
+        const getMembersHtml = () => `
             <h1 class="page-title">${t('members_title')}</h1>
-            <div class="app-content-box" style="display: flex; flex-direction: column; gap: 20px;">
-                
-                <!-- Fiche Grégoire -->
-                <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                    <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; flex-shrink: 0;">
-                        GH
+            <div class="app-content-box">
+                <div class="member-line">
+                    <h2>${t('members_committee')}</h2>
+                    <hr>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
+                    <!-- Grégoire -->
+                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div class="member-circle">
+                            <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
+                        </div>
+                        <div>
+                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
+                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
-                        <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
+
+                    <!-- Ben -->
+                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div class="member-circle">
+                            <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
+                        </div>
+                        <div>
+                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
+                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Fiche Ben -->
-                <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                    <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; flex-shrink: 0;">
-                        BH
+                <div class="member-line">
+                    <h2>${t('members_all')}</h2>
+                    <hr>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- Grégoire -->
+                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div class="member-circle">
+                            <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
+                        </div>
+                        <div>
+                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
+                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
-                        <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
+
+                    <!-- Ben -->
+                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div class="member-circle">
+                            <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
+                        </div>
+                        <div>
+                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
+                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
+                        </div>
                     </div>
                 </div>
 
             </div>
         `;
-                
+
         const getPrivacyHtml = () => `
             <h1 class="page-title">${t('privacy_title')}</h1>
             <div class="app-content-box">
@@ -1159,7 +1248,7 @@ const appsConfig = {
             }
         }
 
-                 function render() {
+        function render() {
             const hash = window.location.hash.replace('#', '') || 'home';
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -1184,6 +1273,7 @@ const appsConfig = {
                 mainContent.innerHTML = getHomeHtml();
             }
         }
+
         // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
@@ -1222,8 +1312,16 @@ const appsConfig = {
 
         window.addEventListener('hashchange', render);
         
-        // Applique la langue sauvegardée au chargement
         setLanguage(currentLang);
+
+        // Enregistrement du Service Worker pour l'installation PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker enregistré !'))
+                    .catch(err => console.log('Erreur Service Worker:', err));
+            });
+        }
     </script>
 </body>
 </html>
