@@ -70,7 +70,13 @@
             gap: 15px;
         }
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
+         .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            flex: 1; /* AJOUTER CECI */
+            justify-content: flex-start;
+             }
         
             .logo-container img {
             height: 55px; /* Modifié de 40px à 55px */
@@ -136,7 +142,15 @@
         .dropdown-content a:hover, .dropdown-content button:hover { background: var(--primary-light); color: var(--primary); }
         .dropdown-divider { height: 1px; background: var(--border); margin: 8px 0; }
 
-        nav { display: flex; gap: 20px; align-items: center; font-size: 0.9rem; font-weight: 600; }
+         nav { 
+            display: flex; 
+            gap: 20px; 
+            align-items: center; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            flex: 1; /* AJOUTER CECI */
+            justify-content: flex-end; /* AJOUTER CECI */
+        }
         nav a { position: relative; padding: 5px 0; color: var(--text-muted); transition: color 0.2s; }
         nav a:hover { color: var(--primary); }
         
@@ -286,11 +300,30 @@
             color: var(--primary); background: none; border: none; z-index: 1002;
         }
 
-        @media (max-width: 768px) {
-            header { padding: 10px 15px; justify-content: space-between; flex-direction: row; }
-            .header-left { width: auto; }
-            .logo-container img { height: 35px; }
-            .burger-menu { display: block; }
+                @media (max-width: 768px) {
+            header { 
+                padding: 10px 15px; 
+                flex-wrap: wrap; /* Permet au menu de passer en dessous */
+            }
+            
+            /* On remet le logo à gauche sur mobile */
+            .logo-container { 
+                position: static !important; 
+                transform: none !important; 
+                order: 1; 
+            }
+            
+            .header-left { 
+                order: 2; 
+                flex: none; 
+                width: auto; 
+            }
+            
+            .burger-menu { 
+                order: 3; 
+            }
+            
+            /* ... (garde le reste de ton CSS mobile) ... */
             
             nav {
                 display: none; flex-direction: column; width: 100%;
@@ -322,9 +355,9 @@
 
     <header>
         <div class="header-left">
-            <a href="#" class="logo-container" onclick="window.location.hash=''">
-                <img src="logo.png" alt="Vespacaution Logo" onerror="this.src='https://drive.google.com/uc?export=download&id=1_3Qc1Qbh36B4NTPlqPXumKHQg05Rq3NX'">
-            </a>
+          <a href="#" class="logo-container" onclick="window.location.hash=''" style="position: absolute; left: 50%; transform: translateX(-50%);">
+            <img src="logo.png" alt="Vespacaution Logo" onerror="this.src='https://drive.google.com/uc?export=download&id=1_3Qc1Qbh36B4NTPlqPXumKHQg05Rq3NX'">
+        </a>  
         </div>
         
 
