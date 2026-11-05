@@ -72,10 +72,10 @@
 
         .header-left { display: flex; align-items: center; gap: 15px; }
         
-        .logo-container img {
-            height: 40px;
+               .logo-container img {
+            height: 55px; /* Modifié de 40px à 55px */
             width: auto;
-            max-width: 200px;
+            max-width: 250px;
             object-fit: contain;
             transition: transform 0.3s ease;
         }
@@ -139,12 +139,11 @@
         nav a { position: relative; padding: 5px 0; color: var(--text-muted); transition: color 0.2s; }
         nav a:hover { color: var(--primary); }
         
-        .social-icons { display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 15px; margin-left: 0; gap: 20px; }
-/* AJOUTER CETTE LIGNE */
-.social-icons a { width: auto !important; display: inline-block; } 
-        .social-icons img { height: 20px; width: 20px; transition: transform 0.2s; filter: grayscale(100%) opacity(0.7); }
+               .social-icons { display: flex; gap: 15px; margin-left: 15px; align-items: center; justify-content: center; }
+        .social-icons img { height: 24px; width: 24px; transition: transform 0.2s; filter: grayscale(100%) opacity(0.7); }
         .social-icons img:hover { transform: translateY(-2px); filter: grayscale(0%) opacity(1); }
-
+.social-icons a { width: auto !important; display: inline-block; } 
+        
         /* --- MAIN LAYOUT --- */
         main { max-width: 1000px; margin: 30px auto; padding: 0 20px; min-height: 70vh; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -327,8 +326,8 @@
             </a>
         </div>
         
-        <button class="burger-menu" onclick="document.querySelector('nav').classList.toggle('active')">☰</button>
 
+        <button class="burger-menu" onclick="document.querySelector('nav').classList.toggle('active'); closeDropdown();">☰</button>
     <nav>
     <div class="lang-selector">
         <button class="lang-btn" onclick="setLanguage('en')">EN</button>
@@ -342,7 +341,10 @@
     <a href="#members" data-i18n="nav_members" onclick="closeMobileMenu()">Membres</a>
     
     <div class="dropdown">
-        <button class="dropdown-btn" onclick="toggleDropdown(event)" data-i18n="nav_resources">Ressources <span id="dropdownTriangle" style="font-size:0.7rem; transition: transform 0.3s; display: inline-block;">▼</span></button>
+        <button class="dropdown-btn" onclick="toggleDropdown(event)">
+    <span data-i18n="nav_resources">Ressources</span> 
+    <span id="dropdownTriangle" style="font-size:0.7rem; transition: transform 0.3s; display: inline-block; margin-left:5px;">▼</span>
+</button>
         <div class="dropdown-content" id="resourcesDropdown">
     <button onclick="renderStaticPage('links'); closeDropdown()" data-i18n="nav_links">🔗 Liens utiles</button>
     <button onclick="renderStaticPage('credits'); closeDropdown()" data-i18n="nav_credits">🏆 Crédits</button>
@@ -440,23 +442,23 @@
         document.getElementById('year').textContent = new Date().getFullYear();
 
         // --- LOGIQUE MENU DÉROULANT & PDF ---
-        function toggleDropdown(event) {
-    event.stopPropagation();
-    const dropdown = document.getElementById('resourcesDropdown');
-    const triangle = document.getElementById('dropdownTriangle');
-    dropdown.classList.toggle('show');
-    
-    if (dropdown.classList.contains('show')) {
-        triangle.style.transform = 'rotate(180deg)';
-    } else {
-        triangle.style.transform = 'rotate(0deg)';
-    }
-}
-function closeDropdown() {
-    document.getElementById('resourcesDropdown').classList.remove('show');
-    const triangle = document.getElementById('dropdownTriangle');
-    if (triangle) triangle.style.transform = 'rotate(0deg)';
-}
+                function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('resourcesDropdown');
+            const triangle = document.getElementById('dropdownTriangle');
+            dropdown.classList.toggle('show');
+            
+            if (dropdown.classList.contains('show')) {
+                triangle.style.transform = 'rotate(180deg)';
+            } else {
+                triangle.style.transform = 'rotate(0deg)';
+            }
+        }
+        function closeDropdown() {
+            document.getElementById('resourcesDropdown').classList.remove('show');
+            const triangle = document.getElementById('dropdownTriangle');
+            if (triangle) triangle.style.transform = 'rotate(0deg)';
+        }
 
         function openPdf(url) {
             document.getElementById('pdfIframe').src = url;
@@ -1342,6 +1344,15 @@ document.addEventListener('click', function(event) {
         closeMobileMenu();
     }
 });
+        // Fermer le dropdown si on clique ailleurs
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('resourcesDropdown');
+            const btn = document.querySelector('.dropdown-btn');
+            if (dropdown.classList.contains('show') && !btn.contains(event.target) && !dropdown.contains(event.target)) {
+                closeDropdown();
+            }
+        });
+        
         setLanguage(currentLang);
 
         // Enregistrement du Service Worker pour l'installation PWA
