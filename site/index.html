@@ -475,6 +475,7 @@
         // ==========================================
         const translations = {
             en: {
+               home_become_member: "Become a Member",
                 nav_follow: "Follow us",                
                 nav_members: "Members",
                 members_title: "The Team",
@@ -517,6 +518,7 @@
                 contact_me: "📬 Contact Us", file_status: "Status File (PDF)", file_printables: "Printables (PDF)"
             },
             fr: {
+                home_become_member: "Devenir membre",
                 nav_follow: "Suivez-nous",               
                 nav_members: "Membres",
                 members_title: "L'Équipe",
@@ -559,6 +561,7 @@
                 contact_me: "📬 Contactez-nous", file_status: "Fichier Statuts (PDF)", file_printables: "Imprimables (PDF)"
             },
             de: {
+               home_become_member: "Mitglied werden",
                 nav_follow: "Folgen Sie uns",             
                 nav_members: "Mitglieder",
                 members_title: "Das Team",
@@ -601,6 +604,7 @@
                 contact_me: "📬 Kontaktieren Sie uns", file_status: "Status-Datei (PDF)", file_printables: "Druckvorlagen (PDF)"
             },
             it: {
+                home_become_member: "Diventa membro",
                 nav_follow: "Seguici",              
                 nav_members: "Membri",
                 members_title: "Il Team",
@@ -643,6 +647,7 @@
                 contact_me: "📬 Contattaci", file_status: "File di Stato (PDF)", file_printables: "Stampabili (PDF)"
             },
             rm: {
+               home_become_member: "Deventar commember",
                 nav_follow: "Suonda nus",              
                 nav_members: "Commembers",
                 members_title: "La Squadra",
@@ -1089,6 +1094,14 @@
                 <p>${t('home_desc1')}</p>
                 <p>${t('home_desc2')}</p>
             </div>
+            
+            <!-- BOUTON DEVENIR MEMBRE AJOUTÉ ICI -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <a href="#contact" onclick="prefillMembership()" class="btn" style="background: var(--primary); font-size: 1.1rem; padding: 15px 30px;">
+                    ${t('home_become_member')}
+                </a>
+            </div>
+
             <h2 id="apps" style="text-align:center; font-size:1.8rem; color:var(--primary); margin-bottom:20px;">${t('home_my_apps')}</h2>
             <div class="app-grid">
                 ${Object.keys(appsConfig).map(key => `
@@ -1100,6 +1113,23 @@
                 `).join('')}
             </div>
         `;
+
+                function prefillMembership() {
+            // On attend un tout petit peu que la page contact s'affiche avant de remplir
+            setTimeout(() => {
+                const typeSelect = document.querySelector('select[name="type"]');
+                const appSelect = document.querySelector('select[name="app"]');
+                
+                if (typeSelect) typeSelect.value = "Become Member"; // Sélectionne "Devenir membre"
+                if (appSelect) appSelect.value = "General"; // Sélectionne "Question Générale"
+                
+                // Optionnel : On met un texte par défaut dans le message
+                const messageField = document.querySelector('textarea[name="message"]');
+                if (messageField && messageField.value === "") {
+                    messageField.value = "Bonjour, je souhaite devenir membre de Vespacaution. Voici mes coordonnées :\n\n";
+                }
+            }, 100);
+        }
 
         const getResourcesHtml = (type) => {
             if (type === 'credits') {
