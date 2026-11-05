@@ -1193,69 +1193,75 @@
             </div>
         `;
 
-                const getMembersHtml = () => `
-            <h1 class="page-title">${t('nav_members')}</h1>
-            <div class="app-content-box">
-                <div class="member-line">
-                    <h2>${t('members_committee')}</h2>
-                    <hr>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
-                    <!-- Grégoire -->
-                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                        <div class="member-circle">
-                            <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
-                        </div>
-                        <div>
-                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
-                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
-                        </div>
-                    </div>
-
-                    <!-- Ben -->
-                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                        <div class="member-circle">
-                            <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
-                        </div>
-                        <div>
-                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
-                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="member-line">
-                    <h2>${t('members_all')}</h2>
-                    <hr>
-                </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- Grégoire -->
-                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                        <div class="member-circle">
-                            <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
-                        </div>
-                        <div>
-                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
-                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
-                        </div>
-                    </div>
-
-                    <!-- Ben -->
-                    <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                        <div class="member-circle">
-                            <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
-                        </div>
-                        <div>
-                            <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
-                            <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
-                        </div>
-                    </div>
-                </div>
-
+            const getMembersHtml = () => `
+    <h1 class="page-title">${t('nav_members')}</h1>
+    <div class="app-content-box">
+        
+        <!-- TITRE CLIQUABLE : AU COMITÉ -->
+        <a href="../apps/admin/index.html" style="text-decoration: none; color: inherit; display: block;">
+            <div class="member-line" style="cursor: pointer;" title="Espace Administration">
+                <h2>${t('members_committee')}</h2>
+                <hr>
             </div>
-        `;
+        </a>
+
+        <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
+            <!-- Grégoire -->
+            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                <div class="member-circle">
+                    <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
+                </div>
+            </div>
+
+            <!-- Ben -->
+            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                <div class="member-circle">
+                    <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TITRE NON CLIQUABLE : TOUS LES MEMBRES -->
+        <div class="member-line">
+            <h2>${t('members_all')}</h2>
+            <hr>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Grégoire -->
+            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                <div class="member-circle">
+                    <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
+                </div>
+            </div>
+
+            <!-- Ben -->
+            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                <div class="member-circle">
+                    <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+`;
 
         const getPrivacyHtml = () => `
             <h1 class="page-title">${t('privacy_title')}</h1>
