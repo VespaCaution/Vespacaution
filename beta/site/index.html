@@ -1387,20 +1387,30 @@ document.addEventListener('click', function(event) {
             return currentUrl.replace('/beta/site/', '/site/');
         }
 
-        function addLongPressEvents() {
+                function addLongPressEvents() {
             const logo = document.querySelector('.logo-container');
+            let isLongPress = false;
 
-            function handleLongPress(e) {
-                e.preventDefault(); // Empêche le menu contextuel
+            function handlePointerDown(e) {
+                isLongPress = false;
                 
                 pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    
                     if (confirm("Tu es actuellement en mode BETA.\n\nVeux-tu revenir à la version STABLE ?")) {
-                        // On désactive le mode beta
                         localStorage.setItem('vc_beta_mode', 'false');
-                        // On redirige vers la stable
                         window.location.href = getStableUrl();
                     }
-                }, 2000); // 2 secondes d'appui long
+                }, 2000); // 2 secondes
+            }
+
+            function handlePointerUp(e) {
+                clearTimeout(pressTimer);
+                // Si clic normal (pas d'appui long), retour à l'accueil
+                if (!isLongPress) {
+                    window.location.hash = ''; 
+                    window.location.href = window.location.href.split('#')[0]; 
+                }
             }
 
             function cancelLongPress() { 
@@ -1408,15 +1418,12 @@ document.addEventListener('click', function(event) {
             }
 
             if (logo) {
-                logo.addEventListener('mousedown', handleLongPress);
-                logo.addEventListener('touchstart', handleLongPress);
-                logo.addEventListener('mouseup', cancelLongPress);
-                logo.addEventListener('mouseleave', cancelLongPress);
-                logo.addEventListener('touchend', cancelLongPress);
-                logo.addEventListener('touchcancel', cancelLongPress);
+                logo.addEventListener('pointerdown', handlePointerDown);
+                logo.addEventListener('pointerup', handlePointerUp);
+                logo.addEventListener('pointerleave', cancelLongPress);
+                logo.addEventListener('pointercancel', cancelLongPress);
             }
         }
-
         // ==========================================
         // 7. INITIALISATION (BOOT)
         // ==========================================
