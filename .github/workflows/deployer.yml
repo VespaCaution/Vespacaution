@@ -18,10 +18,9 @@ jobs:
 
       - name: Inject Secrets into admin.html
         run: |
-          # Remplace les variables par les secrets
-          sed -i "s|%%GITHUB_TOKEN%%|${{ secrets.GITHUB_TOKEN_SECRET }}|g" apps/admin/index.html
-          sed -i "s|%%GIST_ID%%|${{ secrets.GIST_ID_SECRET }}|g" apps/admin/index.html
-
+          # Remplace la variable par le secret TOKEN_SECRET
+          sed -i "s|%%TOKEN_SECRET%%|${{ secrets.TOKEN_SECRET }}|g" site/apps/admin/index.html
+          
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
