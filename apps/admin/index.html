@@ -661,8 +661,8 @@
             event.target.value = '';
         }
 
-        // ==========================================
-        // 9. SYNCHRONISATION CLOUD (JSONBIN.IO)
+                // ==========================================
+        // 9. SYNCHRONISATION CLOUD (JSONBIN.IO) - CORRIGÉ
         // ==========================================
         const BIN_ID = "6aee072bac6210605a72f967"; 
         const MASTER_KEY = "$2a$10$PY1PyzyHT4gBl6VRLkTsq.24n1YvmLLsJSQAbsX2QfMOsyHKGrS3S"; 
@@ -672,54 +672,103 @@
             const status = document.getElementById('syncStatus');
             
             if (action === 'save') {
-                status.textContent = "Envoi en cours...";
+                status.textContent = "Envoi en cours (max 10 sec)...";
+                status.style.color = "#c99b48";
+                
+                // Création d'un timeout de 10 secondes
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
                 try {
                     const data = { caisse: transactions, archives: archives };
                     const res = await fetch(API_URL, {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
-                        body: JSON.stringify(data)
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'X-Master-Key': MASTER_KEY,
+                            'X-Bin-Meta': 'false' // Évite de recevoir les métadonnées inutiles
+                        },
+                        body: JSON.stringify(data),
+                        signal: controller.signal
                     });
+                    
+                    clearTimeout(timeoutId); // On annule le timeout si ça a réussi
+
                     if (res.ok) {
                         status.textContent = "✅ Sauvegardé sur le Cloud";
-                        alert("Sauvegarde Cloud réussie !");
+                        status.style.color = "#5cb85c";
+                        alert("✅ Sauvegarde Cloud réussie !");
                     } else {
-                        status.textContent = "❌ Erreur de sauvegarde";
-                        alert("Erreur : Vérifie ton Bin ID et ta Master Key.");
+                        // Si le serveur répond avec une erreur (ex: 401, 402, 413)
+                        const errData = await res.json().catch(() => ({}));
+                        const errMsg = errData.message || res.status;
+                        status.textContent = "❌ Erreur " + res.status;
+                        status.style.color = "#d9534f";
+                        alert("❌ Erreur de sauvegarde : " + errMsg + "\n\n(Si l'erreur est 413, c'est que tes données sont trop lourdes pour le plan gratuit).");
                     }
                 } catch (e) {
-                    status.textContent = "❌ Erreur réseau";
+                    clearTimeout(timeoutId);
+                    if (e.name === 'AbortError') {
+                        status.textContent = "❌ Délai dépassé (Réseau lent)";
+                        status.style.color = "#d9534f";
+                        alert("❌ Le serveur n'a pas répondu à temps. Vérifie ta connexion internet.");
+                    } else {
+                        status.textContent = "❌ Erreur réseau/CORS";
+                        status.style.color = "#d9534f";
+                        alert("❌ Impossible de contacter JSONBin.\n\nSi tu ouvres le fichier localement (file://), essaie de le mettre sur un serveur (GitHub Pages) pour éviter les blocages de sécurité du navigateur.");
+                    }
                 }
             } 
             
             if (action === 'load') {
                 status.textContent = "Chargement...";
+                status.style.color = "#c99b48";
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
                 try {
                     const res = await fetch(API_URL + "/latest", {
                         method: 'GET',
-                        headers: { 'X-Master-Key': MASTER_KEY }
+                        headers: { 
+                            'X-Master-Key': MASTER_KEY,
+                            'X-Bin-Meta': 'false'
+                        },
+                        signal: controller.signal
                     });
+                    
+                    clearTimeout(timeoutId);
+
+                    if (!res.ok) {
+                        throw new Error("Erreur HTTP " + res.status);
+                    }
+
                     const json = await res.json();
                     
-                    if (json.record && json.record.caisse) {
+                    if (json && json.caisse) {
                         if (confirm("Des données ont été trouvées sur le Cloud. Voulez-vous les charger ? (Cela écrasera vos données locales)")) {
-                            transactions = json.record.caisse;
-                            archives = json.record.archives || {};
+                            transactions = json.caisse;
+                            archives = json.archives || {};
                             renderTable();
                             renderArchives();
                             updateEditorFolders();
                             saveAllData();
                             status.textContent = "✅ Chargé depuis le Cloud";
+                            status.style.color = "#5cb85c";
                         }
                     } else {
                         status.textContent = "ℹ️ Aucune donnée sur le Cloud";
+                        status.style.color = "#888";
                     }
                 } catch (e) {
-                    status.textContent = "❌ Erreur réseau";
+                    clearTimeout(timeoutId);
+                    status.textContent = "❌ Erreur de chargement";
+                    status.style.color = "#d9534f";
+                    console.error(e);
+                    alert("❌ Impossible de charger les données. Vérifie ta connexion.");
                 }
             }
         }
-
         // ==========================================
         // 10. INITIALISATION
         // ==========================================
