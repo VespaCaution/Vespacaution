@@ -1330,7 +1330,7 @@ function closeMobileMenu() {
             }
         }
 
-        // ==========================================
+                // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
         function setupContactForm() {
@@ -1366,17 +1366,25 @@ function closeMobileMenu() {
             });
         }
 
+        // ==========================================
+        // 6. ROUTING & NAVIGATION LOGIC
+        // ==========================================
+        
+        function closeMobileMenu() {
+            document.querySelector('nav').classList.remove('active');
+        }
+
         window.addEventListener('hashchange', render);
+        
         // Fermer le menu mobile si on clique en dehors
-document.addEventListener('click', function(event) {
-    const nav = document.querySelector('nav');
-    const burger = document.querySelector('.burger-menu');
-    
-    // Si le menu est ouvert et qu'on clique en dehors du menu ET en dehors du bouton burger
-    if (nav.classList.contains('active') && !nav.contains(event.target) && !burger.contains(event.target)) {
-        closeMobileMenu();
-    }
-});
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const burger = document.querySelector('.burger-menu');
+            if (nav.classList.contains('active') && !nav.contains(event.target) && !burger.contains(event.target)) {
+                closeMobileMenu();
+            }
+        });
+
         // Fermer le dropdown si on clique ailleurs
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('resourcesDropdown');
@@ -1385,23 +1393,12 @@ document.addEventListener('click', function(event) {
                 closeDropdown();
             }
         });
-        
-        setLanguage(currentLang);
 
-        // Enregistrement du Service Worker pour l'installation PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker enregistré !'))
-                    .catch(err => console.log('Erreur Service Worker:', err));
-            });
-        }
-                                   // ==========================================
-        // GESTION DE LA VERSION BETA (Long Press 2s sur le logo)
         // ==========================================
-        
+        // 7. GESTION DE LA VERSION BETA (Long Press 2s)
+        // ==========================================
         let pressTimer;
-        const BETA_PASSWORD = "VcB3ta39"; 
+        const BETA_PASSWORD = "VcB3ta39";
 
         function checkBetaMode() {
             return localStorage.getItem('vc_beta_mode') === 'true';
@@ -1411,18 +1408,17 @@ document.addEventListener('click', function(event) {
             return localStorage.getItem('vc_beta_unlocked') === 'true';
         }
 
-        // Fonction pour générer l'URL de la beta en fonction de l'URL actuelle
+        // Fonction pour trouver l'URL Beta (ex: github.io/site/ -> github.io/beta/site/)
         function getBetaUrl() {
             const currentUrl = window.location.href;
-            // Si on est sur .../site/ on remplace par .../beta/site/
             if (currentUrl.includes('/site/')) {
                 return currentUrl.replace('/site/', '/beta/site/');
             }
-            // Si on est à la racine (par sécurité)
+            // Si on est à la racine (ex: github.io/ -> github.io/beta/site/)
             return currentUrl.replace(/\/$/, '') + '/beta/site/';
         }
 
-        // Fonction pour générer l'URL stable
+        // Fonction pour revenir à l'URL stable
         function getStableUrl() {
             const currentUrl = window.location.href;
             return currentUrl.replace('/beta/site/', '/site/');
@@ -1432,22 +1428,27 @@ document.addEventListener('click', function(event) {
             const logo = document.querySelector('.logo-container');
 
             function handleLongPress(e) {
-                e.preventDefault();
+                e.preventDefault(); // Empêche le menu contextuel du navigateur
+                
                 pressTimer = setTimeout(() => {
                     const isBetaActive = checkBetaMode();
                     
                     if (isBetaActive) {
+                        // Si on est en beta, on propose de revenir
                         if (confirm("Tu es actuellement en mode Beta.\n\nVeux-tu revenir à la version stable ?")) {
                             localStorage.setItem('vc_beta_mode', 'false');
                             window.location.href = getStableUrl();
                         }
                     } else {
+                        // Si on n'est pas en beta
                         if (checkBetaUnlocked()) {
+                            // Déjà débloqué, on active
                             if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
                                 localStorage.setItem('vc_beta_mode', 'true');
                                 window.location.href = getBetaUrl();
                             }
                         } else {
+                            // Pas encore débloqué, on demande le mot de passe
                             const password = prompt("🔒 Accès Beta restreint.\n\nEntre le mot de passe pour débloquer l'accès Beta :");
                             
                             if (password === BETA_PASSWORD) {
@@ -1461,10 +1462,12 @@ document.addEventListener('click', function(event) {
                             }
                         }
                     }
-                }, 2000); // 2 secondes
+                }, 2000); // 2 secondes d'appui long
             }
 
-            function cancelLongPress() { clearTimeout(pressTimer); }
+            function cancelLongPress() { 
+                clearTimeout(pressTimer); 
+            }
 
             if (logo) {
                 logo.addEventListener('mousedown', handleLongPress);
@@ -1476,11 +1479,10 @@ document.addEventListener('click', function(event) {
             }
         }
 
-        // Redirection automatique au chargement
+        // Redirection automatique si le mode beta est actif
         function handleAutoBetaRedirect() {
             if (checkBetaMode()) {
-                const currentUrl = window.location.href;
-                if (!currentUrl.includes('/beta/')) {
+                if (!window.location.href.includes('/beta/')) {
                     window.location.href = getBetaUrl();
                 }
             } else {
@@ -1490,9 +1492,27 @@ document.addEventListener('click', function(event) {
             }
         }
 
+        // ==========================================
+        // 8. INITIALISATION (BOOT)
+        // ==========================================
+        
+        // Appliquer la langue sauvegardée ou le français par défaut
+        setLanguage(currentLang);
+
+        // Enregistrement du Service Worker pour la PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker enregistré !'))
+                    .catch(err => console.log('Erreur Service Worker:', err));
+            });
+        }
+
+        // Lancer les événements au chargement de la page
         document.addEventListener('DOMContentLoaded', () => {
             addLongPressEvents();
             handleAutoBetaRedirect();
+        });
         });
     </script>
 </body>
