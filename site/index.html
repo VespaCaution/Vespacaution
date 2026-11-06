@@ -1330,7 +1330,7 @@ function closeMobileMenu() {
             }
         }
 
-                // ==========================================
+                       // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
         function setupContactForm() {
@@ -1408,17 +1408,14 @@ function closeMobileMenu() {
             return localStorage.getItem('vc_beta_unlocked') === 'true';
         }
 
-        // Fonction pour trouver l'URL Beta (ex: github.io/site/ -> github.io/beta/site/)
         function getBetaUrl() {
             const currentUrl = window.location.href;
             if (currentUrl.includes('/site/')) {
                 return currentUrl.replace('/site/', '/beta/site/');
             }
-            // Si on est à la racine (ex: github.io/ -> github.io/beta/site/)
             return currentUrl.replace(/\/$/, '') + '/beta/site/';
         }
 
-        // Fonction pour revenir à l'URL stable
         function getStableUrl() {
             const currentUrl = window.location.href;
             return currentUrl.replace('/beta/site/', '/site/');
@@ -1428,27 +1425,23 @@ function closeMobileMenu() {
             const logo = document.querySelector('.logo-container');
 
             function handleLongPress(e) {
-                e.preventDefault(); // Empêche le menu contextuel du navigateur
+                e.preventDefault(); 
                 
                 pressTimer = setTimeout(() => {
                     const isBetaActive = checkBetaMode();
                     
                     if (isBetaActive) {
-                        // Si on est en beta, on propose de revenir
                         if (confirm("Tu es actuellement en mode Beta.\n\nVeux-tu revenir à la version stable ?")) {
                             localStorage.setItem('vc_beta_mode', 'false');
                             window.location.href = getStableUrl();
                         }
                     } else {
-                        // Si on n'est pas en beta
                         if (checkBetaUnlocked()) {
-                            // Déjà débloqué, on active
                             if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
                                 localStorage.setItem('vc_beta_mode', 'true');
                                 window.location.href = getBetaUrl();
                             }
                         } else {
-                            // Pas encore débloqué, on demande le mot de passe
                             const password = prompt("🔒 Accès Beta restreint.\n\nEntre le mot de passe pour débloquer l'accès Beta :");
                             
                             if (password === BETA_PASSWORD) {
@@ -1462,7 +1455,7 @@ function closeMobileMenu() {
                             }
                         }
                     }
-                }, 2000); // 2 secondes d'appui long
+                }, 2000);
             }
 
             function cancelLongPress() { 
@@ -1479,7 +1472,6 @@ function closeMobileMenu() {
             }
         }
 
-        // Redirection automatique si le mode beta est actif
         function handleAutoBetaRedirect() {
             if (checkBetaMode()) {
                 if (!window.location.href.includes('/beta/')) {
@@ -1493,13 +1485,13 @@ function closeMobileMenu() {
         }
 
         // ==========================================
-        // 8. INITIALISATION (BOOT)
+        // 8. INITIALISATION (BOOT) - TOUJOURS EN DERNIER
         // ==========================================
         
-        // Appliquer la langue sauvegardée ou le français par défaut
+        // On applique la langue
         setLanguage(currentLang);
 
-        // Enregistrement du Service Worker pour la PWA
+        // On enregistre le Service Worker (PWA)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -1508,12 +1500,11 @@ function closeMobileMenu() {
             });
         }
 
-        // Lancer les événements au chargement de la page
+        // On lance les vérifications UNE FOIS que tout est chargé
         document.addEventListener('DOMContentLoaded', () => {
             addLongPressEvents();
             handleAutoBetaRedirect();
         });
-        });
     </script>
 </body>
-</html>
+</html> 
