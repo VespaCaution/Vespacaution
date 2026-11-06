@@ -1431,39 +1431,32 @@ document.addEventListener('click', function(event) {
                     .catch(err => console.log('Erreur Service Worker:', err));
             });
         }
-                        // ==========================================
-        // GESTION DE LA VERSION BETA (Retour à la stable)
+                               // ==========================================
+        // GESTION DE LA VERSION BETA (Long Press 2s sur le logo -> Retour stable)
         // ==========================================
+        
         let pressTimer;
 
         function addLongPressEvents() {
-            const appCards = document.querySelectorAll('.app-card');
             const logo = document.querySelector('.logo-container');
 
-            function handleLongPress(element, e) {
-                e.preventDefault();
+            function handleLongPress(e) {
+                e.preventDefault(); // Empêche le menu contextuel
                 pressTimer = setTimeout(() => {
                     if (confirm("Tu es actuellement en mode BETA.\n\nVeux-tu revenir à la version STABLE ?")) {
                         localStorage.setItem('vc_beta_mode', 'false');
-                        window.location.href = "/site/";
+                        window.location.href = "/site/"; // Retour au site stable
                     }
-                }, 1000);
+                }, 2000); // 2000 ms = 2 secondes d'appui long
             }
 
-            function cancelLongPress() { clearTimeout(pressTimer); }
-
-            appCards.forEach(card => {
-                card.addEventListener('mousedown', (e) => handleLongPress(card, e));
-                card.addEventListener('touchstart', (e) => handleLongPress(card, e));
-                card.addEventListener('mouseup', cancelLongPress);
-                card.addEventListener('mouseleave', cancelLongPress);
-                card.addEventListener('touchend', cancelLongPress);
-                card.addEventListener('touchcancel', cancelLongPress);
-            });
+            function cancelLongPress() {
+                clearTimeout(pressTimer);
+            }
 
             if (logo) {
-                logo.addEventListener('mousedown', (e) => handleLongPress(logo, e));
-                logo.addEventListener('touchstart', (e) => handleLongPress(logo, e));
+                logo.addEventListener('mousedown', handleLongPress);
+                logo.addEventListener('touchstart', handleLongPress);
                 logo.addEventListener('mouseup', cancelLongPress);
                 logo.addEventListener('mouseleave', cancelLongPress);
                 logo.addEventListener('touchend', cancelLongPress);
@@ -1471,7 +1464,7 @@ document.addEventListener('click', function(event) {
             }
         }
 
-        // Ajouter les événements au chargement de la page
+        // Initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', () => {
             addLongPressEvents();
         });
