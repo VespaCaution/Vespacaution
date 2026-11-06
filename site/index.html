@@ -1396,46 +1396,72 @@ document.addEventListener('click', function(event) {
                     .catch(err => console.log('Erreur Service Worker:', err));
             });
         }
-                // ==========================================
-        // GESTION DE LA VERSION BETA (Long Press)
+                        // ==========================================
+        // GESTION DE LA VERSION BETA (Long Press + Mot de passe)
         // ==========================================
         
         let pressTimer;
         const betaPath = "/beta/site/"; // Le chemin vers la version beta
+        const BETA_PASSWORD = "VcB3ta39"; // Mot de passe pour la première activation
 
         // Fonction pour vérifier si on est déjà en beta
         function checkBetaMode() {
             return localStorage.getItem('vc_beta_mode') === 'true';
         }
 
-        // Ajouter la détection du "Long Press" (Appui long) sur l'application
+        // Fonction pour vérifier si on a déjà débloqué l'accès beta
+        function checkBetaUnlocked() {
+            return localStorage.getItem('vc_beta_unlocked') === 'true';
+        }
+
+        // Ajouter la détection du "Long Press" (Appui long)
         function addLongPressEvents() {
             const appCards = document.querySelectorAll('.app-card');
             const logo = document.querySelector('.logo-container');
 
-            // Fonction générique pour gérer l'appui long
             function handleLongPress(element, e) {
                 e.preventDefault(); // Empêche le menu contextuel du navigateur
                 pressTimer = setTimeout(() => {
                     const isBetaActive = checkBetaMode();
-                    const message = isBetaActive 
-                        ? "Tu es actuellement en mode Beta.\n\nVeux-tu revenir à la version stable ?" 
-                        : "Veux-tu activer le mode Beta de Vespacaution ?";
                     
-                    if (confirm(message)) {
-                        localStorage.setItem('vc_beta_mode', !isBetaActive);
-                        // Redirection immédiate
-                        window.location.href = !isBetaActive ? betaPath : "/site/";
+                    if (isBetaActive) {
+                        // Si on est déjà en beta, on demande juste si on veut revenir
+                        if (confirm("Tu es actuellement en mode Beta.\n\nVeux-tu revenir à la version stable ?")) {
+                            localStorage.setItem('vc_beta_mode', 'false');
+                            window.location.href = "/site/";
+                        }
+                    } else {
+                        // Si on n'est pas en beta, on vérifie si on est déjà débloqué
+                        if (checkBetaUnlocked()) {
+                            // Déjà débloqué : on active directement
+                            if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
+                                localStorage.setItem('vc_beta_mode', 'true');
+                                window.location.href = betaPath;
+                            }
+                        } else {
+                            // Pas encore débloqué : on demande le mot de passe
+                            const password = prompt("🔒 Accès Beta restreint.\n\nEntre le mot de passe pour débloquer l'accès Beta :");
+                            
+                            if (password === BETA_PASSWORD) {
+                                // Mot de passe correct : on débloque pour toujours
+                                localStorage.setItem('vc_beta_unlocked', 'true');
+                                if (confirm("✅ Mot de passe correct !\n\nVeux-tu activer le mode Beta de Vespacaution ?")) {
+                                    localStorage.setItem('vc_beta_mode', 'true');
+                                    window.location.href = betaPath;
+                                }
+                            } else if (password !== null) {
+                                // Mauvais mot de passe
+                                alert("❌ Mot de passe incorrect. Accès Beta refusé.");
+                            }
+                        }
                     }
                 }, 1000); // 1000 ms = 1 seconde d'appui long
             }
 
-            // Annuler le timer si on relâche ou bouge
             function cancelLongPress() {
                 clearTimeout(pressTimer);
             }
 
-            // Appliquer l'événement sur chaque carte d'application
             appCards.forEach(card => {
                 card.addEventListener('mousedown', (e) => handleLongPress(card, e));
                 card.addEventListener('touchstart', (e) => handleLongPress(card, e));
@@ -1445,7 +1471,6 @@ document.addEventListener('click', function(event) {
                 card.addEventListener('touchcancel', cancelLongPress);
             });
 
-            // Appliquer l'événement sur le logo pour revenir en arrière
             if (logo) {
                 logo.addEventListener('mousedown', (e) => handleLongPress(logo, e));
                 logo.addEventListener('touchstart', (e) => handleLongPress(logo, e));
@@ -1456,21 +1481,25 @@ document.addEventListener('click', function(event) {
             }
         }
 
-        // Fonction pour rediriger automatiquement si le mode beta est actif au chargement
+        // Redirection automatique si le mode beta est actif au chargement
         function handleAutoBetaRedirect() {
             if (checkBetaMode()) {
                 const currentPath = window.location.pathname;
-                // Si on est sur le site stable, on redirige vers beta
                 if (!currentPath.includes('/beta/')) {
                     window.location.href = betaPath;
                 }
             } else {
-                // Si on est sur beta mais que le mode a été désactivé (depuis un autre onglet)
                 if (window.location.pathname.includes('/beta/')) {
                     window.location.href = "/site/";
                 }
             }
         }
+
+        // Ajouter les événements au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            addLongPressEvents();
+            handleAutoBetaRedirect();
+        });
                 // Ajouter les événements
         addLongPressEvents();
     </script>
