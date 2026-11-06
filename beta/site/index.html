@@ -437,46 +437,6 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // ==========================================
-        // GESTION DE LA VERSION BETA (Retour à la stable)
-        // ==========================================
-        let pressTimer;
-
-        function addLongPressEvents() {
-            const appCards = document.querySelectorAll('.app-card');
-            const logo = document.querySelector('.logo-container');
-
-            function handleLongPress(element, e) {
-                e.preventDefault();
-                pressTimer = setTimeout(() => {
-                    if (confirm("Tu es actuellement en mode BETA.\n\nVeux-tu revenir à la version STABLE ?")) {
-                        localStorage.setItem('vc_beta_mode', 'false');
-                        window.location.href = "/site/";
-                    }
-                }, 1000);
-            }
-
-            function cancelLongPress() { clearTimeout(pressTimer); }
-
-            appCards.forEach(card => {
-                card.addEventListener('mousedown', (e) => handleLongPress(card, e));
-                card.addEventListener('touchstart', (e) => handleLongPress(card, e));
-                card.addEventListener('mouseup', cancelLongPress);
-                card.addEventListener('mouseleave', cancelLongPress);
-                card.addEventListener('touchend', cancelLongPress);
-                card.addEventListener('touchcancel', cancelLongPress);
-            });
-
-            if (logo) {
-                logo.addEventListener('mousedown', (e) => handleLongPress(logo, e));
-                logo.addEventListener('touchstart', (e) => handleLongPress(logo, e));
-                logo.addEventListener('mouseup', cancelLongPress);
-                logo.addEventListener('mouseleave', cancelLongPress);
-                logo.addEventListener('touchend', cancelLongPress);
-                logo.addEventListener('touchcancel', cancelLongPress);
-            }
-        }
-
         // --- LOGIQUE MENU DÉROULANT & PDF ---
         function toggleDropdown(event) {
             event.stopPropagation();
@@ -711,7 +671,7 @@
                 link_stop: "Resursas ed instruments da rapport per chatschaders da vespras.",
                 link_abeilles: "L'associaziun svizra d'apiculturs (APISUISSE).",
                 link_melizoe: "Plattafurma svizra per la vendita da mel.",
-                credit_sar: "SAR (Société d'Apiculture Romande)",
+                credit_sar: "SAR (Société d'Apiculture Romaine)",
                 support_title: "Sustegn Vespacaution", support_desc: "Ti plaschan noss apps? Ti pos sustegnair nus cun ina donaziun Twint al numer sutvart. Grazia fich! 🙂",
                 support_thanks_title: "Grazia speziala a:", support_thanks_list: "Grégoire Hupka,",
                 privacy_title: "Protecziun da datas", privacy_date: "Ultima actualisaziun:", privacy_p1: "Tar Vespacaution è la tia sfera privata ina prioritad.",
@@ -750,7 +710,7 @@
         }
 
         // ==========================================
-        // 2. APP CONFIGURATION (Chemins Beta)
+        // 2. APP CONFIGURATION & FULL DESCRIPTIONS
         // ==========================================
         const appsConfig = {
             'vespatimer': {
@@ -1150,15 +1110,11 @@
         `;
 
         function prefillMembership() {
-            // On attend un tout petit peu que la page contact s'affiche avant de remplir
             setTimeout(() => {
                 const typeSelect = document.querySelector('select[name="type"]');
                 const appSelect = document.querySelector('select[name="app"]');
-                
-                if (typeSelect) typeSelect.value = "Become Member"; // Sélectionne "Devenir membre"
-                if (appSelect) appSelect.value = "General"; // Sélectionne "Question Générale"
-                
-               
+                if (typeSelect) typeSelect.value = "Become Member";
+                if (appSelect) appSelect.value = "General";
             }, 100);
         }
 
@@ -1365,7 +1321,7 @@ function closeMobileMenu() {
             }
         }
 
-                // ==========================================
+        // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
         function setupContactForm() {
@@ -1401,24 +1357,17 @@ function closeMobileMenu() {
             });
         }
 
-        // ==========================================
-        // 6. ROUTING & NAVIGATION LOGIC
-        // ==========================================
-        function closeMobileMenu() {
-            document.querySelector('nav').classList.remove('active');
-        }
-
         window.addEventListener('hashchange', render);
-        
         // Fermer le menu mobile si on clique en dehors
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('nav');
-            const burger = document.querySelector('.burger-menu');
-            if (nav.classList.contains('active') && !nav.contains(event.target) && !burger.contains(event.target)) {
-                closeMobileMenu();
-            }
-        });
-
+document.addEventListener('click', function(event) {
+    const nav = document.querySelector('nav');
+    const burger = document.querySelector('.burger-menu');
+    
+    // Si le menu est ouvert et qu'on clique en dehors du menu ET en dehors du bouton burger
+    if (nav.classList.contains('active') && !nav.contains(event.target) && !burger.contains(event.target)) {
+        closeMobileMenu();
+    }
+});
         // Fermer le dropdown si on clique ailleurs
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('resourcesDropdown');
@@ -1427,13 +1376,12 @@ function closeMobileMenu() {
                 closeDropdown();
             }
         });
-
+        
         // ==========================================
-        // 7. GESTION DU RETOUR À LA VERSION STABLE (Long Press 2s)
+        // 6. GESTION DU RETOUR A LA VERSION STABLE (Long Press 2s)
         // ==========================================
         let pressTimer;
 
-        // Fonction pour trouver l'URL stable (ex: /beta/site/ -> /site/)
         function getStableUrl() {
             const currentUrl = window.location.href;
             return currentUrl.replace('/beta/site/', '/site/');
@@ -1470,7 +1418,7 @@ function closeMobileMenu() {
         }
 
         // ==========================================
-        // 8. INITIALISATION (BOOT)
+        // 7. INITIALISATION (BOOT)
         // ==========================================
         
         // On applique la langue
