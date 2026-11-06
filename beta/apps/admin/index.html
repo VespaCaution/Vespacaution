@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comité — Vespacaution</title>
+    
+    <!-- Bibliothèques pour PDF et DOCX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.0.0/build/index.umd.js"></script>
+    
+    <style>
+        body { font-family: sans-serif; background: #f9f7f1; color: #2d2d2d; padding: 20px; max-width: 900px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e6e2d8; }
+        h1, h2 { color: #c99b48; margin-top: 0; }
+        input, button, textarea, select { padding: 10px; margin: 5px 0; border-radius: 6px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+        button { background: #c99b48; color: white; font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
+        button:hover { background: #b5883b; }
+        .hidden { display: none !important; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+        th { background: #f4ebd9; }
+        .flex { display: flex; gap: 10px; flex-wrap: wrap; }
+        .flex > * { flex: 1; min-width: 120px; }
+        .btn-red { background: #d9534f; }
+        .btn-green { background: #5cb85c; }
+        .btn-grey { background: #888; }
+        .btn-blue { background: #457b9d; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; width: auto; margin: 0; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e6e2d8; padding-bottom: 10px; }
+        .tab { background: none; color: #6b6b6b; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px 15px; border-radius: 8px; }
+        .tab.active { background: #f4ebd9; color: #c99b48; font-weight: bold; }
+        .doc-item { border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
+        
+        /* Langue */
+        .lang-container { display: flex; justify-content: flex-end; gap: 5px; margin-bottom: 10px; }
+        .lang-btn { background: transparent; border: 1px solid #c99b48; color: #c99b48; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; width: auto; }
+        .lang-btn.active { background: #c99b48; color: white; }
+
+        /* ÉDITEUR DE TEXTE PLEIN ÉCRAN */
+        #editorOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+        }
+        .editor-box {
+            background: white; width: 90%; max-width: 800px; height: 80vh;
+            border-radius: 12px; display: flex; flex-direction: column; overflow: hidden;
+        }
+        .editor-header { background: #f4ebd9; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .editor-content { flex: 1; display: flex; padding: 20px; gap: 10px; }
+        .editor-content textarea { flex: 1; height: 100%; resize: none; border: none; border: 1px solid #ddd; padding: 15px; font-size: 16px; line-height: 1.5; }
+        .editor-footer { padding: 15px; background: #f4ebd9; display: flex; gap: 10px; justify-content: flex-end; }
+    </style>
+</head>
+<body>
+
+    <!-- SÉLECTEUR DE LANGUE -->
+    <div class="lang-container">
+        <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
+        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+        <button class="lang-btn" onclick="setLanguage('it')">IT</button>
+        <button class="lang-btn" onclick="setLanguage('rm')">RM</button>
+    </div>
+
+    <!-- ÉCRAN DE CONNEXION -->
+    <div id="authSection" class="card" style="text-align: center;">
+        <h1>🔒 <span data-i18n="login_title">Espace Comité</span></h1>
+        <p data-i18n="login_subtitle">Accès réservé aux membres.</p>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" data-i18n-placeholder="login_password_ph" placeholder="Mot de passe">
+        <button onclick="login()" style="margin-top: 15px;" data-i18n="login_btn">Se connecter</button>
+        <p id="authMsg" style="color: red; margin-top: 10px; font-weight: bold;"></p>
+    </div>
+
+    <!-- APPLICATION -->
+    <div id="appSection" class="hidden">
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 20px;">
+            <h1 style="margin:0;" data-i18n="dash_title">Tableau de bord</h1>
+            <button onclick="logout()" class="btn-red btn-sm" style="width:auto; padding: 10px;" data-i18n="btn_logout">Déconnexion</button>
+        </div>
+
+        <!-- ONGLETS -->
+        <div class="tabs">
+            <button class="tab active" id="tabBtnCaisse" onclick="switchTab('caisse')">💰 <span data-i18n="tab_caisse">Caisse</span></button>
+            <button class="tab" id="tabBtnArchives" onclick="switchTab('archives')">📁 <span data-i18n="tab_archives">Archives</span></button>
+        </div>
+
+        <!-- SECTION CAISSE -->
+        <div id="tabCaisse" class="card">
+            <h2 data-i18n="caisse_title">Journal de Caisse</h2>
+            <div class="flex">
+                <input type="date" id="txDate">
+                <input type="text" id="txDesc" data-i18n-placeholder="caisse_desc_ph" placeholder="Description">
+                <input type="number" id="txAmount" data-i18n-placeholder="caisse_amount_ph" placeholder="Montant">
+                <button onclick="addTransaction()" style="width: 100px;" data-i18n="btn_add">Ajouter</button>
+            </div>
+            
+            <table id="txTable">
+                <thead><tr><th data-i18n="table_date">Date</th><th data-i18n="table_desc">Description</th><th data-i18n="table_amount">Montant</th><th data-i18n="table_action">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+
+            <div class="flex" style="margin-top: 20px;">
+                <button onclick="exportCSV()" class="btn-green" data-i18n="btn_export_csv">📥 Export Excel (CSV)</button>
+                <button onclick="exportPDF()" class="btn-red" data-i18n="btn_export_pdf">📄 Générer PDF</button>
+                <input type="file" id="importCSV" accept=".csv" style="display:none;" onchange="importCSV(event)">
+                <button onclick="document.getElementById('importCSV').click()" class="btn-grey" data-i18n="btn_import_csv">📤 Import CSV</button>
+                            <button onclick="clearAllData()" style="background: #7f0000; color: white;">🗑️ Tout effacer</button>
+            <!-- BOUTONS JSON -->
+        <div class="card flex" style="justify-content: center;">
+            <button onclick="exportJSON()" class="btn-blue" style="max-width: 300px;" data-i18n="btn_export_json">💾 Sauvegarde complète (JSON)</button>
+            <input type="file" id="importJSON" accept=".json" style="display:none;" onchange="importJSON(event)">
+            <button onclick="document.getElementById('importJSON').click()" class="btn-blue" style="max-width: 300px;" data-i18n="btn_import_json">📂 Restaurer (JSON)</button>
+        </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- SECTION ARCHIVES -->
+        <div id="tabArchives" class="card hidden">
+            <h2 data-i18n="archives_title">Archives & Documents</h2>
+            
+            <div class="flex" style="margin-bottom: 20px;">
+                <input type="text" id="newFolderName" data-i18n-placeholder="folder_ph" placeholder="Nom du nouveau dossier">
+                <button onclick="createFolder()" style="width: 150px;" data-i18n="btn_create_folder">Créer un dossier</button>
+            </div>
+
+            <div class="flex" style="margin-bottom: 20px;">
+                <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.txt" style="display:none;" onchange="uploadFile(event)">
+                <button onclick="document.getElementById('fileUpload').click()" class="btn-blue" data-i18n="btn_upload">📤 Importer un fichier</button>
+                <button onclick="openEditor('new')" class="btn-green" data-i18n="btn_create_doc">📝 Créer un document texte</button>
+            </div>
+
+            <div id="foldersContainer"></div>
+        </div>
+
+        
+
+    <!-- MODALE ÉDITEUR DE TEXTE -->
+    <div id="editorOverlay" class="hidden">
+        <div class="editor-box">
+            <div class="editor-header">
+                <input type="text" id="editorTitle" data-i18n-placeholder="editor_title_ph" placeholder="Titre du document" style="margin:0; max-width: 300px; font-weight: bold;">
+                <button onclick="closeEditor()" class="btn-red btn-sm" data-i18n="btn_close">Fermer ✕</button>
+            </div>
+            <div class="editor-content">
+                <textarea id="editorText" data-i18n-placeholder="editor_text_ph" placeholder="Écrivez votre document ici..."></textarea>
+            </div>
+            <div class="editor-footer">
+                <button onclick="saveTextDoc()" class="btn-green" data-i18n="btn_save_archive">💾 Enregistrer dans les archives</button>
+                <span style="flex:1;"></span>
+                <button onclick="exportTXT()" class="btn-grey" data-i18n="btn_export_txt">📥 .txt</button>
+                <button onclick="exportDOCX()" class="btn-blue" data-i18n="btn_export_docx">📥 .docx (Word)</button>
+                <button onclick="exportEditorPDF()" class="btn-red" data-i18n="btn_export_editor_pdf">📥 .pdf</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. TRADUCTIONS (i18n)
+        // ==========================================
+        const translations = {
+            fr: {
+                login_title: "Espace Comité", login_subtitle: "Accès réservé aux membres.", login_password_ph: "Mot de passe", login_btn: "Se connecter",
+                dash_title: "Tableau de bord", btn_logout: "Déconnexion",
+                tab_caisse: "Caisse", tab_archives: "Archives",
+                caisse_title: "Journal de Caisse", caisse_desc_ph: "Description", caisse_amount_ph: "Montant", btn_add: "Ajouter",
+                table_date: "Date", table_desc: "Description", table_amount: "Montant", table_action: "Action",
+                btn_export_csv: "📥 Export Excel (CSV)", btn_export_pdf: "📄 Générer PDF", btn_import_csv: "📤 Import CSV",
+                archives_title: "Archives & Documents", folder_ph: "Nom du nouveau dossier", btn_create_folder: "Créer un dossier",
+                btn_upload: "📤 Importer un fichier", btn_create_doc: "📝 Créer un document texte",
+                btn_export_json: "💾 Sauvegarde complète (JSON)", btn_import_json: "📂 Restaurer (JSON)",
+                editor_title_ph: "Titre du document", editor_text_ph: "Écrivez votre document ici...", btn_close: "Fermer ✕",
+                btn_save_archive: "💾 Enregistrer dans les archives", btn_export_txt: "📥 .txt", btn_export_docx: "📥 .docx (Word)", btn_export_editor_pdf: "📥 .pdf",
+                alert_fill_fields: "Remplis tous les champs !", alert_delete_line: "Supprimer cette ligne ?", alert_delete_folder: "Supprimer ce dossier ?", alert_delete_doc: "Supprimer ce document ?",
+                prompt_folder: "Dans quel dossier ? (ou 'Général' par défaut)", prompt_editor_folder: "Dans quel dossier sauvegarder ce document ? (Laissez vide pour 'Général')", prompt_doc_title: "Donnez un titre au document.",
+                alert_saved_archive: "✅ Document enregistré dans", alert_json_invalid: "❌ Fichier JSON invalide.", alert_json_restore: "✅ Sauvegarde restaurée !",
+                alert_confirm_replace: "⚠️ Cela va remplacer TOUTES les données actuelles. Continuer ?", alert_folder_exists: "Ce dossier existe déjà.", alert_enter_name: "Entrez un nom.",
+                no_folders: "Aucun dossier.", empty_folder: "Dossier vide", btn_download: "Télécharger", btn_open_editor: "Ouvrir l'éditeur", btn_delete_folder: "Supprimer le dossier"
+            },
+            en: {
+                login_title: "Committee Area", login_subtitle: "Restricted access for members.", login_password_ph: "Password", login_btn: "Log in",
+                dash_title: "Dashboard", btn_logout: "Log out",
+                tab_caisse: "Cash Register", tab_archives: "Archives",
+                caisse_title: "Cash Journal", caisse_desc_ph: "Description", caisse_amount_ph: "Amount", btn_add: "Add",
+                table_date: "Date", table_desc: "Description", table_amount: "Amount", table_action: "Action",
+                btn_export_csv: "📥 Export Excel (CSV)", btn_export_pdf: "📄 Generate PDF", btn_import_csv: "📤 Import CSV",
+                archives_title: "Archives & Documents", folder_ph: "New folder name", btn_create_folder: "Create folder",
+                btn_upload: "📤 Upload file", btn_create_doc: "📝 Create text document",
+                btn_export_json: "💾 Full Backup (JSON)", btn_import_json: "📂 Restore (JSON)",
+                editor_title_ph: "Document title", editor_text_ph: "Write your document here...", btn_close: "Close ✕",
+                btn_save_archive: "💾 Save to archives", btn_export_txt: "📥 .txt", btn_export_docx: "📥 .docx (Word)", btn_export_editor_pdf: "📥 .pdf",
+                alert_fill_fields: "Fill all fields!", alert_delete_line: "Delete this line?", alert_delete_folder: "Delete this folder?", alert_delete_doc: "Delete this document?",
+                prompt_folder: "In which folder? (or 'General' by default)", prompt_editor_folder: "Which folder to save this document? (Leave empty for 'General')", prompt_doc_title: "Give the document a title.",
+                alert_saved_archive: "✅ Document saved in", alert_json_invalid: "❌ Invalid JSON file.", alert_json_restore: "✅ Backup restored!",
+                alert_confirm_replace: "⚠️ This will replace ALL current data. Continue?", alert_folder_exists: "This folder already exists.", alert_enter_name: "Enter a name.",
+                no_folders: "No folders.", empty_folder: "Empty folder", btn_download: "Download", btn_open_editor: "Open editor", btn_delete_folder: "Delete folder"
+            },
+            de: {
+                login_title: "Komitee-Bereich", login_subtitle: "Zugang nur für Mitglieder.", login_password_ph: "Passwort", login_btn: "Anmelden",
+                dash_title: "Dashboard", btn_logout: "Abmelden",
+                tab_caisse: "Kasse", tab_archives: "Archive",
+                caisse_title: "Kassenbuch", caisse_desc_ph: "Beschreibung", caisse_amount_ph: "Betrag", btn_add: "Hinzufügen",
+                table_date: "Datum", table_desc: "Beschreibung", table_amount: "Betrag", table_action: "Aktion",
+                btn_export_csv: "📥 Excel exportieren (CSV)", btn_export_pdf: "📄 PDF erstellen", btn_import_csv: "📤 CSV importieren",
+                archives_title: "Archive & Dokumente", folder_ph: "Name des neuen Ordners", btn_create_folder: "Ordner erstellen",
+                btn_upload: "📤 Datei hochladen", btn_create_doc: "📝 Textdokument erstellen",
+                btn_export_json: "💾 Vollständige Sicherung (JSON)", btn_import_json: "📂 Wiederherstellen (JSON)",
+                editor_title_ph: "Dokumenttitel", editor_text_ph: "Schreiben Sie Ihr Dokument hier...", btn_close: "Schließen ✕",
+                btn_save_archive: "💾 In Archiven speichern", btn_export_txt: "📥 .txt", btn_export_docx: "📥 .docx (Word)", btn_export_editor_pdf: "📥 .pdf",
+                alert_fill_fields: "Füllen Sie alle Felder aus!", alert_delete_line: "Diese Zeile löschen?", alert_delete_folder: "Diesen Ordner löschen?", alert_delete_doc: "Dieses Dokument löschen?",
+                prompt_folder: "In welchem Ordner? (oder 'Allgemein' standardmäßig)", prompt_editor_folder: "In welchem Ordner speichern? (Leer lassen für 'Allgemein')", prompt_doc_title: "Geben Sie dem Dokument einen Titel.",
+                alert_saved_archive: "✅ Dokument gespeichert in", alert_json_invalid: "❌ Ungültige JSON-Datei.", alert_json_restore: "✅ Sicherung wiederhergestellt!",
+                alert_confirm_replace: "⚠️ Dies ersetzt ALLE aktuellen Daten. Fortfahren?", alert_folder_exists: "Dieser Ordner existiert bereits.", alert_enter_name: "Geben Sie einen Namen ein.",
+                no_folders: "Keine Ordner.", empty_folder: "Leerer Ordner", btn_download: "Herunterladen", btn_open_editor: "Editor öffnen", btn_delete_folder: "Ordner löschen"
+            },
+            it: {
+                login_title: "Area Comitato", login_subtitle: "Accesso riservato ai membri.", login_password_ph: "Password", login_btn: "Accedi",
+                dash_title: "Dashboard", btn_logout: "Disconnetti",
+                tab_caisse: "Cassa", tab_archives: "Archivi",
+                caisse_title: "Giornale di Cassa", caisse_desc_ph: "Descrizione", caisse_amount_ph: "Importo", btn_add: "Aggiungi",
+                table_date: "Data", table_desc: "Descrizione", table_amount: "Importo", table_action: "Azione",
+                btn_export_csv: "📥 Esporta Excel (CSV)", btn_export_pdf: "📄 Genera PDF", btn_import_csv: "📤 Importa CSV",
+                archives_title: "Archivi & Documenti", folder_ph: "Nome nuova cartella", btn_create_folder: "Crea cartella",
+                btn_upload: "📤 Carica file", btn_create_doc: "📝 Crea documento di testo",
+                btn_export_json: "💾 Backup completo (JSON)", btn_import_json: "📂 Ripristina (JSON)",
+                editor_title_ph: "Titolo del documento", editor_text_ph: "Scrivi il tuo documento qui...", btn_close: "Chiudi ✕",
+                btn_save_archive: "💾 Salva negli archivi", btn_export_txt: "📥 .txt", btn_export_docx: "📥 .docx (Word)", btn_export_editor_pdf: "📥 .pdf",
+                alert_fill_fields: "Compila tutti i campi!", alert_delete_line: "Eliminare questa riga?", alert_delete_folder: "Eliminare questa cartella?", alert_delete_doc: "Eliminare questo documento?",
+                prompt_folder: "In quale cartella? (o 'Generale' per impostazione predefinita)", prompt_editor_folder: "In quale cartella salvare? (Lascia vuoto per 'Generale')", prompt_doc_title: "Dai un titolo al documento.",
+                alert_saved_archive: "✅ Documento salvato in", alert_json_invalid: "❌ File JSON non valido.", alert_json_restore: "✅ Backup ripristinato!",
+                alert_confirm_replace: "⚠️ Questo sostituirà TUTTI i dati attuali. Continuare?", alert_folder_exists: "Questa cartella esiste già.", alert_enter_name: "Inserisci un nome.",
+                no_folders: "Nessuna cartella.", empty_folder: "Cartella vuota", btn_download: "Scarica", btn_open_editor: "Apri editor", btn_delete_folder: "Elimina cartella"
+            },
+            rm: {
+                login_title: "Spazi da la Cumissiun", login_subtitle: "Access reservà als commembers.", login_password_ph: "Pled-clav", login_btn: "S'annunziar",
+                dash_title: "Tabella da survista", btn_logout: "Sortir",
+                tab_caisse: "Cassa", tab_archives: "Archivs",
+                caisse_title: "Cudesch da cassa", caisse_desc_ph: "Descripziun", caisse_amount_ph: "Summa", btn_add: "Agiuntar",
+                table_date: "Data", table_desc: "Descripziun", table_amount: "Summa", table_action: "Acziun",
+                btn_export_csv: "📥 Export Excel (CSV)", btn_export_pdf: "📄 Generar PDF", btn_import_csv: "📤 Import CSV",
+                archives_title: "Archivs & Documents", folder_ph: "Num dal nov ordinatur", btn_create_folder: "Crear in ordinatur",
+                btn_upload: "📤 Chargiar ina datoteca", btn_create_doc: "📝 Crear in document da text",
+                btn_export_json: "💾 Sgrivadetscha cumpletta (JSON)", btn_import_json: "📂 Restaurar (JSON)",
+                editor_title_ph: "Titel dal document", editor_text_ph: "Scriva tes document qua...", btn_close: "Serrar ✕",
+                btn_save_archive: "💾 Memoriser en ils archivs", btn_export_txt: "📥 .txt", btn_export_docx: "📥 .docx (Word)", btn_export_editor_pdf: "📥 .pdf",
+                alert_fill_fields: "Emplena tut ils champs!", alert_delete_line: "Stizzar questa lingia?", alert_delete_folder: "Stizzar quest ordinatur?", alert_delete_doc: "Stizzar quest document?",
+                prompt_folder: "En tge ordinatur? (u 'General' per standard)", prompt_editor_folder: "En tge ordinatur memorisar? (Lascai vid per 'General')", prompt_doc_title: "Dai in titel al document.",
+                alert_saved_archive: "✅ Document memorisà en", alert_json_invalid: "❌ Datoteca JSON nunvalaivla.", alert_json_restore: "✅ Sgrivadetscha restaurata!",
+                alert_confirm_replace: "⚠️ Quai remplazzarà TUT las datas actualas. Cuntinuar?", alert_folder_exists: "Quest ordinatur exista gia.", alert_enter_name: "Endatescha in num.",
+                no_folders: "Nagins ordinaturs.", empty_folder: "Ordinatur vid", btn_download: "Chargiar giu", btn_open_editor: "Avrir l'editor", btn_delete_folder: "Stizzar l'ordinatur"
+            }
+        };
+
+        let currentLang = localStorage.getItem('vc_admin_lang') || 'fr';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('vc_admin_lang', lang);
+            
+            // Mise à jour des boutons de langue
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`.lang-btn[onclick="setLanguage('${lang}')"]`);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // Traduction des textes
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            // Traduction des placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+            renderArchives(); // Pour retraduire les boutons dynamiques
+        }
+
+        function t(key) {
+            return translations[currentLang] && translations[currentLang][key] ? translations[currentLang][key] : key;
+        }
+
+        // ==========================================
+        // 2. CONNEXION
+        // ==========================================
+        const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
+        const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
+
+        let transactions = [];
+        let archives = {};
+        let isLoggedIn = false;
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            const msg = document.getElementById('authMsg');
+
+            if (email === atob(ENCODED_EMAIL) && pass === atob(ENCODED_PASSWORD)) {
+                isLoggedIn = true;
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('appSection').classList.remove('hidden');
+                msg.textContent = "";
+                loadAllData();
+            } else {
+                msg.textContent = "❌ " + (currentLang === 'fr' ? "Identifiants incorrects." : "Invalid credentials.");
+            }
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            document.getElementById('appSection').classList.add('hidden');
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            transactions = [];
+            archives = {};
+        }
+
+        // ==========================================
+        // 3. ONGLETS & DONNÉES
+        // ==========================================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (tab === 'caisse') {
+                document.getElementById('tabBtnCaisse').classList.add('active');
+                document.getElementById('tabCaisse').classList.remove('hidden');
+                document.getElementById('tabArchives').classList.add('hidden');
+            } else {
+                document.getElementById('tabBtnArchives').classList.add('active');
+                document.getElementById('tabCaisse').classList.add('hidden');
+                document.getElementById('tabArchives').classList.remove('hidden');
+            }
+        }
+
+        function loadAllData() {
+            const savedCaisse = localStorage.getItem('vc_caisse');
+            if (savedCaisse) transactions = JSON.parse(savedCaisse);
+            const savedArchives = localStorage.getItem('vc_archives');
+            if (savedArchives) archives = JSON.parse(savedArchives);
+            renderTable();
+            renderArchives();
+        }
+
+        function saveAllData() {
+            localStorage.setItem('vc_caisse', JSON.stringify(transactions));
+            localStorage.setItem('vc_archives', JSON.stringify(archives));
+        }
+
+        // ==========================================
+        // 4. CAISSE
+        // ==========================================
+        function renderTable() {
+            const tbody = document.querySelector('#txTable tbody');
+            tbody.innerHTML = '';
+            transactions.forEach((tx, index) => {
+                tbody.innerHTML += `<tr>
+                    <td>${tx.date}</td>
+                    <td>${tx.desc}</td>
+                    <td style="color:${tx.amount < 0 ? 'red' : 'green'}">${tx.amount} CHF</td>
+                    <td><button class="btn-red btn-sm" onclick="deleteTransaction(${index})">🗑️</button></td>
+                </tr>`;
+            });
+        }
+
+        function addTransaction() {
+            const date = document.getElementById('txDate').value;
+            const desc = document.getElementById('txDesc').value;
+            const amount = parseFloat(document.getElementById('txAmount').value);
+            if (!date || !desc || isNaN(amount)) return alert(t('alert_fill_fields'));
+            transactions.push({ date, desc, amount });
+            renderTable(); saveAllData();
+            document.getElementById('txDate').value = '';
+            document.getElementById('txDesc').value = '';
+            document.getElementById('txAmount').value = '';
+        }
+
+        function deleteTransaction(index) {
+            if (confirm(t('alert_delete_line'))) {
+                transactions.splice(index, 1);
+                renderTable(); saveAllData();
+            }
+        }
+
+        // ==========================================
+        // 5. ARCHIVES
+        // ==========================================
+        function renderArchives() {
+            const container = document.getElementById('foldersContainer');
+            container.innerHTML = '';
+
+            if (Object.keys(archives).length === 0) {
+                container.innerHTML = `<p style="color:#888; font-style:italic;">${t('no_folders')}</p>`;
+                return;
+            }
+
+            for (const folderName in archives) {
+                let folderHtml = `
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; background: white;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="margin:0; color:#457b9d;">📁 ${folderName}</h3>
+                        <button class="btn-red btn-sm" onclick="deleteFolder('${folderName}')">${t('btn_delete_folder')}</button>
+                    </div>
+                    <div style="margin-top:10px;">
+                `;
+
+                if (archives[folderName].length === 0) {
+                    folderHtml += `<p style="font-size:12px; color:#aaa;">${t('empty_folder')}</p>`;
+                } else {
+                    archives[folderName].forEach(doc => {
+                        folderHtml += `
+                        <div class="doc-item">
+                            <span>${doc.type === 'file' ? '📄' : '📝'} ${doc.name}</span>
+                            <div>
+                                ${doc.type === 'file' 
+                                    ? `<a href="${doc.content}" download="${doc.name}" class="btn-blue btn-sm" style="text-decoration:none; padding:5px 10px; color:white; border-radius:4px; font-size:12px;">${t('btn_download')}</a>` 
+                                    : `<button class="btn-blue btn-sm" onclick="openEditor('${folderName}', '${doc.id}')">${t('btn_open_editor')}</button>`}
+                                <button class="btn-red btn-sm" onclick="deleteDoc('${folderName}', '${doc.id}')">🗑️</button>
+                            </div>
+                        </div>`;
+                    });
+                }
+                folderHtml += `</div></div>`;
+                container.innerHTML += folderHtml;
+            }
+        }
+
+        function createFolder() {
+            const name = document.getElementById('newFolderName').value.trim();
+            if (!name) return alert(t('alert_enter_name'));
+            if (archives[name]) return alert(t('alert_folder_exists'));
+            archives[name] = [];
+            document.getElementById('newFolderName').value = '';
+            renderArchives(); saveAllData();
+        }
+
+        function deleteFolder(name) {
+            if (confirm(t('alert_delete_folder'))) {
+                delete archives[name];
+                renderArchives(); saveAllData();
+            }
+        }
+
+        function uploadFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const folder = prompt(t('prompt_folder'));
+            const targetFolder = folder && folder.trim() !== '' ? folder.trim() : 'General';
+            if (!archives[targetFolder]) archives[targetFolder] = [];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                archives[targetFolder].push({
+                    id: Date.now().toString(),
+                    name: file.name,
+                    type: 'file',
+                    content: e.target.result
+                });
+                renderArchives(); saveAllData();
+            };
+            reader.readAsDataURL(file);
+            event.target.value = ''; 
+        }
+
+        function deleteDoc(folder, id) {
+            if (confirm(t('alert_delete_doc'))) {
+                archives[folder] = archives[folder].filter(doc => doc.id !== id);
+                renderArchives(); saveAllData();
+            }
+        }
+
+        // --- ÉDITEUR ---
+        let editingDocId = null;
+        let currentFolder = null;
+
+        function openEditor(folderName, docId = null) {
+            if (folderName === 'new') {
+                currentFolder = prompt(t('prompt_editor_folder')) || 'General';
+            } else {
+                currentFolder = folderName;
+            }
+            if (!archives[currentFolder]) archives[currentFolder] = [];
+
+            document.getElementById('editorOverlay').classList.remove('hidden');
+            
+            if (docId && docId !== 'new') {
+                const doc = archives[currentFolder].find(d => d.id === docId);
+                if (doc) {
+                    document.getElementById('editorTitle').value = doc.name.replace('.txt', '');
+                    document.getElementById('editorText').value = doc.content;
+                    editingDocId = docId;
+                }
+            } else {
+                document.getElementById('editorTitle').value = "";
+                document.getElementById('editorText').value = "";
+                editingDocId = null;
+            }
+        }
+
+        function closeEditor() {
+            document.getElementById('editorOverlay').classList.add('hidden');
+        }
+
+        function saveTextDoc() {
+            const title = document.getElementById('editorTitle').value.trim();
+            const content = document.getElementById('editorText').value;
+            if (!title) return alert(t('prompt_doc_title'));
+
+            if (editingDocId) {
+                const doc = archives[currentFolder].find(d => d.id === editingDocId);
+                if (doc) { doc.name = title + ".txt"; doc.content = content; }
+            } else {
+                archives[currentFolder].push({ id: Date.now().toString(), name: title + ".txt", type: 'text', content: content });
+            }
+            renderArchives(); saveAllData();
+            alert(t('alert_saved_archive') + " " + currentFolder);
+            closeEditor();
+        }
+
+        function exportTXT() {
+            const title = document.getElementById('editorTitle').value.trim() || "document";
+            const content = document.getElementById('editorText').value;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = title + ".txt";
+            link.click();
+        }
+
+        function exportDOCX() {
+            const title = document.getElementById('editorTitle').value.trim() || "document";
+            const content = document.getElementById('editorText').value;
+            const { Document, Packer, Paragraph, TextRun } = docx;
+            const paragraphs = content.split('\n').map(line => new Paragraph({ children: [new TextRun(line)] }));
+            const doc = new Document({
+                sections: [{
+                    properties: {},
+                    children: [
+                        new Paragraph({ children: [new TextRun({ text: title, bold: true, size: 32 })] }),
+                        ...paragraphs
+                    ],
+                }],
+            });
+            Packer.toBlob(doc).then(blob => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = title + ".docx";
+                link.click();
+            });
+        }
+
+        function exportEditorPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const title = document.getElementById('editorTitle').value.trim() || "document";
+            const content = document.getElementById('editorText').value;
+            doc.setFontSize(22); doc.setTextColor(50, 50, 50);
+            doc.text(title, 20, 20);
+            doc.setFontSize(12);
+            const splitText = doc.splitTextToSize(content, 170); 
+            doc.text(splitText, 20, 35);
+            doc.save(title + ".pdf");
+        }
+
+        // ==========================================
+        // 6. EXPORTS GLOBAUX
+        // ==========================================
+        function exportCSV() {
+            let csv = "Date,Description,Amount\n";
+            transactions.forEach(tx => { csv += `"${tx.date}","${tx.desc}",${tx.amount}\n`; });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Vespacaution_Caisse.csv";
+            link.click();
+        }
+
+        function importCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const lines = e.target.result.split('\n');
+                for (let i = 1; i < lines.length; i++) {
+                    const [date, desc, amount] = lines[i].split(',');
+                    if (date && desc && amount) {
+                        transactions.push({ date: date.replace(/"/g, ''), desc: desc.replace(/"/g, ''), amount: parseFloat(amount) });
+                    }
+                }
+                renderTable(); saveAllData();
+            };
+            reader.readAsText(file);
+        }
+
+        function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(22); doc.setTextColor(201, 155, 72);
+            doc.text("Rapport Financier - Vespacaution", 20, 20);
+            doc.setFontSize(12); doc.setTextColor(50, 50, 50);
+            doc.text("Généré le : " + new Date().toLocaleDateString(), 20, 30);
+            const tableData = transactions.map(tx => [tx.date, tx.desc, tx.amount + " CHF"]);
+            const total = transactions.reduce((sum, tx) => sum + tx.amount, 0);
+            doc.autoTable({
+                startY: 40,
+                head: [['Date', 'Description', 'Amount']],
+                body: tableData,
+                foot: [['', 'TOTAL', total + " CHF"]],
+                headStyles: { fillColor: [201, 155, 72] }
+            });
+            doc.save("Vespacaution_Rapport.pdf");
+        }
+
+        function exportJSON() {
+            const dataToSave = {
+                app: "Vespacaution",
+                version: "3.0",
+                date: new Date().toISOString(),
+                caisse: transactions,
+                archives: archives 
+            };
+            const jsonString = JSON.stringify(dataToSave, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Vespacaution_SAUVEGARDE_TOTALE_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+// ==========================================
+// 7. EFFACER TOUTES LES DONNÉES
+// ==========================================
+function clearAllData() {
+    const msg = currentLang === 'fr' ? "⚠️ Attention : Cela va supprimer TOUTES tes données (Caisse + Archives). Es-tu sûr ?" : "⚠️ Warning: This will delete ALL your data (Cash + Archives). Are you sure?";
+    
+    if (confirm(msg)) {
+        // On vide la mémoire
+        transactions = [];
+        archives = {};
+        
+        // On vide le stockage local
+        localStorage.removeItem('vc_caisse');
+        localStorage.removeItem('vc_archives');
+        
+        // On met à jour l'écran
+        renderTable();
+        renderArchives();
+        
+        alert(currentLang === 'fr' ? "✅ Toutes les données ont été effacées." : "✅ All data has been cleared.");
+    }
+}
+        
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.caisse || parsed.archives) {
+                        if(confirm(t('alert_confirm_replace'))) {
+                            if (parsed.caisse) transactions = parsed.caisse;
+                            if (parsed.archives) archives = parsed.archives;
+                            renderTable(); renderArchives(); saveAllData();
+                            alert(t('alert_json_restore'));
+                        }
+                    } else {
+                        alert(t('alert_json_invalid'));
+                    }
+                } catch (err) {
+                    alert(t('alert_json_invalid'));
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Initialisation de la langue au chargement
+        setLanguage(currentLang);
+    </script>
+</body>
+</html>
