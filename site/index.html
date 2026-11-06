@@ -1421,13 +1421,16 @@ function closeMobileMenu() {
             return currentUrl.replace('/beta/site/', '/site/');
         }
 
-        function addLongPressEvents() {
+                function addLongPressEvents() {
             const logo = document.querySelector('.logo-container');
+            let isLongPress = false;
 
-                       function handleLongPress(e) {
-                e.preventDefault(); // Empêche le menu contextuel
+            function handlePointerDown(e) {
+                isLongPress = false; // Reset à chaque nouveau clic
                 
                 pressTimer = setTimeout(() => {
+                    isLongPress = true; // Le clic long a été détecté
+                    
                     const isBetaActive = checkBetaMode();
                     
                     if (isBetaActive) {
@@ -1436,13 +1439,35 @@ function closeMobileMenu() {
                             window.location.href = getStableUrl();
                         }
                     } else {
-                        // Plus de mot de passe, on demande juste confirmation
-                        if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
-                            localStorage.setItem('vc_beta_mode', 'true');
-                            window.location.href = getBetaUrl();
+                        if (checkBetaUnlocked()) {
+                            if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
+                                localStorage.setItem('vc_beta_mode', 'true');
+                                window.location.href = getBetaUrl();
+                            }
+                        } else {
+                            const password = prompt("🔒 Accès Beta restreint.\n\nEntre le mot de passe pour débloquer l'accès Beta :");
+                            
+                            if (password === BETA_PASSWORD) {
+                                localStorage.setItem('vc_beta_unlocked', 'true');
+                                if (confirm("✅ Mot de passe correct !\n\nVeux-tu activer le mode Beta de Vespacaution ?")) {
+                                    localStorage.setItem('vc_beta_mode', 'true');
+                                    window.location.href = getBetaUrl();
+                                }
+                            } else if (password !== null) {
+                                alert("❌ Mot de passe incorrect. Accès Beta refusé.");
+                            }
                         }
                     }
-                }, 2000);
+                }, 2000); // 2 secondes
+            }
+
+            function handlePointerUp(e) {
+                clearTimeout(pressTimer);
+                // Si ce n'était pas un appui long, on fait le comportement normal (retour accueil)
+                if (!isLongPress) {
+                    window.location.hash = ''; 
+                    window.location.href = window.location.href.split('#')[0]; // Retour à l'accueil propre
+                }
             }
 
             function cancelLongPress() { 
@@ -1450,15 +1475,13 @@ function closeMobileMenu() {
             }
 
             if (logo) {
-                logo.addEventListener('mousedown', handleLongPress);
-                logo.addEventListener('touchstart', handleLongPress);
-                logo.addEventListener('mouseup', cancelLongPress);
-                logo.addEventListener('mouseleave', cancelLongPress);
-                logo.addEventListener('touchend', cancelLongPress);
-                logo.addEventListener('touchcancel', cancelLongPress);
+                // On utilise pointerdown/pointerup pour gérer souris et tactile
+                logo.addEventListener('pointerdown', handlePointerDown);
+                logo.addEventListener('pointerup', handlePointerUp);
+                logo.addEventListener('pointerleave', cancelLongPress);
+                logo.addEventListener('pointercancel', cancelLongPress);
             }
         }
-
         function handleAutoBetaRedirect() {
             if (checkBetaMode()) {
                 if (!window.location.href.includes('/beta/')) {
