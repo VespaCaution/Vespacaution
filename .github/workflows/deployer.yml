@@ -19,7 +19,7 @@ jobs:
       - name: Inject Secrets into admin.html
         run: |
           # Remplace la variable par le secret TOKEN_SECRET
-          sed -i "s|%%TOKEN_SECRET%%|${{ secrets.TOKEN_SECRET }}|g" site/apps/admin/index.html
+          sed -i "s|%%TOKEN_SECRET%%|${{ secrets.TOKEN_SECRET }}|g" apps/admin/index.html
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
