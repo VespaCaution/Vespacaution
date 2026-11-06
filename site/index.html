@@ -1396,6 +1396,83 @@ document.addEventListener('click', function(event) {
                     .catch(err => console.log('Erreur Service Worker:', err));
             });
         }
+                // ==========================================
+        // GESTION DE LA VERSION BETA (Long Press)
+        // ==========================================
+        
+        let pressTimer;
+        const betaPath = "/beta/site/"; // Le chemin vers la version beta
+
+        // Fonction pour vérifier si on est déjà en beta
+        function checkBetaMode() {
+            return localStorage.getItem('vc_beta_mode') === 'true';
+        }
+
+        // Ajouter la détection du "Long Press" (Appui long) sur l'application
+        function addLongPressEvents() {
+            const appCards = document.querySelectorAll('.app-card');
+            const logo = document.querySelector('.logo-container');
+
+            // Fonction générique pour gérer l'appui long
+            function handleLongPress(element, e) {
+                e.preventDefault(); // Empêche le menu contextuel du navigateur
+                pressTimer = setTimeout(() => {
+                    const isBetaActive = checkBetaMode();
+                    const message = isBetaActive 
+                        ? "Tu es actuellement en mode Beta.\n\nVeux-tu revenir à la version stable ?" 
+                        : "Veux-tu activer le mode Beta de Vespacaution ?";
+                    
+                    if (confirm(message)) {
+                        localStorage.setItem('vc_beta_mode', !isBetaActive);
+                        // Redirection immédiate
+                        window.location.href = !isBetaActive ? betaPath : "/site/";
+                    }
+                }, 1000); // 1000 ms = 1 seconde d'appui long
+            }
+
+            // Annuler le timer si on relâche ou bouge
+            function cancelLongPress() {
+                clearTimeout(pressTimer);
+            }
+
+            // Appliquer l'événement sur chaque carte d'application
+            appCards.forEach(card => {
+                card.addEventListener('mousedown', (e) => handleLongPress(card, e));
+                card.addEventListener('touchstart', (e) => handleLongPress(card, e));
+                card.addEventListener('mouseup', cancelLongPress);
+                card.addEventListener('mouseleave', cancelLongPress);
+                card.addEventListener('touchend', cancelLongPress);
+                card.addEventListener('touchcancel', cancelLongPress);
+            });
+
+            // Appliquer l'événement sur le logo pour revenir en arrière
+            if (logo) {
+                logo.addEventListener('mousedown', (e) => handleLongPress(logo, e));
+                logo.addEventListener('touchstart', (e) => handleLongPress(logo, e));
+                logo.addEventListener('mouseup', cancelLongPress);
+                logo.addEventListener('mouseleave', cancelLongPress);
+                logo.addEventListener('touchend', cancelLongPress);
+                logo.addEventListener('touchcancel', cancelLongPress);
+            }
+        }
+
+        // Fonction pour rediriger automatiquement si le mode beta est actif au chargement
+        function handleAutoBetaRedirect() {
+            if (checkBetaMode()) {
+                const currentPath = window.location.pathname;
+                // Si on est sur le site stable, on redirige vers beta
+                if (!currentPath.includes('/beta/')) {
+                    window.location.href = betaPath;
+                }
+            } else {
+                // Si on est sur beta mais que le mode a été désactivé (depuis un autre onglet)
+                if (window.location.pathname.includes('/beta/')) {
+                    window.location.href = "/site/";
+                }
+            }
+        }
+                // Ajouter les événements
+        addLongPressEvents();
     </script>
 </body>
 </html>
