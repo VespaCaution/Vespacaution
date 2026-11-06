@@ -1365,7 +1365,7 @@ function closeMobileMenu() {
             }
         }
 
-        // ==========================================
+                // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
         function setupContactForm() {
@@ -1401,17 +1401,24 @@ function closeMobileMenu() {
             });
         }
 
+        // ==========================================
+        // 6. ROUTING & NAVIGATION LOGIC
+        // ==========================================
+        function closeMobileMenu() {
+            document.querySelector('nav').classList.remove('active');
+        }
+
         window.addEventListener('hashchange', render);
+        
         // Fermer le menu mobile si on clique en dehors
-document.addEventListener('click', function(event) {
-    const nav = document.querySelector('nav');
-    const burger = document.querySelector('.burger-menu');
-    
-    // Si le menu est ouvert et qu'on clique en dehors du menu ET en dehors du bouton burger
-    if (nav.classList.contains('active') && !nav.contains(event.target) && !burger.contains(event.target)) {
-        closeMobileMenu();
-    }
-});
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const burger = document.querySelector('.burger-menu');
+            if (nav.classList.contains('active') && !nav.contains(event.target) && !burger.contains(event.target)) {
+                closeMobileMenu();
+            }
+        });
+
         // Fermer le dropdown si on clique ailleurs
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('resourcesDropdown');
@@ -1420,38 +1427,36 @@ document.addEventListener('click', function(event) {
                 closeDropdown();
             }
         });
-        
-        setLanguage(currentLang);
 
-        // Enregistrement du Service Worker pour l'installation PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker enregistré !'))
-                    .catch(err => console.log('Erreur Service Worker:', err));
-            });
-        }
-                               // ==========================================
-        // GESTION DE LA VERSION BETA (Long Press 2s sur le logo -> Retour stable)
         // ==========================================
-        
+        // 7. GESTION DU RETOUR À LA VERSION STABLE (Long Press 2s)
+        // ==========================================
         let pressTimer;
+
+        // Fonction pour trouver l'URL stable (ex: /beta/site/ -> /site/)
+        function getStableUrl() {
+            const currentUrl = window.location.href;
+            return currentUrl.replace('/beta/site/', '/site/');
+        }
 
         function addLongPressEvents() {
             const logo = document.querySelector('.logo-container');
 
             function handleLongPress(e) {
                 e.preventDefault(); // Empêche le menu contextuel
+                
                 pressTimer = setTimeout(() => {
                     if (confirm("Tu es actuellement en mode BETA.\n\nVeux-tu revenir à la version STABLE ?")) {
+                        // On désactive le mode beta
                         localStorage.setItem('vc_beta_mode', 'false');
-                        window.location.href = "/site/"; // Retour au site stable
+                        // On redirige vers la stable
+                        window.location.href = getStableUrl();
                     }
-                }, 2000); // 2000 ms = 2 secondes d'appui long
+                }, 2000); // 2 secondes d'appui long
             }
 
-            function cancelLongPress() {
-                clearTimeout(pressTimer);
+            function cancelLongPress() { 
+                clearTimeout(pressTimer); 
             }
 
             if (logo) {
@@ -1464,7 +1469,23 @@ document.addEventListener('click', function(event) {
             }
         }
 
-        // Initialisation au chargement de la page
+        // ==========================================
+        // 8. INITIALISATION (BOOT)
+        // ==========================================
+        
+        // On applique la langue
+        setLanguage(currentLang);
+
+        // On enregistre le Service Worker (PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker enregistré !'))
+                    .catch(err => console.log('Erreur Service Worker:', err));
+            });
+        }
+
+        // On lance l'événement d'appui long une fois que la page est chargée
         document.addEventListener('DOMContentLoaded', () => {
             addLongPressEvents();
         });
