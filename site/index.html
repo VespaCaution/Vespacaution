@@ -1424,8 +1424,8 @@ function closeMobileMenu() {
         function addLongPressEvents() {
             const logo = document.querySelector('.logo-container');
 
-            function handleLongPress(e) {
-                e.preventDefault(); 
+                       function handleLongPress(e) {
+                e.preventDefault(); // Empêche le menu contextuel
                 
                 pressTimer = setTimeout(() => {
                     const isBetaActive = checkBetaMode();
@@ -1436,23 +1436,10 @@ function closeMobileMenu() {
                             window.location.href = getStableUrl();
                         }
                     } else {
-                        if (checkBetaUnlocked()) {
-                            if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
-                                localStorage.setItem('vc_beta_mode', 'true');
-                                window.location.href = getBetaUrl();
-                            }
-                        } else {
-                            const password = prompt("🔒 Accès Beta restreint.\n\nEntre le mot de passe pour débloquer l'accès Beta :");
-                            
-                            if (password === BETA_PASSWORD) {
-                                localStorage.setItem('vc_beta_unlocked', 'true');
-                                if (confirm("✅ Mot de passe correct !\n\nVeux-tu activer le mode Beta de Vespacaution ?")) {
-                                    localStorage.setItem('vc_beta_mode', 'true');
-                                    window.location.href = getBetaUrl();
-                                }
-                            } else if (password !== null) {
-                                alert("❌ Mot de passe incorrect. Accès Beta refusé.");
-                            }
+                        // Plus de mot de passe, on demande juste confirmation
+                        if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
+                            localStorage.setItem('vc_beta_mode', 'true');
+                            window.location.href = getBetaUrl();
                         }
                     }
                 }, 2000);
