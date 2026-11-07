@@ -40,7 +40,7 @@
     <div id="authSection" class="card" style="text-align: center;">
         <h1>🔒 <span data-i18n="admin_login_title">Espace Comité</span></h1>
         <p data-i18n="admin_login_desc">Accès réservé aux membres.</p>
-        <input type="email" id="email" placeholder="Email (comite@vespacaution.ch)">
+        <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Mot de passe">
         <button onclick="login()" style="margin-top: 15px;" data-i18n="admin_login_btn">Se connecter</button>
         <p id="authMsg" style="color: red; font-weight: bold;"></p>
@@ -137,7 +137,7 @@
         // ==========================================
         const adminTranslations = {
             fr: {
-                admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres.", admin_login_btn: "Se connecter",
+                admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres du comité.", admin_login_btn: "Se connecter",
                 admin_dashboard: "Tableau de bord", admin_sync_ready: "Prêt", admin_sync_save: "☁️ Sauvegarder", admin_sync_load: "☁️ Charger", admin_logout: "Déconnexion",
                 admin_tab_caisse: "💰 Caisse", admin_tab_archives: "📁 Archives", admin_tab_editor: "📝 Éditeur",
                 admin_caisse_title: "💰 Journal de Caisse", admin_type_receive: "🟢 Reçu", admin_type_spend: "🔴 Dépense",
@@ -149,7 +149,7 @@
                 admin_save_local: "💾 Sauvegarde locale (JSON)", admin_restore_local: "📂 Restaurer (JSON)"
             },
             en: {
-                admin_login_title: "Committee Space", admin_login_desc: "Members only.", admin_login_btn: "Log in",
+                admin_login_title: "Committee Space", admin_login_desc: "Comitee members only.", admin_login_btn: "Log in",
                 admin_dashboard: "Dashboard", admin_sync_ready: "Ready", admin_sync_save: "☁️ Save", admin_sync_load: "☁️ Load", admin_logout: "Log out",
                 admin_tab_caisse: "💰 Cash", admin_tab_archives: "📁 Archives", admin_tab_editor: "📝 Editor",
                 admin_caisse_title: "💰 Cash Journal", admin_type_receive: "🟢 Received", admin_type_spend: "🔴 Spent",
@@ -161,7 +161,7 @@
                 admin_save_local: "💾 Local Backup (JSON)", admin_restore_local: "📂 Restore (JSON)"
             },
             de: {
-                admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Mitglieder.", admin_login_btn: "Anmelden",
+                admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Komitee-Mitglieder.", admin_login_btn: "Anmelden",
                 admin_dashboard: "Dashboard", admin_sync_ready: "Bereit", admin_sync_save: "☁️ Speichern", admin_sync_load: "☁️ Laden", admin_logout: "Abmelden",
                 admin_tab_caisse: "💰 Kasse", admin_tab_archives: "📁 Archiv", admin_tab_editor: "📝 Editor",
                 admin_caisse_title: "💰 Kassenbuch", admin_type_receive: "🟢 Eingenommen", admin_type_spend: "🔴 Ausgegeben",
@@ -173,7 +173,7 @@
                 admin_save_local: "💾 Lokales Backup (JSON)", admin_restore_local: "📂 Wiederherstellen (JSON)"
             },
             it: {
-                admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri.", admin_login_btn: "Accedi",
+                admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per comitato membri.", admin_login_btn: "Accedi",
                 admin_dashboard: "Dashboard", admin_sync_ready: "Pronto", admin_sync_save: "☁️ Salva", admin_sync_load: "☁️ Carica", admin_logout: "Disconnetti",
                 admin_tab_caisse: "💰 Cassa", admin_tab_archives: "📁 Archivio", admin_tab_editor: "📝 Editor",
                 admin_caisse_title: "💰 Libro Cassa", admin_type_receive: "🟢 Ricevuto", admin_type_spend: "🔴 Speso",
@@ -185,7 +185,7 @@
                 admin_save_local: "💾 Backup locale (JSON)", admin_restore_local: "📂 Ripristina (JSON)"
             },
             rm: {
-                admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers.", admin_login_btn: "S'annunziar",
+                admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per comité commembers.", admin_login_btn: "S'annunziar",
                 admin_dashboard: "Dashboard", admin_sync_ready: "Pront", admin_sync_save: "☁️ Memorisar", admin_sync_load: "☁️ Chargiar", admin_logout: "Sortir",
                 admin_tab_caisse: "💰 Cassa", admin_tab_archives: "📁 Archiv", admin_tab_editor: "📝 Editor",
                 admin_caisse_title: "💰 Cudesch da cassa", admin_type_receive: "🟢 Recevì", admin_type_spend: "🔴 Spendì",
