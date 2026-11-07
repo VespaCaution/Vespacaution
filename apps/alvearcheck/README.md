@@ -1,42 +1,42 @@
 # 🐝 AlvearCheck v1.3
 
-**AlvearCheck** is a Progressive Web App (PWA) for beekeepers to track their apiaries and hives. It runs in the browser, can be installed on a phone, and works with voice commands in 5 languages.
+**AlvearCheck** est une application web progressive (PWA) pour les apiculteurs. Elle permet de suivre les ruchers et les ruches depuis un téléphone, avec commandes vocales, synchronisation cloud et installation sur l'écran d'accueil.
 
 ---
 
-## ✨ Features
+## ✨ Fonctionnalités
 
-- **Apiary Management:** Create apiaries with a name, orientation, and GPS coordinates.
-- **Hive Tracking:** For each hive, record:
-  - Number of male frames, honey frames, and brood frames.
-  - Queen color (blue, white, yellow, red, green).
-  - Number of varroa mites.
-  - Swarm risk (with automatic 14-day alert).
-  - Free-form remarks.
-- **Visit History:** Every save creates a timestamped visit entry. Export visits as CSV.
-- **Swarm Alerts:** If a hive is marked "at risk", a ⚠️ warning appears after 14 days.
-- **AI Voice Dictation:** Use the microphone to fill forms and navigate the app. Powered by Groq (Whisper + LLM).
-- **Cloud Sync:** Data is stored in Supabase and synced across devices.
-- **Biometric Login:** Sign in with Face ID / fingerprint via Passkeys.
-- **Multi-language:** English, French, German, Italian, and Romansh.
-- **PWA:** Installable on Android and iOS. Works offline (after first load).
-- **Pull-to-Refresh Disabled:** Prevents accidental page reloads on mobile.
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Vanilla HTML, CSS, JavaScript (single `index.html`).
-- **Backend:** [Supabase](https://supabase.com/) (Auth + PostgreSQL database).
-- **AI:** [Groq](https://groq.com/) (Whisper for transcription, Llama/Qwen for form understanding).
-- **PWA:** `manifest.json` + `sw.js` (service worker).
+- **Gestion des ruchers :** Création avec nom, orientation et coordonnées GPS (bouton de géolocalisation).
+- **Suivi des ruches :** Pour chaque ruche, enregistrement de :
+  - Nombre de cadres mâles, cadres de miel, cadres de couvain.
+  - Couleur de la reine (bleu, blanc, jaune, rouge, vert).
+  - Nombre de varroas.
+  - Risque d'essaimage (avec alerte automatique après 14 jours).
+  - Remarques libres.
+- **Historique des visites :** Chaque sauvegarde crée une entrée horodatée. Export possible en CSV.
+- **Alertes d'essaimage :** Si une ruche est marquée "à risque", un ⚠️ apparaît après 14 jours sur le rucher et la ruche.
+- **Dictée vocale par IA :** Utilisation du microphone pour remplir les formulaires et naviguer. Propulsé par Groq (Whisper + LLM).
+- **Synchronisation cloud :** Données stockées sur Supabase et synchronisées entre appareils.
+- **Connexion biométrique :** Face ID / empreinte digitale via les Passkeys (WebAuthn).
+- **Multi-langues :** Anglais, Français, Allemand, Italien, Romanche.
+- **PWA installable :** Sur Android et iOS. Fonctionne hors ligne (après le premier chargement).
+- **Pull-to-Refresh désactivé :** Évite le rechargement accidentel de la page sur mobile.
 
 ---
 
-## 🚀 Setup
+## 🛠️ Technologies utilisées
 
-### 1. Clone the repository
+- **Frontend :** HTML, CSS, JavaScript (fichier `index.html` unique).
+- **Backend :** [Supabase](https://supabase.com/) (Auth + base de données PostgreSQL).
+- **IA :** [Groq](https://groq.com/) (Whisper pour la transcription, Llama/Qwen pour la compréhension des formulaires).
+- **PWA :** `manifest.json` + `sw.js` (service worker).
+
+---
+
+## 🚀 Installation
+
+### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/your-username/AlvearCheck.git
+git clone https://github.com/ton-utilisateur/AlvearCheck.git
 cd AlvearCheck
