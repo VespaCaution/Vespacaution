@@ -78,6 +78,10 @@
             max-width: 250px;
             object-fit: contain;
             transition: transform 0.3s ease;
+                /* DÉSACTIVER LE MENU D'IMAGE SUR MOBILE */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         }
         .logo-container:hover img { transform: scale(1.03); }
@@ -1421,15 +1425,15 @@ function closeMobileMenu() {
             return currentUrl.replace('/beta/site/', '/site/');
         }
 
-                function addLongPressEvents() {
+        function addLongPressEvents() {
             const logo = document.querySelector('.logo-container');
             let isLongPress = false;
 
             function handlePointerDown(e) {
-                isLongPress = false; // Reset à chaque nouveau clic
+                isLongPress = false; 
                 
                 pressTimer = setTimeout(() => {
-                    isLongPress = true; // Le clic long a été détecté
+                    isLongPress = true; 
                     
                     const isBetaActive = checkBetaMode();
                     
@@ -1458,15 +1462,14 @@ function closeMobileMenu() {
                             }
                         }
                     }
-                }, 2000); // 2 secondes
+                }, 2000); 
             }
 
             function handlePointerUp(e) {
                 clearTimeout(pressTimer);
-                // Si ce n'était pas un appui long, on fait le comportement normal (retour accueil)
                 if (!isLongPress) {
                     window.location.hash = ''; 
-                    window.location.href = window.location.href.split('#')[0]; // Retour à l'accueil propre
+                    window.location.href = window.location.href.split('#')[0]; 
                 }
             }
 
@@ -1475,7 +1478,9 @@ function closeMobileMenu() {
             }
 
             if (logo) {
-                // On utilise pointerdown/pointerup pour gérer souris et tactile
+                // On bloque le menu contextuel (Enregistrer l'image, etc.)
+                logo.addEventListener('contextmenu', (e) => e.preventDefault());
+                
                 logo.addEventListener('pointerdown', handlePointerDown);
                 logo.addEventListener('pointerup', handlePointerUp);
                 logo.addEventListener('pointerleave', cancelLongPress);
