@@ -14,7 +14,7 @@ Bienvenue sur le dépôt officiel de **Vespacaution**, une association suisse à
 
 Le site principal sert de portail vers les différentes applications et ressources.
 
-- **Site Web** : [https://vespacaution.github.io](https://vespacaution.github.io)
+- **Site Web** : [https://vespacaution.ch](https://vespacaution.ch)
 - **Langues** : Français, Anglais, Allemand, Italien, Romanche (Rumantsch Grischun)
 - **Fonctionnalités** : Design responsive, PWA (installable), mode sombre/clair (selon le système), système de traduction complet.
 
