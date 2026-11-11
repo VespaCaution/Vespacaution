@@ -148,6 +148,10 @@
         .social-icons img { height: 24px; width: 24px; transition: transform 0.2s; filter: grayscale(100%) opacity(0.7); }
         .social-icons img:hover { transform: translateY(-2px); filter: grayscale(0%) opacity(1); }
 .social-icons a { width: auto !important; display: inline-block; } 
+
+        /* NEW: Search button */
+        .search-btn { background: none; border: none; color: var(--primary); font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 50%; transition: background 0.2s; line-height: 1; }
+        .search-btn:hover { background: var(--primary-light); }
         
         /* --- MAIN LAYOUT --- */
         main { max-width: 1000px; margin: 30px auto; padding: 0 20px; min-height: 70vh; animation: fadeIn 0.4s ease; }
@@ -256,6 +260,14 @@
         }
         .member-circle img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* NEW: Blog CSS */
+        .blog-post { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .blog-post:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .blog-post h3 { color: var(--primary); margin-bottom: 6px; }
+        .blog-post .blog-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+        .blog-post .blog-body { font-size: 0.95rem; color: var(--text-main); }
+        .blog-post .blog-body p { margin-bottom: 10px; }
+
         /* --- PDF MODAL --- */
         .pdf-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -289,6 +301,20 @@
             display: none; font-size: 1.8rem; cursor: pointer;
             color: var(--primary); background: none; border: none; z-index: 1002;
         }
+
+        /* NEW: Search modal */
+        #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; padding: 20px; }
+        #searchModal.active { display: flex; align-items: flex-start; justify-content: center; }
+        .search-box { background: var(--surface); max-width: 640px; width: 100%; margin-top: 60px; padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow-hover); }
+        .search-box h3 { color: var(--primary); margin-bottom: 12px; }
+        .search-box input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--bg-color); color: var(--text-main); margin-bottom: 12px; }
+        .search-box input:focus { outline: none; border-color: var(--primary); }
+        #searchResults { max-height: 50vh; overflow-y: auto; }
+        .search-result { display: block; padding: 12px 14px; border-radius: 8px; margin-bottom: 6px; border: 1px solid var(--border); background: var(--bg-color); transition: all 0.2s; cursor: pointer; }
+        .search-result:hover { background: var(--primary-light); border-color: var(--primary); }
+        .search-result .sr-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 2px 8px; border-radius: 20px; margin-right: 8px; text-transform: uppercase; }
+        .search-result .sr-title { font-weight: 600; color: var(--text-main); }
+        .search-result .sr-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
 
         @media (max-width: 768px) {
             header { padding: 10px 15px; justify-content: space-between; flex-direction: row; }
@@ -344,6 +370,7 @@
     <a href="#" data-i18n="nav_home" onclick="closeMobileMenu()">Accueil</a>
     <a href="#apps" data-i18n="nav_apps" onclick="closeMobileMenu()">Apps</a>
     <a href="#members" data-i18n="nav_members" onclick="closeMobileMenu()">Membres</a>
+    <a href="#blog" data-i18n="nav_blog" onclick="closeMobileMenu()">Blog</a>
     
     <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown(event)">
@@ -361,6 +388,8 @@
 
     <a href="#support" data-i18n="nav_support" onclick="closeMobileMenu()">Soutenir</a>
     <a href="#contact" data-i18n="nav_contact" onclick="closeMobileMenu()">Contact</a>
+
+    <button class="search-btn" onclick="openSearch()" title="Rechercher" aria-label="Rechercher">🔍</button>
     
     <div class="social-icons">
         <a href="https://youtube.com/@hornetjunkie?si=8nSpCgGxehuk5r39" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
@@ -379,6 +408,7 @@
         <li><a href="#" data-i18n="nav_home">Accueil</a></li>
         <li><a href="#apps" data-i18n="nav_apps">Apps</a></li>
         <li><a href="#members" data-i18n="nav_members">Membres</a></li>
+        <li><a href="#blog" data-i18n="nav_blog">Blog</a></li>
         <li><a href="#support" data-i18n="nav_support">Soutenir</a></li>
         <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
         
@@ -443,11 +473,61 @@
         <iframe id="pdfIframe" class="pdf-iframe" src=""></iframe>
     </div>
 
+    <!-- SEARCH MODAL -->
+    <div id="searchModal">
+        <div class="search-box">
+            <h3>🔍 Rechercher sur Vespacaution</h3>
+            <input type="text" id="searchInput" oninput="performSearch()" placeholder="App, page, article, membre...">
+            <div id="searchResults"></div>
+            <button onclick="closeSearch()" class="btn" style="width:100%; margin-top:12px;">Fermer</button>
+        </div>
+    </div>
+
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
+        // --- DYNAMIC CONTENT (Gist) ---
+        const GIST_ID = "f4fe8523136960f0289660123aa32cb7";
+        const GIST_FILENAME = "vespacaution_data.json";
+        const GIST_CACHE_KEY = "vc_gist_cache";
+        const GIST_CACHE_TTL = 5 * 60 * 1000;
+        let dynamicBlog = [];
+        let dynamicMembers = [];
+
+        const FALLBACK_MEMBERS = [
+            { id: "g", name: "Grégoire Hupka", role: { fr: "Vice président de Vespacaution et de la société apicole de Morges, Référent de la société apicole de Morges, Spécialiste destructeur et télémètre.", en: "Vice President of Vespacaution and the Beekeeping Society of Morges, Representative of the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.", de: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Ansprechpartner der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.", it: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Referente della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.", rm: "Vicepresident da Vespacaution e da la societad apicola da Morges, Referent da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter." }, image: "gregoire.png", group: "committee" },
+            { id: "b", name: "Ben Hupka", role: { fr: "Président de Vespacaution, Développeur.", en: "President of Vespacaution, Developer.", de: "Präsident von Vespacaution, Entwickler.", it: "Presidente di Vespacaution, Sviluppatore.", rm: "President da Vespacaution, Sviluppader." }, image: "ben.png", group: "committee" }
+        ];
+
+        async function loadDynamicContent() {
+            try {
+                const cached = JSON.parse(localStorage.getItem(GIST_CACHE_KEY) || "null");
+                if (cached && (Date.now() - cached.ts < GIST_CACHE_TTL)) {
+                    dynamicBlog = cached.blog || [];
+                    dynamicMembers = cached.members || [];
+                    if (['#blog', '#members', ''].includes(window.location.hash) || window.location.hash === '') render();
+                    return;
+                }
+            } catch (e) {}
+            try {
+                const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+                if (!res.ok) throw new Error('Gist fetch failed: ' + res.status);
+                const data = await res.json();
+                const file = data.files && data.files[GIST_FILENAME];
+                if (file && file.content) {
+                    const parsed = JSON.parse(file.content);
+                    dynamicBlog = parsed.blog || [];
+                    dynamicMembers = parsed.members || [];
+                    localStorage.setItem(GIST_CACHE_KEY, JSON.stringify({ ts: Date.now(), blog: dynamicBlog, members: dynamicMembers }));
+                    if (['#blog', '#members', ''].includes(window.location.hash) || window.location.hash === '') render();
+                }
+            } catch (e) {
+                console.warn('[Vespacaution] Gist unreachable, using fallback.', e);
+            }
+        }
+
         // --- LOGIQUE MENU DÉROULANT & PDF ---
-                function toggleDropdown(event) {
+        function toggleDropdown(event) {
             event.stopPropagation();
             const dropdown = document.getElementById('resourcesDropdown');
             const triangle = document.getElementById('dropdownTriangle');
@@ -482,6 +562,7 @@
                home_become_member: "Become a Member",
                 nav_follow: "Follow us",                
                 nav_members: "Members",
+                nav_blog: "Blog",
                 members_title: "The Team",
                 members_committee: "Committee",
                 members_all: "All members",
@@ -519,12 +600,14 @@
                 privacy_h5: "5. Analytics", privacy_t5: "We use Umami Analytics to measure site traffic. Umami is privacy-friendly, does not use cookies, and does not track personal data.",
                 privacy_h6: "6. External Links", privacy_t6: "Our site contains links to external sites. We are not responsible for their privacy practices.",
                 privacy_h7: "7. Contact", privacy_t7: "If you have any questions about this Privacy Policy, please use the contact page.",
-                contact_me: "📬 Contact Us", file_status: "Status File (PDF)", file_printables: "Printables (PDF)"
+                contact_me: "📬 Contact Us", file_status: "Status File (PDF)", file_printables: "Printables (PDF)",
+                blog_title: "📰 Blog", blog_empty: "No articles yet."
             },
             fr: {
                 home_become_member: "Devenir membre",
                 nav_follow: "Suivez-nous",               
                 nav_members: "Membres",
+                nav_blog: "Blog",
                 members_title: "L'Équipe",
                 members_committee: "Au comité",
                 members_all: "Tous les membres",
@@ -562,12 +645,14 @@
                 privacy_h5: "5. Analytique", privacy_t5: "Nous utilisons Umami Analytics pour mesurer le trafic. Umami respecte la vie privée, n'utilise pas de cookies et ne suit aucune donnée personnelle.",
                 privacy_h6: "6. Liens externes", privacy_t6: "Notre site contient des liens vers des sites externes. Nous ne sommes pas responsables de leurs pratiques en matière de confidentialité.",
                 privacy_h7: "7. Contact", privacy_t7: "Pour toute question, veuillez utiliser la page de contact.",
-                contact_me: "📬 Contactez-nous", file_status: "Fichier Statuts (PDF)", file_printables: "Imprimables (PDF)"
+                contact_me: "📬 Contactez-nous", file_status: "Fichier Statuts (PDF)", file_printables: "Imprimables (PDF)",
+                blog_title: "📰 Blog", blog_empty: "Aucun article pour le moment."
             },
             de: {
                home_become_member: "Mitglied werden",
                 nav_follow: "Folgen Sie uns",             
                 nav_members: "Mitglieder",
+                nav_blog: "Blog",
                 members_title: "Das Team",
                 members_committee: "Komitee",
                 members_all: "Alle Mitglieder",
@@ -605,12 +690,14 @@
                 privacy_h5: "5. Analytik", privacy_t5: "Wir verwenden Umami Analytics, um den Website-Traffic zu messen. Umami ist datenschutzfreundlich, verwendet keine Cookies und verfolgt keine persönlichen Daten.",
                 privacy_h6: "6. Externe Links", privacy_t6: "Unsere Website enthält Links zu externen Websites. Wir sind nicht für deren Datenschutzpraktiken verantwortlich.",
                 privacy_h7: "7. Kontakt", privacy_t7: "Wenn Sie Fragen zu dieser Datenschutzerklärung haben, nutzen Sie bitte die Kontaktseite.",
-                contact_me: "📬 Kontaktieren Sie uns", file_status: "Status-Datei (PDF)", file_printables: "Druckvorlagen (PDF)"
+                contact_me: "📬 Kontaktieren Sie uns", file_status: "Status-Datei (PDF)", file_printables: "Druckvorlagen (PDF)",
+                blog_title: "📰 Blog", blog_empty: "Noch keine Artikel."
             },
             it: {
                 home_become_member: "Diventa membro",
                 nav_follow: "Seguici",              
                 nav_members: "Membri",
+                nav_blog: "Blog",
                 members_title: "Il Team",
                 members_committee: "Comitato",
                 members_all: "Tutti i membri",
@@ -648,12 +735,14 @@
                 privacy_h5: "5. Analisi", privacy_t5: "Utilizziamo Umami Analytics per misurare il traffico del sito. Umami rispetta la privacy, non utilizza cookie e non traccia dati personali.",
                 privacy_h6: "6. Link esterni", privacy_t6: "Il nostro sito contiene link a siti esterni. Non siamo responsabili delle loro pratiche sulla privacy.",
                 privacy_h7: "7. Contatto", privacy_t7: "Se hai domande su questa Informativa sulla privacy, utilizza la pagina di contatto.",
-                contact_me: "📬 Contattaci", file_status: "File di Stato (PDF)", file_printables: "Stampabili (PDF)"
+                contact_me: "📬 Contattaci", file_status: "File di Stato (PDF)", file_printables: "Stampabili (PDF)",
+                blog_title: "📰 Blog", blog_empty: "Nessun articolo per ora."
             },
             rm: {
                home_become_member: "Deventar commember",
                 nav_follow: "Suonda nus",              
                 nav_members: "Commembers",
+                nav_blog: "Blog",
                 members_title: "La Squadra",
                 members_committee: "Comité",
                 members_all: "Tuts ils commembers",
@@ -691,7 +780,8 @@
                 privacy_h5: "5. Analitica", privacy_t5: "Nus duvrain Umami Analytics per mesirar il traffic dal sit. Umami respecta la sfera privata, n'utilisescha betg cookies e na fastizar betg datas persunalas.",
                 privacy_h6: "6. Colliaziuns externas", privacy_t6: "Nos sit cuntegna colliaziuns a sits externs. Nus n'es betg responsabels per lur practicas da datas.",
                 privacy_h7: "7. Contact", privacy_t7: "Sche ti has dumondas davart questa politica da protecziun da datas, duvra p.pl. la pagina da contact.",
-                contact_me: "📬 Contact", file_status: "Datoteca da Status (PDF)", file_printables: "Imprimibels (PDF)"
+                contact_me: "📬 Contact", file_status: "Datoteca da Status (PDF)", file_printables: "Imprimibels (PDF)",
+                blog_title: "📰 Blog", blog_empty: "Nagins artitgels per il mument."
             }
         };
            
@@ -1091,7 +1181,6 @@
         // ==========================================
         // 3. PAGE TEMPLATES
         // ==========================================
-        
         const getHomeHtml = () => `
             <div class="hero">
                 <h1>${t('home_title')}</h1>
@@ -1118,56 +1207,28 @@
             </div>
         `;
 
-                function prefillMembership() {
-            // On attend un tout petit peu que la page contact s'affiche avant de remplir
+        function prefillMembership() {
             setTimeout(() => {
                 const typeSelect = document.querySelector('select[name="type"]');
                 const appSelect = document.querySelector('select[name="app"]');
-                
-                if (typeSelect) typeSelect.value = "Become Member"; // Sélectionne "Devenir membre"
-                if (appSelect) appSelect.value = "General"; // Sélectionne "Question Générale"
-                
-               
+                if (typeSelect) typeSelect.value = "Become Member";
+                if (appSelect) appSelect.value = "General";
             }, 100);
         }
 
         const getResourcesHtml = (type) => {
             if (type === 'credits') {
-                return `
-                    <h1 class="page-title">${t('res_credits')}</h1>
-                    <div class="app-content-box">
-                        <ul style="line-height:2; font-size:1.1rem;">
-                            <li><strong>${t('res_creator')}</strong> Ben Hupka</li>
-                            <li><strong>${t('res_video')}</strong> Grégoire Hupka</li>
-                            <li><strong>${t('res_code')}</strong> DeepSeek AI</li>
-                            <li><strong>${t('res_base')}</strong> ${t('credit_sar')}</li>
-                            <li><strong>${t('res_printables')}</strong> ${t('credit_files_in_file')}</li>
-                        </ul>
-                    </div>
-                `;
+                return `<h1 class="page-title">${t('res_credits')}</h1><div class="app-content-box"><ul style="line-height:2; font-size:1.1rem;"><li><strong>${t('res_creator')}</strong> Ben Hupka</li><li><strong>${t('res_video')}</strong> Grégoire Hupka</li><li><strong>${t('res_code')}</strong> DeepSeek AI</li><li><strong>${t('res_base')}</strong> ${t('credit_sar')}</li><li><strong>${t('res_printables')}</strong> ${t('credit_files_in_file')}</li></ul></div>`;
             }
-            return `
-                <h1 class="page-title">${t('nav_links')}</h1>
-                <div class="app-content-box" style="margin-top:20px;">
-                    <a href="https://frelonasiatique.ch" target="_blank" class="resource-link"><strong>frelonasiatique.ch</strong><span>${t('link_frelon')}</span></a>
-                    <a href="https://stopfrelons.ch" target="_blank" class="resource-link"><strong>stopfrelons.ch</strong><span>${t('link_stop')}</span></a>
-                    <a href="https://abeilles.ch" target="_blank" class="resource-link"><strong>abeilles.ch</strong><span>${t('link_abeilles')}</span></a>
-                    <a href="https://melizoe.ch" target="_blank" class="resource-link"><strong>melizoe.ch</strong><span>${t('link_melizoe')}</span></a>
-                </div>
-            `;
+            return `<h1 class="page-title">${t('nav_links')}</h1><div class="app-content-box" style="margin-top:20px;"><a href="https://frelonasiatique.ch" target="_blank" class="resource-link"><strong>frelonasiatique.ch</strong><span>${t('link_frelon')}</span></a><a href="https://stopfrelons.ch" target="_blank" class="resource-link"><strong>stopfrelons.ch</strong><span>${t('link_stop')}</span></a><a href="https://abeilles.ch" target="_blank" class="resource-link"><strong>abeilles.ch</strong><span>${t('link_abeilles')}</span></a><a href="https://melizoe.ch" target="_blank" class="resource-link"><strong>melizoe.ch</strong><span>${t('link_melizoe')}</span></a></div>`;
         };
 
         const getSupportHtml = () => `
             <h1 class="page-title">${t('support_title')}</h1>
             <div class="app-content-box" style="text-align: center; padding: 50px 20px;">
                 <p style="font-size: 1.1rem; margin-bottom: 30px;">${t('support_desc')}</p>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; font-family:'Outfit', sans-serif; margin-bottom: 30px;">
-                    📱 079 938 41 98
-                </div>
-                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border);">
-                    <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 15px;">${t('support_thanks_title')}</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('support_thanks_list')}</p>
-                </div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; font-family:'Outfit', sans-serif; margin-bottom: 30px;">📱 079 938 41 98</div>
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border);"><h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 15px;">${t('support_thanks_title')}</h3><p style="font-size: 0.95rem; color: var(--text-main);">${t('support_thanks_list')}</p></div>
             </div>
         `;
 
@@ -1180,16 +1241,7 @@
                     <div class="form-group"><label>${t('contact_name')}</label><input type="text" name="name" required></div>
                     <div class="form-group"><label>${t('contact_email')}</label><input type="email" name="email" required></div>
                     <div class="form-group"><label>${t('contact_app')}</label><select name="app"><option value="General">${t('contact_general')}</option>${Object.keys(appsConfig).map(key => `<option value="${appsConfig[key].title}">${appsConfig[key].title}</option>`).join('')}</select></div>
-                    <div class="form-group">
-                        <label>${t('contact_type')}</label>
-                        <select name="type">
-                            <option value="Question">${t('contact_opt_q')}</option>
-                            <option value="Bug Report">${t('contact_opt_bug')}</option>
-                            <option value="Feature Request">${t('contact_opt_feat')}</option>
-                            <option value="Become Member">${t('contact_opt_member')}</option>
-                            <option value="Other">${t('contact_opt_other')}</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>${t('contact_type')}</label><select name="type"><option value="Question">${t('contact_opt_q')}</option><option value="Bug Report">${t('contact_opt_bug')}</option><option value="Feature Request">${t('contact_opt_feat')}</option><option value="Become Member">${t('contact_opt_member')}</option><option value="Other">${t('contact_opt_other')}</option></select></div>
                     <div class="form-group"><label>${t('contact_msg')}</label><textarea name="message" required></textarea></div>
                     <button type="submit" class="btn" id="submitBtn" style="width:100%;">${t('contact_send')}</button>
                     <p id="formStatus" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
@@ -1197,75 +1249,46 @@
             </div>
         `;
 
-                
-            const getMembersHtml = () => `
-    <h1 class="page-title">${t('nav_members')}</h1>
-    <div class="app-content-box">
-        
-        <!-- TITRE CLIQUABLE : AU COMITÉ -->
-        <a href="../apps/admin/index.html" style="text-decoration: none; color: inherit; display: block;">
-            <div class="member-line" style="cursor: pointer;" title="Espace Administration">
-                <h2>${t('members_committee')}</h2>
-                <hr>
-            </div>
-        </a>
+        const getMembersHtml = () => {
+            const resolveRole = (role) => {
+                if (typeof role === 'string') return role;
+                if (role && typeof role === 'object') return role[currentLang] || role.fr || role.en || '';
+                return '';
+            };
+            const members = (dynamicMembers && dynamicMembers.length > 0) ? dynamicMembers : FALLBACK_MEMBERS;
+            const committee = members.filter(m => m.group === 'committee');
+            const all = members.filter(m => m.group !== 'committee');
+            const renderMember = (m) => {
+                const imgSrc = m.image || '';
+                const initials = (m.name || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                return `<div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+                    <div class="member-circle">${imgSrc ? `<img src="${imgSrc}" alt="${initials}" onerror="this.parentElement.innerText='${initials}'">` : initials}</div>
+                    <div><h3 style="color: var(--primary); margin-bottom: 5px;">${m.name || ''}</h3><p style="font-size: 0.95rem; color: var(--text-main);">${resolveRole(m.role)}</p></div>
+                </div>`;
+            };
+            return `<h1 class="page-title">${t('nav_members')}</h1><div class="app-content-box">
+                <a href="../apps/admin/index.html" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="member-line" style="cursor: pointer;" title="Espace Administration"><h2>${t('members_committee')}</h2><hr></div>
+                </a>
+                <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">${committee.map(renderMember).join('') || '<p style="color:var(--text-muted);">—</p>'}</div>
+                <div class="member-line"><h2>${t('members_all')}</h2><hr></div>
+                <div style="display: flex; flex-direction: column; gap: 20px;">${(all.length > 0 ? all : committee).map(renderMember).join('') || '<p style="color:var(--text-muted);">—</p>'}</div>
+            </div>`;
+        };
 
-        <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
-            <!-- Grégoire -->
-            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                <div class="member-circle">
-                    <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
-                </div>
-                <div>
-                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
-                </div>
-            </div>
-
-            <!-- Ben -->
-            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                <div class="member-circle">
-                    <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
-                </div>
-                <div>
-                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- TITRE NON CLIQUABLE : TOUS LES MEMBRES -->
-        <div class="member-line">
-            <h2>${t('members_all')}</h2>
-            <hr>
-        </div>
-        
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <!-- Grégoire -->
-            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                <div class="member-circle">
-                    <img src="gregoire.png" alt="GH" onerror="this.style.display='none'; this.parentElement.innerText='GH';">
-                </div>
-                <div>
-                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_gregoire_name')}</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_gregoire_role')}</p>
-                </div>
-            </div>
-
-            <!-- Ben -->
-            <div style="display: flex; align-items: center; gap: 20px; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
-                <div class="member-circle">
-                    <img src="ben.png" alt="BH" onerror="this.style.display='none'; this.parentElement.innerText='BH';">
-                </div>
-                <div>
-                    <h3 style="color: var(--primary); margin-bottom: 5px;">${t('member_ben_name')}</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-main);">${t('member_ben_role')}</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-`;
+        const getBlogHtml = () => {
+            const escape = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+            const fmtDate = (iso) => { try { return new Date(iso).toLocaleDateString(currentLang, { year: 'numeric', month: 'long', day: 'numeric' }); } catch(e) { return ''; } };
+            const posts = (dynamicBlog || []).slice().sort((a,b) => new Date(b.date) - new Date(a.date));
+            return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box">
+                ${posts.length === 0 ? `<p style="color:var(--text-muted); text-align:center;">${t('blog_empty')}</p>` : posts.map(p => `
+                    <div class="blog-post">
+                        <h3>${escape(p.title)}</h3>
+                        <div class="blog-meta">${fmtDate(p.date)}</div>
+                        <div class="blog-body">${String(p.content || '').split(/\n{2,}/).map(par => `<p>${escape(par)}</p>`).join('')}</div>
+                    </div>`).join('')}
+            </div>`;
+        };
 
         const getPrivacyHtml = () => `
             <h1 class="page-title">${t('privacy_title')}</h1>
@@ -1285,12 +1308,11 @@
         // ==========================================
         // 4. ROUTING LOGIC & ACCORDION
         // ==========================================
-        
         const mainContent = document.getElementById('app-content');
 
-function closeMobileMenu() {
-    document.querySelector('nav').classList.remove('active');
-}
+        function closeMobileMenu() {
+            document.querySelector('nav').classList.remove('active');
+        }
         
         function toggleAccordion(header) {
             const content = header.nextElementSibling;
@@ -1324,6 +1346,8 @@ function closeMobileMenu() {
                 mainContent.innerHTML = getSupportHtml();
             } else if (hash === 'members') {
                 mainContent.innerHTML = getMembersHtml();
+            } else if (hash === 'blog') {
+                mainContent.innerHTML = getBlogHtml();
             } else if (hash === 'contact') {
                 mainContent.innerHTML = getContactHtml();
                 setupContactForm();
@@ -1334,7 +1358,7 @@ function closeMobileMenu() {
             }
         }
 
-                       // ==========================================
+        // ==========================================
         // 5. CONTACT FORM LOGIC
         // ==========================================
         function setupContactForm() {
@@ -1371,12 +1395,51 @@ function closeMobileMenu() {
         }
 
         // ==========================================
-        // 6. ROUTING & NAVIGATION LOGIC
+        // 6. ROUTING & NAVIGATION LOGIC + SEARCH
         // ==========================================
         
-        function closeMobileMenu() {
-            document.querySelector('nav').classList.remove('active');
+        function openSearch() {
+            document.getElementById('searchModal').classList.add('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+            setTimeout(() => document.getElementById('searchInput').focus(), 50);
         }
+        function closeSearch() { document.getElementById('searchModal').classList.remove('active'); }
+
+        function performSearch() {
+            const q = document.getElementById('searchInput').value.toLowerCase().trim();
+            const results = document.getElementById('searchResults');
+            results.innerHTML = '';
+            if (q.length < 2) { results.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tapez au moins 2 caractères...</p>'; return; }
+            const hits = [];
+            const addHit = (tag, title, desc, hash) => hits.push({ tag, title, desc, hash });
+            Object.keys(appsConfig).forEach(key => {
+                const t1 = appsConfig[key].title.toLowerCase(), d1 = (appsConfig[key].shortDesc[currentLang] || '').toLowerCase();
+                if (t1.includes(q) || d1.includes(q)) addHit('App', appsConfig[key].title, appsConfig[key].shortDesc[currentLang], '#' + key);
+            });
+            const staticPages = [['nav_home', 'home'], ['nav_apps', 'apps'], ['nav_members', 'members'], ['nav_blog', 'blog'], ['nav_support', 'support'], ['nav_contact', 'contact'], ['nav_privacy', 'privacy'], ['nav_links', 'resources'], ['nav_credits', 'resources']];
+            staticPages.forEach(([key, hash]) => { const label = t(key); if (label.toLowerCase().includes(q)) addHit('Page', label, '', '#' + hash); });
+            (dynamicBlog || []).forEach(p => {
+                const title = String(p.title || '').toLowerCase(), body = String(p.content || '').toLowerCase();
+                if (title.includes(q) || body.includes(q)) {
+                    const excerpt = String(p.content || '').slice(0, 80).replace(/\n/g, ' ');
+                    addHit('Blog', p.title, excerpt + (String(p.content || '').length > 80 ? '…' : ''), '#blog');
+                }
+            });
+            const members = dynamicMembers.length ? dynamicMembers : FALLBACK_MEMBERS;
+            members.forEach(m => {
+                const n = String(m.name || '').toLowerCase(), r = (typeof m.role === 'string' ? m.role : (m.role?.[currentLang] || '')).toLowerCase();
+                if (n.includes(q) || r.includes(q)) addHit('Membre', m.name, typeof m.role === 'string' ? m.role : m.role?.[currentLang] || '', '#members');
+            });
+            if (hits.length === 0) { results.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Aucun résultat.</p>'; return; }
+            results.innerHTML = hits.map(h => `<a class="search-result" href="${h.hash}" onclick="closeSearch()"><div><span class="sr-tag">${h.tag}</span><span class="sr-title">${h.title}</span></div>${h.desc ? `<div class="sr-desc">${h.desc}</div>` : ''}</a>`).join('');
+        }
+
+        document.getElementById('searchModal').addEventListener('click', function(e) { if (e.target === this) closeSearch(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeSearch();
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+        });
 
         window.addEventListener('hashchange', render);
         
@@ -1478,9 +1541,7 @@ function closeMobileMenu() {
             }
 
             if (logo) {
-                // On bloque le menu contextuel (Enregistrer l'image, etc.)
                 logo.addEventListener('contextmenu', (e) => e.preventDefault());
-                
                 logo.addEventListener('pointerdown', handlePointerDown);
                 logo.addEventListener('pointerup', handlePointerUp);
                 logo.addEventListener('pointerleave', cancelLongPress);
@@ -1500,13 +1561,11 @@ function closeMobileMenu() {
         }
 
         // ==========================================
-        // 8. INITIALISATION (BOOT) - TOUJOURS EN DERNIER
+        // 8. INITIALISATION (BOOT)
         // ==========================================
-        
-        // On applique la langue
         setLanguage(currentLang);
+        loadDynamicContent();
 
-        // On enregistre le Service Worker (PWA)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -1515,11 +1574,10 @@ function closeMobileMenu() {
             });
         }
 
-        // On lance les vérifications UNE FOIS que tout est chargé
         document.addEventListener('DOMContentLoaded', () => {
             addLongPressEvents();
             handleAutoBetaRedirect();
         });
     </script>
 </body>
-</html> 
+</html>
