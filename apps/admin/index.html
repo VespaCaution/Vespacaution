@@ -247,7 +247,7 @@
         }
 
         // ==========================================
-        // 1. CONNEXION
+        // 1. CONNEXION ADMIN
         // ==========================================
         const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
         const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
@@ -296,6 +296,7 @@
             renderArchives();
             renderBlog();
             renderMembers();
+            updateEditorFolders();
         }
 
         function saveAllData() {
@@ -324,7 +325,7 @@
         }
 
         // ==========================================
-        // 4. CAISSE
+        // 4. LOGIQUE CAISSE
         // ==========================================
         function renderTable() {
             const tbody = document.querySelector('#txTable tbody');
@@ -440,7 +441,7 @@
         }
 
         // ==========================================
-        // 6. ÉDITEUR
+        // 6. ÉDITEUR DE TEXTE
         // ==========================================
         function updateEditorFolders() {
             const select = document.getElementById('editorFolder');
