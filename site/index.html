@@ -261,13 +261,21 @@
         .member-circle img { width: 100%; height: 100%; object-fit: cover; }
 
         /* NEW: Blog CSS */
-        .blog-post { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .blog-post:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .blog-post h3 { color: var(--primary); margin-bottom: 6px; }
-        .blog-post .blog-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
-        .blog-post .blog-body { font-size: 0.95rem; color: var(--text-main); }
-        .blog-post .blog-body p { margin-bottom: 10px; }
-
+        /* Blog accordion */
+.blog-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--bg-color); transition: border-color 0.2s, box-shadow 0.2s; }
+.blog-item:hover { border-color: var(--primary-light); }
+.blog-item.open { border-color: var(--primary); box-shadow: 0 4px 15px rgba(201, 155, 72, 0.1); }
+.blog-item-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; background: var(--surface); border: none; cursor: pointer; text-align: left; font-family: inherit; transition: background 0.2s; }
+.blog-item-header:hover { background: var(--primary-light); }
+.blog-item.open .blog-item-header { background: var(--primary-light); border-bottom: 1px solid var(--border); }
+.blog-item-summary { flex: 1; min-width: 0; }
+.blog-item-summary h3 { font-size: 1.15rem; color: var(--primary); margin: 0 0 4px 0; line-height: 1.3; }
+.blog-item-date { font-size: 0.85rem; color: var(--text-muted); }
+.blog-item-icon { font-size: 1.6rem; font-weight: 300; color: var(--primary); margin-left: 16px; transition: transform 0.2s; flex-shrink: 0; line-height: 1; }
+.blog-item-content { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); background: var(--surface); }
+.blog-body { padding: 20px; font-size: 0.95rem; color: var(--text-main); line-height: 1.7; }
+.blog-body p { margin-bottom: 12px; }
+.blog-body p:last-child { margin-bottom: 0; }
         /* --- PDF MODAL --- */
         .pdf-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -1277,18 +1285,62 @@
         };
 
         const getBlogHtml = () => {
-            const escape = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            const fmtDate = (iso) => { try { return new Date(iso).toLocaleDateString(currentLang, { year: 'numeric', month: 'long', day: 'numeric' }); } catch(e) { return ''; } };
-            const posts = (dynamicBlog || []).slice().sort((a,b) => new Date(b.date) - new Date(a.date));
-            return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box">
-                ${posts.length === 0 ? `<p style="color:var(--text-muted); text-align:center;">${t('blog_empty')}</p>` : posts.map(p => `
-                    <div class="blog-post">
-                        <h3>${escape(p.title)}</h3>
-                        <div class="blog-meta">${fmtDate(p.date)}</div>
-                        <div class="blog-body">${String(p.content || '').split(/\n{2,}/).map(par => `<p>${escape(par)}</p>`).join('')}</div>
-                    </div>`).join('')}
-            </div>`;
-        };
+    const escape = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const fmtDate = (iso) => { try { return new Date(iso).toLocaleDateString(currentLang, { year: 'numeric', month: 'long', day: 'numeric' }); } catch(e) { return ''; } };
+    const posts = (dynamicBlog || []).slice().sort((a,b) => new Date(b.date) - new Date(a.date));
+
+    if (posts.length === 0) {
+        return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box"><p style="color:var(--text-muted); text-align:center;">${t('blog_empty')}</p></div>`;
+    }
+
+    const postHtml = posts.map(p => `
+        <div class="blog-item" data-post-id="${escape(p.id || '')}">
+            <button class="blog-item-header" onclick="toggleBlogPost(this)" aria-expanded="false">
+                <div class="blog-item-summary">
+                    <h3>${escape(p.title)}</h3>
+                    <span class="blog-item-date">${fmtDate(p.date)}</span>
+                </div>
+                <span class="blog-item-icon">+</span>
+            </button>
+            <div class="blog-item-content">
+                <div class="blog-body">${String(p.content || '').split(/\n{2,}/).map(par => `<p>${escape(par)}</p>`).join('')}</div>
+            </div>
+        </div>`).join('');
+
+    return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box">${postHtml}</div>`;
+};
+
+function toggleBlogPost(button) {
+    const item = button.parentElement;
+    const content = item.querySelector('.blog-item-content');
+    const icon = button.querySelector('.blog-item-icon');
+    const isOpen = item.classList.contains('open');
+
+    // Close all others (accordion behavior)
+    document.querySelectorAll('.blog-item.open').forEach(other => {
+        if (other !== item) {
+            other.classList.remove('open');
+            other.querySelector('.blog-item-content').style.maxHeight = null;
+            const otherIcon = other.querySelector('.blog-item-icon');
+            if (otherIcon) otherIcon.textContent = '+';
+            const otherBtn = other.querySelector('.blog-item-header');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Toggle this one
+    if (isOpen) {
+        item.classList.remove('open');
+        content.style.maxHeight = null;
+        icon.textContent = '+';
+        button.setAttribute('aria-expanded', 'false');
+    } else {
+        item.classList.add('open');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        icon.textContent = '−';
+        button.setAttribute('aria-expanded', 'true');
+    }
+}
 
         const getPrivacyHtml = () => `
             <h1 class="page-title">${t('privacy_title')}</h1>
