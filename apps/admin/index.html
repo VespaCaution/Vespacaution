@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comité — Vespacaution</title>
     
+    <!-- jsPDF pour les exports -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         body { font-family: sans-serif; background: #f9f7f1; color: #2d2d2d; padding: 20px; max-width: 900px; margin: auto; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e6e2d8; }
-        h1, h2 { color: #c99b48; }
+        h1, h2, h3 { color: #c99b48; }
         input, button, select, textarea { padding: 10px; margin: 5px 0; border-radius: 6px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; }
         textarea { resize: vertical; min-height: 100px; }
         button { background: #c99b48; color: white; font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
@@ -36,108 +37,218 @@
 <body>
 
     <div id="authSection" class="card" style="text-align: center;">
-        <h1>🔒 Espace Comité</h1>
+        <h1>🔒 <span data-i18n="admin_login_title">Espace Comité</span></h1>
+        <p data-i18n="admin_login_desc">Accès réservé aux membres.</p>
         <input type="email" id="email" placeholder="Email (comite@vespacaution.ch)">
         <input type="password" id="password" placeholder="Mot de passe">
-        <button onclick="login()" style="margin-top: 15px;">Se connecter</button>
+        <button onclick="login()" style="margin-top: 15px;" data-i18n="admin_login_btn">Se connecter</button>
         <p id="authMsg" style="color: red; font-weight: bold;"></p>
     </div>
 
     <div id="appSection" class="hidden">
         <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
-            <h1 style="margin:0;">Tableau de bord</h1>
+            <h1 style="margin:0;" data-i18n="admin_dashboard">Tableau de bord</h1>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <div id="syncStatus" class="sync-status">Prêt</div>
-                <button onclick="syncCloud('save')" class="btn-blue btn-sm">☁️ Sauvegarder</button>
-                <button onclick="syncCloud('load')" class="btn-green btn-sm">☁️ Charger</button>
-                <button onclick="logout()" class="btn-red btn-sm" style="width:auto; padding: 10px;">Déconnexion</button>
+                <div id="syncStatus" class="sync-status" data-i18n="admin_sync_ready">Prêt</div>
+                <button onclick="syncCloud('save')" class="btn-blue btn-sm" data-i18n="admin_sync_save">☁️ Sauvegarder</button>
+                <button onclick="syncCloud('load')" class="btn-green btn-sm" data-i18n="admin_sync_load">☁️ Charger</button>
+                <button onclick="logout()" class="btn-red btn-sm" style="width:auto; padding: 10px;" data-i18n="admin_logout">Déconnexion</button>
             </div>
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('caisse')">💰 Caisse</button>
-            <button class="tab" onclick="switchTab('archives')">📁 Archives</button>
-            <button class="tab" onclick="switchTab('editor')">📝 Éditeur</button>
-            <button class="tab" onclick="switchTab('blog')">📰 Blog & Membres</button>
+            <button class="tab active" onclick="switchTab('caisse')" data-i18n="admin_tab_caisse">💰 Caisse</button>
+            <button class="tab" onclick="switchTab('archives')" data-i18n="admin_tab_archives">📁 Archives</button>
+            <button class="tab" onclick="switchTab('editor')" data-i18n="admin_tab_editor">📝 Éditeur</button>
+            <button class="tab" onclick="switchTab('blog')" data-i18n="admin_tab_blog">📰 Blog & Membres</button>
         </div>
 
         <!-- CAISSE -->
         <div id="tabCaisse" class="card">
-            <h2>💰 Journal de Caisse</h2>
+            <h2 data-i18n="admin_caisse_title">💰 Journal de Caisse</h2>
             <div class="flex">
                 <select id="txType" style="flex: 0.8;">
-                    <option value="receive">🟢 Reçu</option>
-                    <option value="spend">🔴 Dépense</option>
+                    <option value="receive" data-i18n="admin_type_receive">🟢 Reçu</option>
+                    <option value="spend" data-i18n="admin_type_spend">🔴 Dépense</option>
                 </select>
                 <input type="date" id="txDate" style="flex: 1;">
-                <input type="text" id="txDesc" placeholder="Description" style="flex: 2;">
-                <input type="number" id="txAmount" placeholder="Montant" style="flex: 1;">
-                <button onclick="addTransaction()" style="width: 100px;">Ajouter</button>
+                <input type="text" id="txDesc" placeholder="Description" data-i18n-placeholder="admin_desc_placeholder" style="flex: 2;">
+                <input type="number" id="txAmount" placeholder="Montant" data-i18n-placeholder="admin_amount_placeholder" style="flex: 1;">
+                <button onclick="addTransaction()" style="width: 100px;" data-i18n="admin_add_btn">Ajouter</button>
             </div>
-            <table id="txTable"><thead><tr><th>Date</th><th>Description</th><th>Montant</th><th>Action</th></tr></thead><tbody></tbody></table>
+            
+            <table id="txTable">
+                <thead>
+                    <tr>
+                        <th data-i18n="admin_table_date">Date</th>
+                        <th data-i18n="admin_table_desc">Description</th>
+                        <th data-i18n="admin_table_amount">Montant</th>
+                        <th data-i18n="admin_table_action">Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
             <div class="flex" style="margin-top: 20px;">
-                <button onclick="exportCSV()" class="btn-green">📥 Export CSV</button>
-                <button onclick="exportPDF()" class="btn-red">📄 Export PDF</button>
+                <button onclick="exportCSV()" class="btn-green" data-i18n="admin_export_csv">📥 Export CSV</button>
+                <button onclick="exportPDF()" class="btn-red" data-i18n="admin_export_pdf">📄 Export PDF</button>
             </div>
         </div>
 
         <!-- ARCHIVES -->
         <div id="tabArchives" class="card hidden">
-            <h2>📁 Archives</h2>
+            <h2 data-i18n="admin_archives_title">📁 Archives</h2>
             <div class="flex" style="margin-bottom: 20px;">
-                <input type="text" id="newFolderName" placeholder="Nom du dossier">
-                <button onclick="createFolder()" style="width: 150px;">Créer dossier</button>
+                <input type="text" id="newFolderName" placeholder="Nom du dossier" data-i18n-placeholder="admin_folder_placeholder">
+                <button onclick="createFolder()" style="width: 150px;" data-i18n="admin_create_folder">Créer dossier</button>
             </div>
             <div class="flex" style="margin-bottom: 20px;">
                 <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.txt" style="display:none;" onchange="uploadFile(event)">
-                <button onclick="document.getElementById('fileUpload').click()" class="btn-blue">📤 Importer fichier</button>
+                <button onclick="document.getElementById('fileUpload').click()" class="btn-blue" data-i18n="admin_import_file">📤 Importer fichier</button>
             </div>
             <div id="foldersContainer"></div>
         </div>
 
         <!-- ÉDITEUR DE TEXTE -->
         <div id="tabEditor" class="card hidden">
-            <h2>📝 Éditeur de texte</h2>
+            <h2 data-i18n="admin_editor_title">📝 Éditeur de texte</h2>
             <div class="flex">
-                <select id="editorFolder"><option value="Général">Général</option></select>
-                <input type="text" id="editorTitle" placeholder="Titre du document">
+                <select id="editorFolder">
+                    <option value="Général" data-i18n="admin_general_folder">Général</option>
+                </select>
+                <input type="text" id="editorTitle" placeholder="Titre du document" data-i18n-placeholder="admin_title_placeholder">
             </div>
-            <textarea id="editorContent" placeholder="Écrivez votre texte ici..."></textarea>
-            <button onclick="saveTextDoc()" class="btn-green" style="margin-top: 10px;">💾 Enregistrer le document</button>
+            <textarea id="editorContent" placeholder="Écrivez votre texte ici..." data-i18n-placeholder="admin_text_placeholder"></textarea>
+            <button onclick="saveTextDoc()" class="btn-green" style="margin-top: 10px;" data-i18n="admin_save_doc">💾 Enregistrer le document</button>
         </div>
 
         <!-- BLOG & MEMBRES -->
         <div id="tabBlog" class="card hidden">
-            <h2>📰 Blog & Membres</h2>
+            <h2 data-i18n="admin_blog_title">📰 Blog & Membres</h2>
             
-            <h3>Ajouter un article de blog</h3>
+            <h3 data-i18n="admin_blog_add">Ajouter un article</h3>
             <div class="flex">
-                <input type="text" id="blogTitle" placeholder="Titre de l'article">
+                <input type="text" id="blogTitle" placeholder="Titre de l'article" data-i18n-placeholder="admin_blog_title_ph">
             </div>
-            <textarea id="blogContent" placeholder="Contenu de l'article (Markdown/HTML simple)"></textarea>
-            <button onclick="addBlogPost()" class="btn-blue" style="margin-top: 10px;">➕ Publier l'article</button>
+            <textarea id="blogContent" placeholder="Contenu de l'article..." data-i18n-placeholder="admin_blog_content_ph"></textarea>
+            <button onclick="addBlogPost()" class="btn-blue" style="margin-top: 10px;" data-i18n="admin_blog_publish">➕ Publier l'article</button>
             <div id="blogList" style="margin-top: 20px;"></div>
 
             <hr style="margin: 30px 0; border-top: 1px solid #ddd;">
 
-            <h3>Mettre à jour les membres</h3>
+            <h3 data-i18n="admin_members_add">Mettre à jour les membres</h3>
             <div class="flex">
-                <input type="text" id="memberName" placeholder="Nom du membre">
-                <input type="text" id="memberRole" placeholder="Rôle (ex: Président)">
+                <input type="text" id="memberName" placeholder="Nom du membre" data-i18n-placeholder="admin_member_name_ph">
+                <input type="text" id="memberRole" placeholder="Rôle (ex: Président)" data-i18n-placeholder="admin_member_role_ph">
             </div>
             <div class="flex">
-                <input type="text" id="memberImage" placeholder="Nom du fichier image (ex: ben.png)">
+                <input type="text" id="memberImage" placeholder="Image (ex: ben.png)" data-i18n-placeholder="admin_member_image_ph">
                 <select id="memberGroup">
-                    <option value="committee">Au comité</option>
-                    <option value="all">Tous les membres</option>
+                    <option value="committee" data-i18n="admin_member_committee">Au comité</option>
+                    <option value="all" data-i18n="admin_member_all">Tous les membres</option>
                 </select>
             </div>
-            <button onclick="addMember()" class="btn-green" style="margin-top: 10px;">➕ Ajouter le membre</button>
+            <button onclick="addMember()" class="btn-green" style="margin-top: 10px;" data-i18n="admin_member_add_btn">➕ Ajouter le membre</button>
             <div id="memberList" style="margin-top: 20px;"></div>
         </div>
     </div>
 
     <script>
+        // ==========================================
+        // 0. TRADUCTIONS
+        // ==========================================
+        const adminTranslations = {
+            fr: {
+                admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres.", admin_login_btn: "Se connecter",
+                admin_dashboard: "Tableau de bord", admin_sync_ready: "Prêt", admin_sync_save: "☁️ Sauvegarder", admin_sync_load: "☁️ Charger", admin_logout: "Déconnexion",
+                admin_tab_caisse: "💰 Caisse", admin_tab_archives: "📁 Archives", admin_tab_editor: "📝 Éditeur", admin_tab_blog: "📰 Blog & Membres",
+                admin_caisse_title: "💰 Journal de Caisse", admin_type_receive: "🟢 Reçu", admin_type_spend: "🔴 Dépense",
+                admin_desc_placeholder: "Description", admin_amount_placeholder: "Montant", admin_add_btn: "Ajouter",
+                admin_table_date: "Date", admin_table_desc: "Description", admin_table_amount: "Montant", admin_table_action: "Action",
+                admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF",
+                admin_archives_title: "📁 Archives", admin_folder_placeholder: "Nom du dossier", admin_create_folder: "Créer dossier", admin_import_file: "📤 Importer fichier",
+                admin_editor_title: "📝 Éditeur de texte", admin_general_folder: "Général", admin_title_placeholder: "Titre du document", admin_text_placeholder: "Écrivez votre texte ici...", admin_save_doc: "💾 Enregistrer le document",
+                admin_blog_title: "📰 Blog & Membres", admin_blog_add: "Ajouter un article", admin_blog_title_ph: "Titre de l'article", admin_blog_content_ph: "Contenu de l'article...", admin_blog_publish: "➕ Publier l'article",
+                admin_members_add: "Mettre à jour les membres", admin_member_name_ph: "Nom du membre", admin_member_role_ph: "Rôle", admin_member_image_ph: "Image (ex: ben.png)", admin_member_committee: "Au comité", admin_member_all: "Tous les membres", admin_member_add_btn: "➕ Ajouter le membre"
+            },
+            en: {
+                admin_login_title: "Committee Space", admin_login_desc: "Members only.", admin_login_btn: "Log in",
+                admin_dashboard: "Dashboard", admin_sync_ready: "Ready", admin_sync_save: "☁️ Save", admin_sync_load: "☁️ Load", admin_logout: "Log out",
+                admin_tab_caisse: "💰 Cash", admin_tab_archives: "📁 Archives", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Members",
+                admin_caisse_title: "💰 Cash Journal", admin_type_receive: "🟢 Received", admin_type_spend: "🔴 Spent",
+                admin_desc_placeholder: "Description", admin_amount_placeholder: "Amount", admin_add_btn: "Add",
+                admin_table_date: "Date", admin_table_desc: "Description", admin_table_amount: "Amount", admin_table_action: "Action",
+                admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF",
+                admin_archives_title: "📁 Archives", admin_folder_placeholder: "Folder name", admin_create_folder: "Create folder", admin_import_file: "📤 Import file",
+                admin_editor_title: "📝 Text Editor", admin_general_folder: "General", admin_title_placeholder: "Document title", admin_text_placeholder: "Write your text here...", admin_save_doc: "💾 Save document",
+                admin_blog_title: "📰 Blog & Members", admin_blog_add: "Add article", admin_blog_title_ph: "Article title", admin_blog_content_ph: "Article content...", admin_blog_publish: "➕ Publish article",
+                admin_members_add: "Update members", admin_member_name_ph: "Member name", admin_member_role_ph: "Role", admin_member_image_ph: "Image (ex: ben.png)", admin_member_committee: "Committee", admin_member_all: "All members", admin_member_add_btn: "➕ Add member"
+            },
+            de: {
+                admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Mitglieder.", admin_login_btn: "Anmelden",
+                admin_dashboard: "Dashboard", admin_sync_ready: "Bereit", admin_sync_save: "☁️ Speichern", admin_sync_load: "☁️ Laden", admin_logout: "Abmelden",
+                admin_tab_caisse: "💰 Kasse", admin_tab_archives: "📁 Archiv", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Mitglieder",
+                admin_caisse_title: "💰 Kassenbuch", admin_type_receive: "🟢 Eingenommen", admin_type_spend: "🔴 Ausgegeben",
+                admin_desc_placeholder: "Beschreibung", admin_amount_placeholder: "Betrag", admin_add_btn: "Hinzufügen",
+                admin_table_date: "Datum", admin_table_desc: "Beschreibung", admin_table_amount: "Betrag", admin_table_action: "Aktion",
+                admin_export_csv: "📥 CSV exportieren", admin_export_pdf: "📄 PDF exportieren",
+                admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Ordnername", admin_create_folder: "Ordner erstellen", admin_import_file: "📤 Datei importieren",
+                admin_editor_title: "📝 Texteditor", admin_general_folder: "Allgemein", admin_title_placeholder: "Dokumenttitel", admin_text_placeholder: "Schreiben Sie hier...", admin_save_doc: "💾 Dokument speichern",
+                admin_blog_title: "📰 Blog & Mitglieder", admin_blog_add: "Artikel hinzufügen", admin_blog_title_ph: "Artikeltitel", admin_blog_content_ph: "Artikelinhalt...", admin_blog_publish: "➕ Artikel veröffentlichen",
+                admin_members_add: "Mitglieder aktualisieren", admin_member_name_ph: "Name des Mitglieds", admin_member_role_ph: "Rolle", admin_member_image_ph: "Bild (z.B. ben.png)", admin_member_committee: "Komitee", admin_member_all: "Alle Mitglieder", admin_member_add_btn: "➕ Mitglied hinzufügen"
+            },
+            it: {
+                admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri.", admin_login_btn: "Accedi",
+                admin_dashboard: "Dashboard", admin_sync_ready: "Pronto", admin_sync_save: "☁️ Salva", admin_sync_load: "☁️ Carica", admin_logout: "Disconnetti",
+                admin_tab_caisse: "💰 Cassa", admin_tab_archives: "📁 Archivio", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Membri",
+                admin_caisse_title: "💰 Libro Cassa", admin_type_receive: "🟢 Ricevuto", admin_type_spend: "🔴 Speso",
+                admin_desc_placeholder: "Descrizione", admin_amount_placeholder: "Importo", admin_add_btn: "Aggiungi",
+                admin_table_date: "Data", admin_table_desc: "Descrizione", admin_table_amount: "Importo", admin_table_action: "Azione",
+                admin_export_csv: "📥 Esporta CSV", admin_export_pdf: "📄 Esporta PDF",
+                admin_archives_title: "📁 Archivio", admin_folder_placeholder: "Nome cartella", admin_create_folder: "Crea cartella", admin_import_file: "📤 Importa file",
+                admin_editor_title: "📝 Editor di testo", admin_general_folder: "Generale", admin_title_placeholder: "Titolo documento", admin_text_placeholder: "Scrivi qui...", admin_save_doc: "💾 Salva documento",
+                admin_blog_title: "📰 Blog & Membri", admin_blog_add: "Aggiungi articolo", admin_blog_title_ph: "Titolo articolo", admin_blog_content_ph: "Contenuto articolo...", admin_blog_publish: "➕ Pubblica articolo",
+                admin_members_add: "Aggiorna membri", admin_member_name_ph: "Nome membro", admin_member_role_ph: "Ruolo", admin_member_image_ph: "Immagine (es: ben.png)", admin_member_committee: "Comitato", admin_member_all: "Tutti i membri", admin_member_add_btn: "➕ Aggiungi membro"
+            },
+            rm: {
+                admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers.", admin_login_btn: "S'annunziar",
+                admin_dashboard: "Dashboard", admin_sync_ready: "Pront", admin_sync_save: "☁️ Memorisar", admin_sync_load: "☁️ Chargiar", admin_logout: "Sortir",
+                admin_tab_caisse: "💰 Cassa", admin_tab_archives: "📁 Archiv", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Commembers",
+                admin_caisse_title: "💰 Cudesch da cassa", admin_type_receive: "🟢 Recevì", admin_type_spend: "🔴 Spendì",
+                admin_desc_placeholder: "Descripziun", admin_amount_placeholder: "Import", admin_add_btn: "Agiuntar",
+                admin_table_date: "Data", admin_table_desc: "Descripziun", admin_table_amount: "Import", admin_table_action: "Acziun",
+                admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF",
+                admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Num da l'ordinatur", admin_create_folder: "Crear ordinatur", admin_import_file: "📤 Importar datoteca",
+                admin_editor_title: "📝 Editor da text", admin_general_folder: "General", admin_title_placeholder: "Titel dal document", admin_text_placeholder: "Scriva qua...", admin_save_doc: "💾 Memorisar il document",
+                admin_blog_title: "📰 Blog & Commembers", admin_blog_add: "Agiuntar in artitgel", admin_blog_title_ph: "Titel da l'artitgel", admin_blog_content_ph: "Cuntegn da l'artitgel...", admin_blog_publish: "➕ Publicar l'artitgel",
+                admin_members_add: "Actualisar ils commembers", admin_member_name_ph: "Num dal commember", admin_member_role_ph: "Rolla", admin_member_image_ph: "Maletg (p.ex. ben.png)", admin_member_committee: "Comité", admin_member_all: "Tuts ils commembers", admin_member_add_btn: "➕ Agiuntar commember"
+            }
+        };
+
+        let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
+
+        function t(key) {
+            return (adminTranslations[currentLang] && adminTranslations[currentLang][key]) ? adminTranslations[currentLang][key] : key;
+        }
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (adminTranslations[currentLang] && adminTranslations[currentLang][key]) {
+                    el.innerHTML = adminTranslations[currentLang][key];
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (adminTranslations[currentLang] && adminTranslations[currentLang][key]) {
+                    el.placeholder = adminTranslations[currentLang][key];
+                }
+            });
+        }
+
+        // ==========================================
+        // 1. CONNEXION
+        // ==========================================
         const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
         const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
         
@@ -168,6 +279,9 @@
             document.getElementById('password').value = '';
         }
 
+        // ==========================================
+        // 2. STOCKAGE LOCAL
+        // ==========================================
         function loadAllData() {
             const savedCaisse = localStorage.getItem('vc_caisse');
             if (savedCaisse) transactions = JSON.parse(savedCaisse);
@@ -191,6 +305,9 @@
             localStorage.setItem('vc_members', JSON.stringify(members));
         }
 
+        // ==========================================
+        // 3. ONGLETS
+        // ==========================================
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
@@ -206,7 +323,9 @@
             if (tab === 'blog') { document.getElementById('tabBlog').classList.remove('hidden'); renderBlog(); renderMembers(); }
         }
 
-        // --- CAISSE ---
+        // ==========================================
+        // 4. CAISSE
+        // ==========================================
         function renderTable() {
             const tbody = document.querySelector('#txTable tbody');
             tbody.innerHTML = '';
@@ -243,7 +362,9 @@
             }
         }
 
-        // --- ARCHIVES ---
+        // ==========================================
+        // 5. ARCHIVES
+        // ==========================================
         function renderArchives() {
             const container = document.getElementById('foldersContainer');
             container.innerHTML = '';
@@ -318,9 +439,12 @@
             if (doc) alert("📄 " + doc.name + "\n\n" + doc.content);
         }
 
+        // ==========================================
+        // 6. ÉDITEUR
+        // ==========================================
         function updateEditorFolders() {
             const select = document.getElementById('editorFolder');
-            select.innerHTML = '<option value="Général">Général</option>';
+            select.innerHTML = `<option value="Général">${t('admin_general_folder')}</option>`;
             for (const folderName in archives) {
                 if (folderName !== 'Général') {
                     select.innerHTML += `<option value="${folderName}">${folderName}</option>`;
@@ -341,7 +465,9 @@
             document.getElementById('editorContent').value = '';
         }
 
-        // --- BLOG & MEMBRES ---
+        // ==========================================
+        // 7. BLOG & MEMBRES
+        // ==========================================
         function addBlogPost() {
             const title = document.getElementById('blogTitle').value.trim();
             const content = document.getElementById('blogContent').value.trim();
@@ -351,13 +477,14 @@
             renderBlog();
             document.getElementById('blogTitle').value = '';
             document.getElementById('blogContent').value = '';
+            alert("✅ Article publié ! (N'oublie pas de Sauvegarder sur GitHub)");
         }
 
         function renderBlog() {
             const container = document.getElementById('blogList');
             container.innerHTML = blogPosts.length === 0 ? '<p style="color:#888;">Aucun article.</p>' : '';
             blogPosts.forEach(post => {
-                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px;">
+                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px; background:#fafafa;">
                     <strong>${post.title}</strong> <small>(${new Date(post.date).toLocaleDateString()})</small>
                     <p style="font-size:12px; color:#666;">${post.content.substring(0, 100)}...</p>
                     <button class="btn-red btn-sm" onclick="deleteBlog('${post.id}')">Supprimer</button>
@@ -384,14 +511,15 @@
             document.getElementById('memberName').value = '';
             document.getElementById('memberRole').value = '';
             document.getElementById('memberImage').value = '';
+            alert("✅ Membre ajouté ! (N'oublie pas de Sauvegarder sur GitHub)");
         }
 
         function renderMembers() {
             const container = document.getElementById('memberList');
-            container.innerHTML = members.length === 0 ? '<p style="color:#888;">Aucun membre.</p>' : '';
+            container.innerHTML = members.length === 0 ? '<p style="color:#888;">Aucun membre ajouté manuellement.</p>' : '';
             members.forEach(m => {
-                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px;">
-                    <strong>${m.name}</strong> - ${m.role} <span style="font-size:10px; background:#eee; padding:2px 5px; border-radius:4px;">${m.group === 'committee' ? 'Comité' : 'Tous'}</span>
+                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px; background:#fafafa;">
+                    <strong>${m.name}</strong> - ${m.role} <span style="font-size:10px; background:#e6e2d8; padding:2px 5px; border-radius:4px;">${m.group === 'committee' ? 'Comité' : 'Tous'}</span>
                     <button class="btn-red btn-sm" onclick="deleteMember('${m.id}')">Supprimer</button>
                 </div>`;
             });
@@ -404,12 +532,50 @@
             }
         }
 
-        // --- EXPORT / IMPORT ---
-        function exportCSV() { /* ... code précédent ... */ }
-        function exportPDF() { /* ... code précédent ... */ }
-        function downloadBackup() { /* ... code précédent ... */ }
-        
-        // --- SYNCHRONISATION GITHUB GIST ---
+        // ==========================================
+        // 8. EXPORT / IMPORT CSV & PDF
+        // ==========================================
+        function exportCSV() {
+            let csv = "Type,Date,Description,Montant (CHF)\n";
+            transactions.forEach(tx => { 
+                const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
+                const montant = tx.type === 'spend' ? -Math.abs(tx.amount) : Math.abs(tx.amount);
+                csv += `"${typeLabel}","${tx.date}","${tx.desc}",${montant}\n`; 
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Vespacaution_Caisse.csv";
+            link.click();
+        }
+
+        function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(22); doc.setTextColor(201, 155, 72);
+            doc.text("Rapport Financier - Vespacaution", 20, 20);
+            doc.setFontSize(12); doc.setTextColor(50, 50, 50);
+            doc.text("Généré le : " + new Date().toLocaleDateString(), 20, 30);
+            let totalReceived = 0, totalSpent = 0;
+            const tableData = transactions.map(tx => {
+                let montant = tx.amount;
+                if (tx.type === 'spend') { montant = -Math.abs(tx.amount); totalSpent += Math.abs(tx.amount); }
+                else { montant = Math.abs(tx.amount); totalReceived += Math.abs(tx.amount); }
+                const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
+                return [tx.date, tx.desc, typeLabel, montant.toFixed(2) + " CHF"];
+            });
+            doc.autoTable({ startY: 40, head: [['Date', 'Description', 'Type', 'Montant']], body: tableData, headStyles: { fillColor: [201, 155, 72] } });
+            let finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(12);
+            doc.setTextColor(92, 184, 92); doc.text(`Total Reçu : ${totalReceived.toFixed(2)} CHF`, 20, finalY);
+            doc.setTextColor(217, 83, 79); doc.text(`Total Dépenses : ${totalSpent.toFixed(2)} CHF`, 20, finalY + 8);
+            doc.setTextColor(50, 50, 50); doc.setFont(undefined, 'bold'); doc.text(`SOLDE TOTAL : ${(totalReceived - totalSpent).toFixed(2)} CHF`, 20, finalY + 18);
+            doc.save("Vespacaution_Rapport.pdf");
+        }
+
+        // ==========================================
+        // 9. SYNCHRONISATION GITHUB GIST
+        // ==========================================
         const GITHUB_TOKEN = "%%TOKEN_SECRET%%"; 
         const GIST_ID = "f4fe8523136960f0289660123aa32cb7"; 
         const GIST_FILENAME = "vespacaution_data.json";
@@ -420,19 +586,31 @@
             const headers = { 'Authorization': 'token ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github.v3+json' };
 
             if (action === 'save') {
-                status.textContent = "Envoi...";
+                status.textContent = "Envoi en cours...";
                 try {
                     const data = { caisse: transactions, archives: archives, blog: blogPosts, members: members };
                     const jsonString = JSON.stringify(data);
-                    if (new Blob([jsonString]).size > 1048576) return alert("⚠️ Fichier trop lourd (>1Mo).");
+                    
+                    const sizeInBytes = new Blob([jsonString]).size;
+                    if (sizeInBytes > 1048576) { 
+                        alert("⚠️ Attention : Tes données dépassent 1 Mo. Retire les gros fichiers PDF/Images des archives avant de sauvegarder.");
+                        status.textContent = "❌ Trop lourd";
+                        return;
+                    }
 
                     const res = await fetch(GITHUB_API_URL, {
                         method: 'PATCH',
                         headers: { ...headers, 'Content-Type': 'application/json' },
                         body: JSON.stringify({ files: { [GIST_FILENAME]: { content: jsonString } } })
                     });
-                    if (res.ok) { status.textContent = "✅ Sauvegardé"; alert("Sauvegarde GitHub réussie !"); }
-                    else { status.textContent = "❌ Erreur"; }
+                    
+                    if (res.ok) {
+                        status.textContent = "✅ Sauvegardé";
+                        alert("Sauvegarde GitHub réussie ! Le site public est mis à jour.");
+                    } else {
+                        status.textContent = "❌ Erreur";
+                        alert("Erreur de sauvegarde.");
+                    }
                 } catch (e) { status.textContent = "❌ Erreur réseau"; }
             } 
             
@@ -444,8 +622,12 @@
                     if (gistData.files && gistData.files[GIST_FILENAME]) {
                         const fileContent = gistData.files[GIST_FILENAME].content;
                         if (!fileContent || fileContent.trim() === "{}") return alert("Aucune donnée sur le Cloud.");
-                        const parsed = JSON.parse(fileContent);
-                        if (confirm("Charger les données depuis GitHub ?")) {
+                        
+                        let parsed;
+                        try { parsed = JSON.parse(fileContent); } 
+                        catch (e) { return alert("❌ Fichier corrompu."); }
+                        
+                        if (confirm("Charger les données depuis GitHub ? (Cela écrasera les données locales)")) {
                             transactions = parsed.caisse || [];
                             archives = parsed.archives || {};
                             blogPosts = parsed.blog || [];
@@ -458,20 +640,13 @@
                 } catch (e) { status.textContent = "❌ Erreur"; }
             }
         }
-        
-        // Fonctions d'export ommises pour la concision, copie celles de ton ancien admin
-        function exportCSV() {
-            let csv = "Type,Date,Description,Montant\n";
-            transactions.forEach(tx => { csv += `"${tx.type}","${tx.date}","${tx.desc}",${tx.amount}\n`; });
-            const blob = new Blob([csv], { type: 'text/csv' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "caisse.csv"; link.click();
-        }
-        function exportPDF() {
-            const { jsPDF } = window.jspdf; const doc = new jsPDF();
-            doc.text("Rapport Financier", 20, 20);
-            const tableData = transactions.map(tx => [tx.date, tx.desc, tx.amount + " CHF"]);
-            doc.autoTable({ startY: 30, head: [['Date', 'Description', 'Montant']], body: tableData });
-            doc.save("rapport.pdf");
-        }
+
+        // ==========================================
+        // 10. INITIALISATION
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            applyTranslations();
+        });
     </script>
 </body>
 </html>
