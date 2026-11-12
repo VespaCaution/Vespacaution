@@ -6,7 +6,7 @@ Bienvenue sur le dépôt officiel de **Vespacaution**, un projet indépendant cr
 
 Le site principal sert de portail vers les différentes applications développées par Vespacaution.
 
-- **Site Web** : [https://vespacaution.github.io](https://vespacaution.github.io)
+- **Site Web** : [https://vespacaution.ch](https://vespacaution.ch)
 - **Langues disponibles** : Français, Anglais, Allemand, Italien, Romanche (Rumantsch Grischun)
 
 ### Applications disponibles
