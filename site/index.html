@@ -503,9 +503,9 @@
 let dynamicMembers = [];
 let dynamicThanks = [];
         const FALLBACK_MEMBERS = [
-            { id: "g", name: "Grégoire Hupka", role: { fr: "Vice président de Vespacaution et de la société apicole de Morges, Référent de la société apicole de Morges, Spécialiste destructeur et télémètre.", en: "Vice President of Vespacaution and the Beekeeping Society of Morges, Representative of the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.", de: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Ansprechpartner der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.", it: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Referente della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.", rm: "Vicepresident da Vespacaution e da la societad apicola da Morges, Referent da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter." }, image: "gregoire.png", group: "committee" },
-            { id: "b", name: "Ben Hupka", role: { fr: "Président de Vespacaution, Développeur.", en: "President of Vespacaution, Developer.", de: "Präsident von Vespacaution, Entwickler.", it: "Presidente di Vespacaution, Sviluppatore.", rm: "President da Vespacaution, Sviluppader." }, image: "ben.png", group: "committee" }
-        ];
+    { id: "b", name: "Ben Hupka", role: { fr: "Président de Vespacaution, Développeur.", en: "President of Vespacaution, Developer.", de: "Präsident von Vespacaution, Entwickler.", it: "Presidente di Vespacaution, Sviluppatore.", rm: "President da Vespacaution, Sviluppader." }, image: "ben.png", group: "committee" },
+    { id: "g", name: "Grégoire Hupka", role: { fr: "Vice président de Vespacaution et de la société apicole de Morges, Référent de la société apicole de Morges, Spécialiste destructeur et télémètre.", en: "Vice President of Vespacaution and the Beekeeping Society of Morges, Representative of the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.", de: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Ansprechpartner der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.", it: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Referente della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.", rm: "Vicepresident da Vespacaution e da la societad apicola da Morges, Referent da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter." }, image: "gregoire.png", group: "committee" }
+];
 
         async function loadDynamicContent() {
     const renderIfNeeded = () => {
@@ -1293,9 +1293,8 @@ let dynamicThanks = [];
     };
 
     const members = (dynamicMembers && dynamicMembers.length > 0) ? dynamicMembers : FALLBACK_MEMBERS;
-    const committee = members.filter(m => m.group === 'committee');
-    const allMembers = members.filter(m => m.group !== 'committee');
-
+    const committee = members.filter(m => m.group === 'committee').sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     const renderMember = (m) => {
         const imgSrc = m.image || '';
         const initials = (m.name || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
@@ -1585,7 +1584,7 @@ function toggleBlogPost(button) {
         // 7. GESTION DE LA VERSION BETA (Long Press 2s)
         // ==========================================
         let pressTimer;
-        const BETA_PASSWORD = "VcB3ta39";
+        
 
         function checkBetaMode() {
             return localStorage.getItem('vc_beta_mode') === 'true';
@@ -1626,24 +1625,10 @@ function toggleBlogPost(button) {
                             window.location.href = getStableUrl();
                         }
                     } else {
-                        if (checkBetaUnlocked()) {
-                            if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
-                                localStorage.setItem('vc_beta_mode', 'true');
-                                window.location.href = getBetaUrl();
-                            }
-                        } else {
-                            const password = prompt("🔒 Accès Beta restreint.\n\nEntre le mot de passe pour débloquer l'accès Beta :");
-                            
-                            if (password === BETA_PASSWORD) {
-                                localStorage.setItem('vc_beta_unlocked', 'true');
-                                if (confirm("✅ Mot de passe correct !\n\nVeux-tu activer le mode Beta de Vespacaution ?")) {
-                                    localStorage.setItem('vc_beta_mode', 'true');
-                                    window.location.href = getBetaUrl();
-                                }
-                            } else if (password !== null) {
-                                alert("❌ Mot de passe incorrect. Accès Beta refusé.");
-                            }
-                        }
+    if (confirm("Veux-tu activer le mode Beta de Vespacaution ?")) {
+        localStorage.setItem('vc_beta_mode', 'true');
+        window.location.href = getBetaUrl();
+    }
                     }
                 }, 2000); 
             }
