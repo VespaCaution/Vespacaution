@@ -825,19 +825,25 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
         let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
 
         function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('vespacaution_lang', lang);
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtns = document.querySelectorAll(`.lang-btn[onclick="setLanguage('${lang}')"]`);
-            activeBtns.forEach(btn => btn.classList.add('active'));
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
-            });
-            render();
+    currentLang = lang;
+    localStorage.setItem('vespacaution_lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtns = document.querySelectorAll(`.lang-btn[onclick="setLanguage('${lang}')"]`);
+    activeBtns.forEach(btn => btn.classList.add('active'));
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            el.innerHTML = translations[lang][key];
         }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            el.placeholder = translations[lang][key];
+        }
+    });
+    render();
+}
 
         function t(key) {
             return (translations[currentLang] && translations[currentLang][key]) ? translations[currentLang][key] : key;
