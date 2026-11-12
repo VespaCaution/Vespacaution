@@ -514,8 +514,8 @@
         const GIST_CACHE_KEY = "vc_gist_cache";
         const GIST_CACHE_TTL = 5 * 60 * 1000;
         let dynamicBlog = [];
-        let dynamicMembers = [];
-
+let dynamicMembers = [];
+let dynamicThanks = [];
         const FALLBACK_MEMBERS = [
             { id: "g", name: "Grégoire Hupka", role: { fr: "Vice président de Vespacaution et de la société apicole de Morges, Référent de la société apicole de Morges, Spécialiste destructeur et télémètre.", en: "Vice President of Vespacaution and the Beekeeping Society of Morges, Representative of the Beekeeping Society of Morges, Hornet Destruction Specialist & Telemeter.", de: "Vizepräsident von Vespacaution und der Imkergesellschaft von Morges, Ansprechpartner der Imkergesellschaft von Morges, Spezialist für Hornissennestzerstörung und Telemetrie.", it: "Vicepresidente di Vespacaution e della Società Apistica di Morges, Referente della Società Apistica di Morges, Specialista nella distruzione dei nidi e telemetrista.", rm: "Vicepresident da Vespacaution e da la societad apicola da Morges, Referent da la societad apicola da Morges, spezialist en la destrucziun da gnieus e telemeter." }, image: "gregoire.png", group: "committee" },
             { id: "b", name: "Ben Hupka", role: { fr: "Président de Vespacaution, Développeur.", en: "President of Vespacaution, Developer.", de: "Präsident von Vespacaution, Entwickler.", it: "Presidente di Vespacaution, Sviluppatore.", rm: "President da Vespacaution, Sviluppader." }, image: "ben.png", group: "committee" }
@@ -539,7 +539,8 @@
                 if (file && file.content) {
                     const parsed = JSON.parse(file.content);
                     dynamicBlog = parsed.blog || [];
-                    dynamicMembers = parsed.members || [];
+dynamicMembers = parsed.members || [];
+dynamicThanks = parsed.specialThanks || [];
                     localStorage.setItem(GIST_CACHE_KEY, JSON.stringify({ ts: Date.now(), blog: dynamicBlog, members: dynamicMembers }));
                     if (['#blog', '#members', ''].includes(window.location.hash) || window.location.hash === '') render();
                 }
@@ -939,13 +940,20 @@
         };
 
         const getSupportHtml = () => `
-            <h1 class="page-title">${t('support_title')}</h1>
-            <div class="app-content-box" style="text-align: center; padding: 50px 20px;">
-                <p style="font-size: 1.1rem; margin-bottom: 30px;">${t('support_desc')}</p>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; font-family:'Outfit', sans-serif; margin-bottom: 30px;">📱 079 938 41 98</div>
-                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border);"><h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 15px;">${t('support_thanks_title')}</h3><p style="font-size: 0.95rem; color: var(--text-main);">${t('support_thanks_list')}</p></div>
+    <h1 class="page-title">${t('support_title')}</h1>
+    <div class="app-content-box" style="text-align: center; padding: 50px 20px;">
+        <p style="font-size: 1.1rem; margin-bottom: 30px;">${t('support_desc')}</p>
+        <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; font-family:'Outfit', sans-serif; margin-bottom: 30px;">📱 079 938 41 98</div>
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border);">
+            <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 15px;">${t('support_thanks_title')}</h3>
+            <div style="font-size: 0.95rem; color: var(--text-main); line-height: 1.9;">
+                ${(dynamicThanks && dynamicThanks.length > 0)
+                    ? dynamicThanks.map(p => `<div>${escapeHtml(p.name)}</div>`).join('')
+                    : `<div>${t('support_thanks_list')}</div>`}
             </div>
-        `;
+        </div>
+    </div>
+`;
 
         const getContactHtml = () => `
             <h1 class="page-title">${t('contact_title')}</h1>
