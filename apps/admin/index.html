@@ -1,69 +1,319 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comité — Vespacaution</title>
-    
-    <!-- jsPDF pour les exports -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    
-    <style>
-        body { font-family: sans-serif; background: #f9f7f1; color: #2d2d2d; padding: 20px; max-width: 900px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e6e2d8; }
-        h1, h2, h3 { color: #c99b48; }
-        input, button, select, textarea { padding: 10px; margin: 5px 0; border-radius: 6px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; }
-        textarea { resize: vertical; min-height: 100px; }
-        button { background: #c99b48; color: white; font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
-        button:hover { background: #b5883b; }
-        .hidden { display: none !important; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
-        th { background: #f4ebd9; }
-        .flex { display: flex; gap: 10px; flex-wrap: wrap; }
-        .flex > * { flex: 1; min-width: 120px; }
-        .btn-red { background: #d9534f; }
-        .btn-green { background: #5cb85c; }
-        .btn-grey { background: #888; }
-        .btn-blue { background: #457b9d; }
-        .btn-sm { padding: 5px 10px; font-size: 12px; width: auto; margin: 0; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e6e2d8; padding-bottom: 10px; flex-wrap: wrap; }
-        .tab { background: none; color: #6b6b6b; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px 15px; border-radius: 8px; }
-        .tab.active { background: #f4ebd9; color: #c99b48; font-weight: bold; }
-        .sync-status { font-size: 0.8rem; color: #888; margin-top: 5px; text-align: right; width: 100%; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comité — Vespacaution</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root {
+    --bg: #f9f7f1;
+    --surface: #ffffff;
+    --primary: #c99b48;
+    --primary-hover: #b5883b;
+    --primary-light: #fdfaf3;
+    --text: #2d2d2d;
+    --muted: #6b6b6b;
+    --border: #e6e2d8;
+    --danger: #d9534f;
+    --success: #5cb85c;
+    --blue: #457b9d;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+.card {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+}
+h1, h2, h3 { color: var(--primary); }
+input, button, select, textarea {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+}
+textarea { resize: vertical; min-height: 80px; }
+button {
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+button:hover { background: var(--primary-hover); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.hidden { display: none !important; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+th { background: #f4ebd9; }
+.flex { display: flex; gap: 10px; flex-wrap: wrap; }
+.flex > * { flex: 1; min-width: 120px; }
+.btn-red { background: var(--danger); }
+.btn-green { background: var(--success); }
+.btn-grey { background: #888; }
+.btn-blue { background: var(--blue); }
+.btn-sm { padding: 5px 10px; font-size: 12px; width: auto; margin: 0; }
+.sync-status { font-size: 0.8rem; color: #888; text-align: right; }
+#authSection { max-width: 400px; margin: 10vh auto; text-align: center; }
+#authSection h1 { margin-bottom: 20px; }
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+}
+.topbar-title { margin: 0; font-size: 1.3rem; }
+.topbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.hamburger {
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.3rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+.drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    background: white;
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    z-index: 200;
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+}
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+}
+.drawer-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #888;
+    display: none;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
+.drawer-nav { display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
+.drawer-item {
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    transition: background 0.15s;
+    margin: 0;
+}
+.drawer-item:hover { background: var(--primary-light); }
+.drawer-item.active { background: var(--primary-light); color: var(--primary); }
+.drawer-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 150;
+}
+.admin-main {
+    margin-left: 240px;
+    padding: 20px;
+    min-height: calc(100vh - 68px);
+    max-width: 1000px;
+}
+.subtabs {
+    display: flex;
+    gap: 6px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.subtab {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.9rem;
+    margin: 0;
+    width: auto;
+}
+.subtab:hover { background: var(--primary-light); }
+.subtab.active { background: var(--primary-light); color: var(--primary); }
+.blog-lang-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+.blog-lang-tab {
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: #f0f0f0;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0;
+    width: auto;
+}
+.blog-lang-tab.active { background: var(--primary); color: white; }
+.blog-lang-tab.filled::after { content: ' ✓'; color: #4a9d4a; font-weight: bold; }
+.blog-lang-tab.active.filled::after { color: white; }
+.blog-lang-panel { display: none; }
+.blog-lang-panel.active { display: block; }
+.member-role-tabs { display: flex; gap: 4px; margin: 6px 0; flex-wrap: wrap; }
+.member-role-tab {
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #f0f0f0;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin: 0;
+    width: auto;
+}
+.member-role-tab.active { background: var(--primary); color: white; }
+.member-role-panel { display: none; }
+.member-role-panel.active { display: block; }
+.item-card {
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: #fafafa;
+}
+.item-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.item-card-meta { font-size: 0.8rem; color: #888; }
+.item-card-langs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.lang-chip {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: #e6e2d8;
+    color: #666;
+}
+.lang-chip.filled { background: #d4edda; color: #155724; }
+.publish-warning {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #92400e;
+    margin: 8px 0;
+}
+.publish-success {
+    background: #d4edda;
+    border: 1px solid #a3d9a8;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #155724;
+    margin: 8px 0;
+}
+@media (max-width: 768px) {
+    .drawer { transform: translateX(-100%); width: 260px; }
+    .drawer.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.2); }
+    .drawer-close { display: block; }
+    .drawer-backdrop.open { display: block; }
+    .admin-main { margin-left: 0; padding: 12px; }
+    .topbar { padding: 10px 12px; }
+}
+</style>
 </head>
 <body>
 
-    <div id="authSection" class="card" style="text-align: center;">
-        <h1>🔒 <span data-i18n="admin_login_title">Espace Comité</span></h1>
-        <p data-i18n="admin_login_desc">Accès réservé aux membres.</p>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Mot de passe">
-        <button onclick="login()" style="margin-top: 15px;" data-i18n="admin_login_btn">Se connecter</button>
-        <p id="authMsg" style="color: red; font-weight: bold;"></p>
+<div id="authSection" class="card">
+    <h1>🔒 <span data-i18n="admin_login_title">Espace Comité</span></h1>
+    <p data-i18n="admin_login_desc" style="margin-bottom: 16px; color: #666;">Accès réservé aux membres du comité.</p>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Mot de passe">
+    <button onclick="login()" style="margin-top: 15px;" data-i18n="admin_login_btn">Se connecter</button>
+    <p id="authMsg" style="color: red; font-weight: bold; margin-top: 12px;"></p>
+</div>
+
+<div id="appSection" class="hidden">
+    <div class="topbar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button class="hamburger" onclick="toggleDrawer()" aria-label="Menu">☰</button>
+            <h1 class="topbar-title" data-i18n="admin_dashboard">Tableau de bord</h1>
+        </div>
+        <div class="topbar-right">
+            <div id="syncStatus" class="sync-status" data-i18n="admin_sync_ready">Prêt</div>
+            <button onclick="syncCloud('save')" class="btn-blue btn-sm" data-i18n="admin_sync_save">☁️ Sauvegarder</button>
+            <button onclick="syncCloud('load')" class="btn-green btn-sm" data-i18n="admin_sync_load">☁️ Charger</button>
+            <button onclick="logout()" class="btn-red btn-sm" data-i18n="admin_logout">Déconnexion</button>
+        </div>
     </div>
 
-    <div id="appSection" class="hidden">
-        <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
-            <h1 style="margin:0;" data-i18n="admin_dashboard">Tableau de bord</h1>
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <div id="syncStatus" class="sync-status" data-i18n="admin_sync_ready">Prêt</div>
-                <button onclick="syncCloud('save')" class="btn-blue btn-sm" data-i18n="admin_sync_save">☁️ Sauvegarder</button>
-                <button onclick="syncCloud('load')" class="btn-green btn-sm" data-i18n="admin_sync_load">☁️ Charger</button>
-                <button onclick="logout()" class="btn-red btn-sm" style="width:auto; padding: 10px;" data-i18n="admin_logout">Déconnexion</button>
-            </div>
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+    <aside class="drawer" id="drawer">
+        <div class="drawer-header">
+            <h2 style="margin: 0; color: var(--primary); font-size: 1.1rem;">Menu</h2>
+            <button class="drawer-close" onclick="closeDrawer()">✕</button>
         </div>
+        <nav class="drawer-nav">
+            <button class="drawer-item active" data-tab="caisse" onclick="switchTab('caisse')">💰 <span data-i18n="admin_tab_caisse">Caisse</span></button>
+            <button class="drawer-item" data-tab="archives" onclick="switchTab('archives')">📁 <span data-i18n="admin_tab_archives">Archives</span></button>
+            <button class="drawer-item" data-tab="editor" onclick="switchTab('editor')">📝 <span data-i18n="admin_tab_editor">Éditeur</span></button>
+            <button class="drawer-item" data-tab="site" onclick="switchTab('site')">🛠️ <span data-i18n="admin_tab_site">Modifier le site</span></button>
+        </nav>
+    </aside>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('caisse')" data-i18n="admin_tab_caisse">💰 Caisse</button>
-            <button class="tab" onclick="switchTab('archives')" data-i18n="admin_tab_archives">📁 Archives</button>
-            <button class="tab" onclick="switchTab('editor')" data-i18n="admin_tab_editor">📝 Éditeur</button>
-            <button class="tab" onclick="switchTab('blog')" data-i18n="admin_tab_blog">📰 Blog & Membres</button>
-        </div>
-
-        <!-- CAISSE -->
+    <main class="admin-main">
         <div id="tabCaisse" class="card">
             <h2 data-i18n="admin_caisse_title">💰 Journal de Caisse</h2>
             <div class="flex">
@@ -76,7 +326,6 @@
                 <input type="number" id="txAmount" placeholder="Montant" data-i18n-placeholder="admin_amount_placeholder" style="flex: 1;">
                 <button onclick="addTransaction()" style="width: 100px;" data-i18n="admin_add_btn">Ajouter</button>
             </div>
-            
             <table id="txTable">
                 <thead>
                     <tr>
@@ -88,14 +337,14 @@
                 </thead>
                 <tbody></tbody>
             </table>
-
             <div class="flex" style="margin-top: 20px;">
                 <button onclick="exportCSV()" class="btn-green" data-i18n="admin_export_csv">📥 Export CSV</button>
                 <button onclick="exportPDF()" class="btn-red" data-i18n="admin_export_pdf">📄 Export PDF</button>
+                <input type="file" id="importCSV" accept=".csv" style="display:none;" onchange="importCSV(event)">
+                <button onclick="document.getElementById('importCSV').click()" class="btn-grey" data-i18n="admin_import_csv">📤 Import CSV</button>
             </div>
         </div>
 
-        <!-- ARCHIVES -->
         <div id="tabArchives" class="card hidden">
             <h2 data-i18n="admin_archives_title">📁 Archives</h2>
             <div class="flex" style="margin-bottom: 20px;">
@@ -104,550 +353,815 @@
             </div>
             <div class="flex" style="margin-bottom: 20px;">
                 <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.txt" style="display:none;" onchange="uploadFile(event)">
-                <button onclick="document.getElementById('fileUpload').click()" class="btn-blue" data-i18n="admin_import_file">📤 Importer fichier</button>
             </div>
             <div id="foldersContainer"></div>
         </div>
 
-        <!-- ÉDITEUR DE TEXTE -->
         <div id="tabEditor" class="card hidden">
             <h2 data-i18n="admin_editor_title">📝 Éditeur de texte</h2>
             <div class="flex">
-                <select id="editorFolder">
-                    <option value="Général" data-i18n="admin_general_folder">Général</option>
-                </select>
+                <select id="editorFolder"><option value="Général" data-i18n="admin_general_folder">Général</option></select>
                 <input type="text" id="editorTitle" placeholder="Titre du document" data-i18n-placeholder="admin_title_placeholder">
             </div>
-            <textarea id="editorContent" placeholder="Écrivez votre texte ici..." data-i18n-placeholder="admin_text_placeholder"></textarea>
+            <textarea id="editorContent" placeholder="Écrivez votre texte ici..." data-i18n-placeholder="admin_text_placeholder" style="min-height: 150px;"></textarea>
             <button onclick="saveTextDoc()" class="btn-green" style="margin-top: 10px;" data-i18n="admin_save_doc">💾 Enregistrer le document</button>
         </div>
 
-        <!-- BLOG & MEMBRES -->
-        <div id="tabBlog" class="card hidden">
-            <h2 data-i18n="admin_blog_title">📰 Blog & Membres</h2>
-            
-            <h3 data-i18n="admin_blog_add">Ajouter un article</h3>
-            <div class="flex">
-                <input type="text" id="blogTitle" placeholder="Titre de l'article" data-i18n-placeholder="admin_blog_title_ph">
+        <div id="tabSite" class="card hidden">
+            <h2 data-i18n="admin_site_title">🛠️ Modifier le site</h2>
+            <div class="subtabs">
+                <button class="subtab active" data-sub="blog" onclick="switchSubTab('blog')" data-i18n="admin_site_blog_tab">📰 Blog</button>
+                <button class="subtab" data-sub="members" onclick="switchSubTab('members')" data-i18n="admin_site_members_tab">👥 Membres</button>
+                <button class="subtab" data-sub="thanks" onclick="switchSubTab('thanks')" data-i18n="admin_site_thanks_tab">🙏 Remerciements</button>
             </div>
-            <textarea id="blogContent" placeholder="Contenu de l'article..." data-i18n-placeholder="admin_blog_content_ph"></textarea>
-            <button onclick="addBlogPost()" class="btn-blue" style="margin-top: 10px;" data-i18n="admin_blog_publish">➕ Publier l'article</button>
-            <div id="blogList" style="margin-top: 20px;"></div>
 
-            <hr style="margin: 30px 0; border-top: 1px solid #ddd;">
-
-            <h3 data-i18n="admin_members_add">Mettre à jour les membres</h3>
-            <div class="flex">
-                <input type="text" id="memberName" placeholder="Nom du membre" data-i18n-placeholder="admin_member_name_ph">
-                <input type="text" id="memberRole" placeholder="Rôle (ex: Président)" data-i18n-placeholder="admin_member_role_ph">
+            <div id="subTabBlog" class="subtab-content">
+                <h3 data-i18n="admin_blog_add_title">Ajouter un article de blog</h3>
+                <div class="blog-lang-tabs">
+                    <button class="blog-lang-tab active" data-lang="fr" onclick="switchBlogLang('fr')">🇫🇷 FR</button>
+                    <button class="blog-lang-tab" data-lang="en" onclick="switchBlogLang('en')">🇬🇧 EN</button>
+                    <button class="blog-lang-tab" data-lang="de" onclick="switchBlogLang('de')">🇩🇪 DE</button>
+                    <button class="blog-lang-tab" data-lang="it" onclick="switchBlogLang('it')">🇮🇹 IT</button>
+                    <button class="blog-lang-tab" data-lang="rm" onclick="switchBlogLang('rm')">🇨🇭 RM</button>
+                </div>
+                <div id="blogLangPanels">
+                    <div class="blog-lang-panel active" data-lang-panel="fr">
+                        <input type="text" class="blog-title-input" data-lang="fr" placeholder="Titre (FR)">
+                        <textarea class="blog-content-input" data-lang="fr" placeholder="Contenu (FR)" style="min-height: 100px;"></textarea>
+                    </div>
+                    <div class="blog-lang-panel" data-lang-panel="en">
+                        <input type="text" class="blog-title-input" data-lang="en" placeholder="Title (EN)">
+                        <textarea class="blog-content-input" data-lang="en" placeholder="Content (EN)" style="min-height: 100px;"></textarea>
+                    </div>
+                    <div class="blog-lang-panel" data-lang-panel="de">
+                        <input type="text" class="blog-title-input" data-lang="de" placeholder="Titel (DE)">
+                        <textarea class="blog-content-input" data-lang="de" placeholder="Inhalt (DE)" style="min-height: 100px;"></textarea>
+                    </div>
+                    <div class="blog-lang-panel" data-lang-panel="it">
+                        <input type="text" class="blog-title-input" data-lang="it" placeholder="Titolo (IT)">
+                        <textarea class="blog-content-input" data-lang="it" placeholder="Contenuto (IT)" style="min-height: 100px;"></textarea>
+                    </div>
+                    <div class="blog-lang-panel" data-lang-panel="rm">
+                        <input type="text" class="blog-title-input" data-lang="rm" placeholder="Titel (RM)">
+                        <textarea class="blog-content-input" data-lang="rm" placeholder="Cuntegn (RM)" style="min-height: 100px;"></textarea>
+                    </div>
+                </div>
+                <div id="blogPublishStatus" class="publish-warning">
+                    ⚠️ Remplissez toutes les langues avant de publier
+                </div>
+                <button id="blogPublishBtn" onclick="publishBlogPost()" class="btn-blue" disabled style="margin-top: 10px;">
+                    ➕ <span data-i18n="admin_blog_publish">Publier l'article</span>
+                </button>
+                <h3 style="margin-top: 24px;" data-i18n="admin_blog_existing">Articles existants</h3>
+                <div id="blogList"></div>
             </div>
-            <div class="flex">
-                <input type="text" id="memberImage" placeholder="Image (ex: ben.png)" data-i18n-placeholder="admin_member_image_ph">
-                <select id="memberGroup">
-                    <option value="committee" data-i18n="admin_member_committee">Au comité</option>
-                    <option value="all" data-i18n="admin_member_all">Tous les membres</option>
+
+            <div id="subTabMembers" class="subtab-content hidden">
+                <h3 data-i18n="admin_members_add_title">Ajouter un membre</h3>
+                <input type="text" id="memberName" placeholder="Nom du membre" data-i18n-placeholder="admin_member_name">
+                <input type="text" id="memberImage" placeholder="Image (ex: ben.png)" data-i18n-placeholder="admin_member_image">
+                <label style="font-size: 0.85rem; font-weight: 600; color: #666; margin-top: 8px; display: block;">Rôle (5 langues)</label>
+                <div class="member-role-tabs">
+                    <button class="member-role-tab active" data-lang="fr" onclick="switchMemberLang('fr')">FR</button>
+                    <button class="member-role-tab" data-lang="en" onclick="switchMemberLang('en')">EN</button>
+                    <button class="member-role-tab" data-lang="de" onclick="switchMemberLang('de')">DE</button>
+                    <button class="member-role-tab" data-lang="it" onclick="switchMemberLang('it')">IT</button>
+                    <button class="member-role-tab" data-lang="rm" onclick="switchMemberLang('rm')">RM</button>
+                </div>
+                <div id="memberRolePanels">
+                    <div class="member-role-panel active" data-lang-panel="fr"><textarea class="member-role-input" data-lang="fr" placeholder="Rôle en français" style="min-height: 50px;"></textarea></div>
+                    <div class="member-role-panel" data-lang-panel="en"><textarea class="member-role-input" data-lang="en" placeholder="Role in English" style="min-height: 50px;"></textarea></div>
+                    <div class="member-role-panel" data-lang-panel="de"><textarea class="member-role-input" data-lang="de" placeholder="Rolle auf Deutsch" style="min-height: 50px;"></textarea></div>
+                    <div class="member-role-panel" data-lang-panel="it"><textarea class="member-role-input" data-lang="it" placeholder="Ruolo in italiano" style="min-height: 50px;"></textarea></div>
+                    <div class="member-role-panel" data-lang-panel="rm"><textarea class="member-role-input" data-lang="rm" placeholder="Rol en rumantsch" style="min-height: 50px;"></textarea></div>
+                </div>
+                <select id="memberGroup" style="margin-top: 8px;">
+                    <option value="committee" data-i18n="admin_member_group_committee">Au comité</option>
+                    <option value="all" data-i18n="admin_member_group_all">Tous les membres</option>
                 </select>
+                <button onclick="addMember()" class="btn-green" style="margin-top: 10px;">
+                    ➕ <span data-i18n="admin_member_add_btn">Ajouter le membre</span>
+                </button>
+                <h3 style="margin-top: 24px;" data-i18n="admin_member_existing">Membres existants</h3>
+                <div id="memberList"></div>
             </div>
-            <button onclick="addMember()" class="btn-green" style="margin-top: 10px;" data-i18n="admin_member_add_btn">➕ Ajouter le membre</button>
-            <div id="memberList" style="margin-top: 20px;"></div>
+
+            <div id="subTabThanks" class="subtab-content hidden">
+                <h3 data-i18n="admin_thanks_add_title">Ajouter un remerciement</h3>
+                <div class="flex">
+                    <input type="text" id="thanksName" placeholder="Nom" data-i18n-placeholder="admin_thanks_name" style="flex:2;">
+                    <button onclick="addThanks()" class="btn-green" data-i18n="admin_thanks_add_btn" style="flex:0.5;">➕ Ajouter</button>
+                </div>
+                <h3 style="margin-top: 24px;" data-i18n="admin_thanks_existing">Remerciements existants</h3>
+                <div id="thanksList"></div>
+            </div>
         </div>
-    </div>
 
-    <script>
-        // ==========================================
-        // 0. TRADUCTIONS
-        // ==========================================
-        const adminTranslations = {
-            fr: {
-                admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres.", admin_login_btn: "Se connecter",
-                admin_dashboard: "Tableau de bord", admin_sync_ready: "Prêt", admin_sync_save: "☁️ Sauvegarder", admin_sync_load: "☁️ Charger", admin_logout: "Déconnexion",
-                admin_tab_caisse: "💰 Caisse", admin_tab_archives: "📁 Archives", admin_tab_editor: "📝 Éditeur", admin_tab_blog: "📰 Blog & Membres",
-                admin_caisse_title: "💰 Journal de Caisse", admin_type_receive: "🟢 Reçu", admin_type_spend: "🔴 Dépense",
-                admin_desc_placeholder: "Description", admin_amount_placeholder: "Montant", admin_add_btn: "Ajouter",
-                admin_table_date: "Date", admin_table_desc: "Description", admin_table_amount: "Montant", admin_table_action: "Action",
-                admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF",
-                admin_archives_title: "📁 Archives", admin_folder_placeholder: "Nom du dossier", admin_create_folder: "Créer dossier", admin_import_file: "📤 Importer fichier",
-                admin_editor_title: "📝 Éditeur de texte", admin_general_folder: "Général", admin_title_placeholder: "Titre du document", admin_text_placeholder: "Écrivez votre texte ici...", admin_save_doc: "💾 Enregistrer le document",
-                admin_blog_title: "📰 Blog & Membres", admin_blog_add: "Ajouter un article", admin_blog_title_ph: "Titre de l'article", admin_blog_content_ph: "Contenu de l'article...", admin_blog_publish: "➕ Publier l'article",
-                admin_members_add: "Mettre à jour les membres", admin_member_name_ph: "Nom du membre", admin_member_role_ph: "Rôle", admin_member_image_ph: "Image (ex: ben.png)", admin_member_committee: "Au comité", admin_member_all: "Tous les membres", admin_member_add_btn: "➕ Ajouter le membre"
-            },
-            en: {
-                admin_login_title: "Committee Space", admin_login_desc: "Members only.", admin_login_btn: "Log in",
-                admin_dashboard: "Dashboard", admin_sync_ready: "Ready", admin_sync_save: "☁️ Save", admin_sync_load: "☁️ Load", admin_logout: "Log out",
-                admin_tab_caisse: "💰 Cash", admin_tab_archives: "📁 Archives", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Members",
-                admin_caisse_title: "💰 Cash Journal", admin_type_receive: "🟢 Received", admin_type_spend: "🔴 Spent",
-                admin_desc_placeholder: "Description", admin_amount_placeholder: "Amount", admin_add_btn: "Add",
-                admin_table_date: "Date", admin_table_desc: "Description", admin_table_amount: "Amount", admin_table_action: "Action",
-                admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF",
-                admin_archives_title: "📁 Archives", admin_folder_placeholder: "Folder name", admin_create_folder: "Create folder", admin_import_file: "📤 Import file",
-                admin_editor_title: "📝 Text Editor", admin_general_folder: "General", admin_title_placeholder: "Document title", admin_text_placeholder: "Write your text here...", admin_save_doc: "💾 Save document",
-                admin_blog_title: "📰 Blog & Members", admin_blog_add: "Add article", admin_blog_title_ph: "Article title", admin_blog_content_ph: "Article content...", admin_blog_publish: "➕ Publish article",
-                admin_members_add: "Update members", admin_member_name_ph: "Member name", admin_member_role_ph: "Role", admin_member_image_ph: "Image (ex: ben.png)", admin_member_committee: "Committee", admin_member_all: "All members", admin_member_add_btn: "➕ Add member"
-            },
-            de: {
-                admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Mitglieder.", admin_login_btn: "Anmelden",
-                admin_dashboard: "Dashboard", admin_sync_ready: "Bereit", admin_sync_save: "☁️ Speichern", admin_sync_load: "☁️ Laden", admin_logout: "Abmelden",
-                admin_tab_caisse: "💰 Kasse", admin_tab_archives: "📁 Archiv", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Mitglieder",
-                admin_caisse_title: "💰 Kassenbuch", admin_type_receive: "🟢 Eingenommen", admin_type_spend: "🔴 Ausgegeben",
-                admin_desc_placeholder: "Beschreibung", admin_amount_placeholder: "Betrag", admin_add_btn: "Hinzufügen",
-                admin_table_date: "Datum", admin_table_desc: "Beschreibung", admin_table_amount: "Betrag", admin_table_action: "Aktion",
-                admin_export_csv: "📥 CSV exportieren", admin_export_pdf: "📄 PDF exportieren",
-                admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Ordnername", admin_create_folder: "Ordner erstellen", admin_import_file: "📤 Datei importieren",
-                admin_editor_title: "📝 Texteditor", admin_general_folder: "Allgemein", admin_title_placeholder: "Dokumenttitel", admin_text_placeholder: "Schreiben Sie hier...", admin_save_doc: "💾 Dokument speichern",
-                admin_blog_title: "📰 Blog & Mitglieder", admin_blog_add: "Artikel hinzufügen", admin_blog_title_ph: "Artikeltitel", admin_blog_content_ph: "Artikelinhalt...", admin_blog_publish: "➕ Artikel veröffentlichen",
-                admin_members_add: "Mitglieder aktualisieren", admin_member_name_ph: "Name des Mitglieds", admin_member_role_ph: "Rolle", admin_member_image_ph: "Bild (z.B. ben.png)", admin_member_committee: "Komitee", admin_member_all: "Alle Mitglieder", admin_member_add_btn: "➕ Mitglied hinzufügen"
-            },
-            it: {
-                admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri.", admin_login_btn: "Accedi",
-                admin_dashboard: "Dashboard", admin_sync_ready: "Pronto", admin_sync_save: "☁️ Salva", admin_sync_load: "☁️ Carica", admin_logout: "Disconnetti",
-                admin_tab_caisse: "💰 Cassa", admin_tab_archives: "📁 Archivio", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Membri",
-                admin_caisse_title: "💰 Libro Cassa", admin_type_receive: "🟢 Ricevuto", admin_type_spend: "🔴 Speso",
-                admin_desc_placeholder: "Descrizione", admin_amount_placeholder: "Importo", admin_add_btn: "Aggiungi",
-                admin_table_date: "Data", admin_table_desc: "Descrizione", admin_table_amount: "Importo", admin_table_action: "Azione",
-                admin_export_csv: "📥 Esporta CSV", admin_export_pdf: "📄 Esporta PDF",
-                admin_archives_title: "📁 Archivio", admin_folder_placeholder: "Nome cartella", admin_create_folder: "Crea cartella", admin_import_file: "📤 Importa file",
-                admin_editor_title: "📝 Editor di testo", admin_general_folder: "Generale", admin_title_placeholder: "Titolo documento", admin_text_placeholder: "Scrivi qui...", admin_save_doc: "💾 Salva documento",
-                admin_blog_title: "📰 Blog & Membri", admin_blog_add: "Aggiungi articolo", admin_blog_title_ph: "Titolo articolo", admin_blog_content_ph: "Contenuto articolo...", admin_blog_publish: "➕ Pubblica articolo",
-                admin_members_add: "Aggiorna membri", admin_member_name_ph: "Nome membro", admin_member_role_ph: "Ruolo", admin_member_image_ph: "Immagine (es: ben.png)", admin_member_committee: "Comitato", admin_member_all: "Tutti i membri", admin_member_add_btn: "➕ Aggiungi membro"
-            },
-            rm: {
-                admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers.", admin_login_btn: "S'annunziar",
-                admin_dashboard: "Dashboard", admin_sync_ready: "Pront", admin_sync_save: "☁️ Memorisar", admin_sync_load: "☁️ Chargiar", admin_logout: "Sortir",
-                admin_tab_caisse: "💰 Cassa", admin_tab_archives: "📁 Archiv", admin_tab_editor: "📝 Editor", admin_tab_blog: "📰 Blog & Commembers",
-                admin_caisse_title: "💰 Cudesch da cassa", admin_type_receive: "🟢 Recevì", admin_type_spend: "🔴 Spendì",
-                admin_desc_placeholder: "Descripziun", admin_amount_placeholder: "Import", admin_add_btn: "Agiuntar",
-                admin_table_date: "Data", admin_table_desc: "Descripziun", admin_table_amount: "Import", admin_table_action: "Acziun",
-                admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF",
-                admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Num da l'ordinatur", admin_create_folder: "Crear ordinatur", admin_import_file: "📤 Importar datoteca",
-                admin_editor_title: "📝 Editor da text", admin_general_folder: "General", admin_title_placeholder: "Titel dal document", admin_text_placeholder: "Scriva qua...", admin_save_doc: "💾 Memorisar il document",
-                admin_blog_title: "📰 Blog & Commembers", admin_blog_add: "Agiuntar in artitgel", admin_blog_title_ph: "Titel da l'artitgel", admin_blog_content_ph: "Cuntegn da l'artitgel...", admin_blog_publish: "➕ Publicar l'artitgel",
-                admin_members_add: "Actualisar ils commembers", admin_member_name_ph: "Num dal commember", admin_member_role_ph: "Rolla", admin_member_image_ph: "Maletg (p.ex. ben.png)", admin_member_committee: "Comité", admin_member_all: "Tuts ils commembers", admin_member_add_btn: "➕ Agiuntar commember"
-            }
-        };
+        <div class="card flex" style="justify-content: center; margin-top: 20px;">
+            <button onclick="downloadBackup()" class="btn-blue" style="max-width: 300px;" data-i18n="admin_save_local">💾 Sauvegarde locale (JSON)</button>
+            <input type="file" id="uploadBackup" accept=".json" style="display:none;" onchange="uploadBackup(event)">
+            <button onclick="document.getElementById('uploadBackup').click()" class="btn-blue" style="max-width: 300px;" data-i18n="admin_restore_local">📂 Restaurer (JSON)</button>
+        </div>
+    </main>
+</div>
 
-        let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
+<script>
+const adminTranslations = {
+    fr: {
+        admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres du comité.", admin_login_btn: "Se connecter",
+        admin_dashboard: "Tableau de bord", admin_sync_ready: "Prêt", admin_sync_save: "☁️ Sauvegarder", admin_sync_load: "☁️ Charger", admin_logout: "Déconnexion",
+        admin_tab_caisse: "Caisse", admin_tab_archives: "Archives", admin_tab_editor: "Éditeur", admin_tab_site: "Modifier le site",
+        admin_caisse_title: "💰 Journal de Caisse", admin_type_receive: "🟢 Reçu", admin_type_spend: "🔴 Dépense",
+        admin_desc_placeholder: "Description", admin_amount_placeholder: "Montant", admin_add_btn: "Ajouter",
+        admin_table_date: "Date", admin_table_desc: "Description", admin_table_amount: "Montant", admin_table_action: "Action",
+        admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF", admin_import_csv: "📤 Import CSV",
+        admin_archives_title: "📁 Archives", admin_folder_placeholder: "Nom du dossier", admin_create_folder: "Créer dossier",
+        admin_editor_title: "📝 Éditeur de texte", admin_general_folder: "Général", admin_title_placeholder: "Titre du document", admin_text_placeholder: "Écrivez votre texte ici...", admin_save_doc: "💾 Enregistrer le document",
+        admin_save_local: "💾 Sauvegarde locale (JSON)", admin_restore_local: "📂 Restaurer (JSON)",
+        admin_site_title: "🛠️ Modifier le site", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Membres", admin_site_thanks_tab: "🙏 Remerciements",
+        admin_blog_add_title: "Ajouter un article de blog", admin_blog_publish: "Publier l'article", admin_blog_existing: "Articles existants",
+        admin_members_add_title: "Ajouter un membre", admin_member_name: "Nom du membre", admin_member_image: "Image (ex: ben.png)", admin_member_add_btn: "Ajouter le membre", admin_member_existing: "Membres existants",
+        admin_member_group_committee: "Au comité", admin_member_group_all: "Tous les membres",
+        admin_thanks_add_title: "Ajouter un remerciement", admin_thanks_name: "Nom", admin_thanks_add_btn: "➕ Ajouter", admin_thanks_existing: "Remerciements existants"
+    },
+    en: {
+        admin_login_title: "Committee Space", admin_login_desc: "Committee members only.", admin_login_btn: "Log in",
+        admin_dashboard: "Dashboard", admin_sync_ready: "Ready", admin_sync_save: "☁️ Save", admin_sync_load: "☁️ Load", admin_logout: "Log out",
+        admin_tab_caisse: "Cash", admin_tab_archives: "Archives", admin_tab_editor: "Editor", admin_tab_site: "Modify site",
+        admin_caisse_title: "💰 Cash Journal", admin_type_receive: "🟢 Received", admin_type_spend: "🔴 Spent",
+        admin_desc_placeholder: "Description", admin_amount_placeholder: "Amount", admin_add_btn: "Add",
+        admin_table_date: "Date", admin_table_desc: "Description", admin_table_amount: "Amount", admin_table_action: "Action",
+        admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF", admin_import_csv: "📤 Import CSV",
+        admin_archives_title: "📁 Archives", admin_folder_placeholder: "Folder name", admin_create_folder: "Create folder",
+        admin_editor_title: "📝 Text Editor", admin_general_folder: "General", admin_title_placeholder: "Document title", admin_text_placeholder: "Write your text here...", admin_save_doc: "💾 Save document",
+        admin_save_local: "💾 Local Backup (JSON)", admin_restore_local: "📂 Restore (JSON)",
+        admin_site_title: "🛠️ Modify site", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Members", admin_site_thanks_tab: "🙏 Thanks",
+        admin_blog_add_title: "Add blog article", admin_blog_publish: "Publish article", admin_blog_existing: "Existing articles",
+        admin_members_add_title: "Add member", admin_member_name: "Member name", admin_member_image: "Image (e.g. ben.png)", admin_member_add_btn: "Add member", admin_member_existing: "Existing members",
+        admin_member_group_committee: "Committee", admin_member_group_all: "All members",
+        admin_thanks_add_title: "Add thanks", admin_thanks_name: "Name", admin_thanks_add_btn: "➕ Add", admin_thanks_existing: "Existing thanks"
+    },
+    de: {
+        admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Komitee-Mitglieder.", admin_login_btn: "Anmelden",
+        admin_dashboard: "Dashboard", admin_sync_ready: "Bereit", admin_sync_save: "☁️ Speichern", admin_sync_load: "☁️ Laden", admin_logout: "Abmelden",
+        admin_tab_caisse: "Kasse", admin_tab_archives: "Archiv", admin_tab_editor: "Editor", admin_tab_site: "Website bearbeiten",
+        admin_caisse_title: "💰 Kassenbuch", admin_type_receive: "🟢 Eingenommen", admin_type_spend: "🔴 Ausgegeben",
+        admin_desc_placeholder: "Beschreibung", admin_amount_placeholder: "Betrag", admin_add_btn: "Hinzufügen",
+        admin_table_date: "Datum", admin_table_desc: "Beschreibung", admin_table_amount: "Betrag", admin_table_action: "Aktion",
+        admin_export_csv: "📥 CSV exportieren", admin_export_pdf: "📄 PDF exportieren", admin_import_csv: "📤 CSV importieren",
+        admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Ordnername", admin_create_folder: "Ordner erstellen",
+        admin_editor_title: "📝 Texteditor", admin_general_folder: "Allgemein", admin_title_placeholder: "Dokumenttitel", admin_text_placeholder: "Schreiben Sie hier...", admin_save_doc: "💾 Dokument speichern",
+        admin_save_local: "💾 Lokales Backup (JSON)", admin_restore_local: "📂 Wiederherstellen (JSON)",
+        admin_site_title: "🛠️ Website bearbeiten", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Mitglieder", admin_site_thanks_tab: "🙏 Danksagungen",
+        admin_blog_add_title: "Blog-Artikel hinzufügen", admin_blog_publish: "Artikel veröffentlichen", admin_blog_existing: "Bestehende Artikel",
+        admin_members_add_title: "Mitglied hinzufügen", admin_member_name: "Mitgliedsname", admin_member_image: "Bild (z.B. ben.png)", admin_member_add_btn: "Mitglied hinzufügen", admin_member_existing: "Bestehende Mitglieder",
+        admin_member_group_committee: "Komitee", admin_member_group_all: "Alle Mitglieder",
+        admin_thanks_add_title: "Danksagung hinzufügen", admin_thanks_name: "Name", admin_thanks_add_btn: "➕ Hinzufügen", admin_thanks_existing: "Bestehende Danksagungen"
+    },
+    it: {
+        admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri del comitato.", admin_login_btn: "Accedi",
+        admin_dashboard: "Dashboard", admin_sync_ready: "Pronto", admin_sync_save: "☁️ Salva", admin_sync_load: "☁️ Carica", admin_logout: "Disconnetti",
+        admin_tab_caisse: "Cassa", admin_tab_archives: "Archivio", admin_tab_editor: "Editor", admin_tab_site: "Modifica sito",
+        admin_caisse_title: "💰 Libro Cassa", admin_type_receive: "🟢 Ricevuto", admin_type_spend: "🔴 Speso",
+        admin_desc_placeholder: "Descrizione", admin_amount_placeholder: "Importo", admin_add_btn: "Aggiungi",
+        admin_table_date: "Data", admin_table_desc: "Descrizione", admin_table_amount: "Importo", admin_table_action: "Azione",
+        admin_export_csv: "📥 Esporta CSV", admin_export_pdf: "📄 Esporta PDF", admin_import_csv: "📤 Importa CSV",
+        admin_archives_title: "📁 Archivio", admin_folder_placeholder: "Nome cartella", admin_create_folder: "Crea cartella",
+        admin_editor_title: "📝 Editor di testo", admin_general_folder: "Generale", admin_title_placeholder: "Titolo documento", admin_text_placeholder: "Scrivi qui...", admin_save_doc: "💾 Salva documento",
+        admin_save_local: "💾 Backup locale (JSON)", admin_restore_local: "📂 Ripristina (JSON)",
+        admin_site_title: "🛠️ Modifica sito", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Membri", admin_site_thanks_tab: "🙏 Ringraziamenti",
+        admin_blog_add_title: "Aggiungi articolo blog", admin_blog_publish: "Pubblica articolo", admin_blog_existing: "Articoli esistenti",
+        admin_members_add_title: "Aggiungi membro", admin_member_name: "Nome del membro", admin_member_image: "Immagine (es: ben.png)", admin_member_add_btn: "Aggiungi membro", admin_member_existing: "Membri esistenti",
+        admin_member_group_committee: "Comitato", admin_member_group_all: "Tutti i membri",
+        admin_thanks_add_title: "Aggiungi ringraziamento", admin_thanks_name: "Nome", admin_thanks_add_btn: "➕ Aggiungi", admin_thanks_existing: "Ringraziamenti esistenti"
+    },
+    rm: {
+        admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers dal comité.", admin_login_btn: "S'annunziar",
+        admin_dashboard: "Dashboard", admin_sync_ready: "Pront", admin_sync_save: "☁️ Memorisar", admin_sync_load: "☁️ Chargiar", admin_logout: "Sortir",
+        admin_tab_caisse: "Cassa", admin_tab_archives: "Archiv", admin_tab_editor: "Editor", admin_tab_site: "Modifitgar il sit",
+        admin_caisse_title: "💰 Cudesch da cassa", admin_type_receive: "🟢 Recevì", admin_type_spend: "🔴 Spendì",
+        admin_desc_placeholder: "Descripziun", admin_amount_placeholder: "Import", admin_add_btn: "Agiuntar",
+        admin_table_date: "Data", admin_table_desc: "Descripziun", admin_table_amount: "Import", admin_table_action: "Acziun",
+        admin_export_csv: "📥 Export CSV", admin_export_pdf: "📄 Export PDF", admin_import_csv: "📤 Import CSV",
+        admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Num da l'ordinatur", admin_create_folder: "Crear ordinatur",
+        admin_editor_title: "📝 Editor da text", admin_general_folder: "General", admin_title_placeholder: "Titel dal document", admin_text_placeholder: "Scriva qua...", admin_save_doc: "💾 Memorisar il document",
+        admin_save_local: "💾 Backup local (JSON)", admin_restore_local: "📂 Restaurar (JSON)",
+        admin_site_title: "🛠️ Modifitgar il sit", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Commembers", admin_site_thanks_tab: "🙏 Grazias",
+        admin_blog_add_title: "Agiuntar in artitgel da blog", admin_blog_publish: "Publitgar l'artitgel", admin_blog_existing: "Artitgels existents",
+        admin_members_add_title: "Agiuntar in commember", admin_member_name: "Num dal commember", admin_member_image: "Immagine (p.ex. ben.png)", admin_member_add_btn: "Agiuntar il commember", admin_member_existing: "Commembers existents",
+        admin_member_group_committee: "Comité", admin_member_group_all: "Tuts ils commembers",
+        admin_thanks_add_title: "Agiuntar ina grazia", admin_thanks_name: "Num", admin_thanks_add_btn: "➕ Agiuntar", admin_thanks_existing: "Grazias existentas"
+    }
+};
 
-        function t(key) {
-            return (adminTranslations[currentLang] && adminTranslations[currentLang][key]) ? adminTranslations[currentLang][key] : key;
+let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
+
+function t(key) {
+    return (adminTranslations[currentLang] && adminTranslations[currentLang][key]) ? adminTranslations[currentLang][key] : key;
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (adminTranslations[currentLang] && adminTranslations[currentLang][key]) {
+            el.textContent = adminTranslations[currentLang][key];
         }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (adminTranslations[currentLang] && adminTranslations[currentLang][key]) {
+            el.placeholder = adminTranslations[currentLang][key];
+        }
+    });
+}
 
-        function applyTranslations() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (adminTranslations[currentLang] && adminTranslations[currentLang][key]) {
-                    el.innerHTML = adminTranslations[currentLang][key];
-                }
+const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
+const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
+
+let transactions = [];
+let archives = {};
+let blogPosts = [];
+let members = [];
+let specialThanks = [];
+let isLoggedIn = false;
+let currentBlogLang = 'fr';
+let currentMemberLang = 'fr';
+
+function login() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+    if (email === atob(ENCODED_EMAIL) && pass === atob(ENCODED_PASSWORD)) {
+        isLoggedIn = true;
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('appSection').classList.remove('hidden');
+        loadAllData();
+    } else {
+        document.getElementById('authMsg').textContent = "❌ Identifiants incorrects.";
+    }
+}
+
+function logout() {
+    isLoggedIn = false;
+    document.getElementById('appSection').classList.add('hidden');
+    document.getElementById('authSection').classList.remove('hidden');
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    transactions = [];
+    archives = {};
+    blogPosts = [];
+    members = [];
+    specialThanks = [];
+}
+
+function loadAllData() {
+    const savedCaisse = localStorage.getItem('vc_caisse');
+    if (savedCaisse) transactions = JSON.parse(savedCaisse);
+    const savedArchives = localStorage.getItem('vc_archives');
+    if (savedArchives) archives = JSON.parse(savedArchives);
+    const savedBlog = localStorage.getItem('vc_blog');
+    if (savedBlog) blogPosts = JSON.parse(savedBlog);
+    const savedMembers = localStorage.getItem('vc_members');
+    if (savedMembers) members = JSON.parse(savedMembers);
+    const savedThanks = localStorage.getItem('vc_thanks');
+    if (savedThanks) specialThanks = JSON.parse(savedThanks);
+    renderTable();
+    renderArchives();
+    renderBlog();
+    renderMembers();
+    renderThanks();
+}
+
+function saveAllData() {
+    localStorage.setItem('vc_caisse', JSON.stringify(transactions));
+    localStorage.setItem('vc_archives', JSON.stringify(archives));
+    localStorage.setItem('vc_blog', JSON.stringify(blogPosts));
+    localStorage.setItem('vc_members', JSON.stringify(members));
+    localStorage.setItem('vc_thanks', JSON.stringify(specialThanks));
+}
+
+function toggleDrawer() {
+    document.getElementById('drawer').classList.toggle('open');
+    document.getElementById('drawerBackdrop').classList.toggle('open');
+}
+
+function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerBackdrop').classList.remove('open');
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.drawer-item').forEach(t => t.classList.remove('active'));
+    const item = document.querySelector('.drawer-item[data-tab="' + tab + '"]');
+    if (item) item.classList.add('active');
+    document.getElementById('tabCaisse').classList.add('hidden');
+    document.getElementById('tabArchives').classList.add('hidden');
+    document.getElementById('tabEditor').classList.add('hidden');
+    document.getElementById('tabSite').classList.add('hidden');
+    if (tab === 'caisse') document.getElementById('tabCaisse').classList.remove('hidden');
+    if (tab === 'archives') { document.getElementById('tabArchives').classList.remove('hidden'); renderArchives(); }
+    if (tab === 'editor') { document.getElementById('tabEditor').classList.remove('hidden'); updateEditorFolders(); }
+    if (tab === 'site') { document.getElementById('tabSite').classList.remove('hidden'); switchSubTab('blog'); }
+    if (window.innerWidth <= 768) closeDrawer();
+}
+
+function switchSubTab(sub) {
+    document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.subtab[data-sub="' + sub + '"]').classList.add('active');
+    document.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('subTab' + sub.charAt(0).toUpperCase() + sub.slice(1)).classList.remove('hidden');
+    if (sub === 'blog') renderBlog();
+    if (sub === 'members') renderMembers();
+    if (sub === 'thanks') renderThanks();
+}
+
+function renderTable() {
+    const tbody = document.querySelector('#txTable tbody');
+    tbody.innerHTML = '';
+    transactions.forEach((tx, index) => {
+        let montantAffiche = tx.amount;
+        let couleur = 'green';
+        if (tx.type === 'spend') { montantAffiche = -Math.abs(tx.amount); couleur = 'red'; }
+        else { montantAffiche = Math.abs(tx.amount); }
+        tbody.innerHTML += '<tr><td>' + tx.date + '</td><td>' + tx.desc + '</td><td style="color:' + couleur + '; font-weight:bold;">' + montantAffiche.toFixed(2) + ' CHF</td><td><button class="btn-red btn-sm" onclick="deleteTransaction(' + index + ')">🗑️</button></td></tr>';
+    });
+}
+
+function addTransaction() {
+    const type = document.getElementById('txType').value;
+    const date = document.getElementById('txDate').value;
+    const desc = document.getElementById('txDesc').value;
+    const amount = parseFloat(document.getElementById('txAmount').value);
+    if (!date || !desc || isNaN(amount)) return alert("Remplis tous les champs !");
+    transactions.push({ type: type, date: date, desc: desc, amount: Math.abs(amount) });
+    renderTable();
+    saveAllData();
+    document.getElementById('txDate').value = '';
+    document.getElementById('txDesc').value = '';
+    document.getElementById('txAmount').value = '';
+}
+
+function deleteTransaction(index) {
+    if (confirm("Supprimer cette ligne ?")) {
+        transactions.splice(index, 1);
+        renderTable();
+        saveAllData();
+    }
+}
+
+function renderArchives() {
+    const container = document.getElementById('foldersContainer');
+    container.innerHTML = '';
+    if (Object.keys(archives).length === 0) {
+        container.innerHTML = '<p style="color:#888; font-style:italic;">Aucun dossier.</p>';
+        return;
+    }
+    for (const folderName in archives) {
+        let folderHtml = '<div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; background: white;"><div style="display:flex; justify-content:space-between; align-items:center;"><h3 style="margin:0; color:#457b9d;">📁 ' + folderName + '</h3><button class="btn-red btn-sm" onclick="deleteFolder(\'' + folderName + '\')">Supprimer</button></div><div style="margin-top:10px;">';
+        if (archives[folderName].length === 0) {
+            folderHtml += '<p style="font-size:12px; color:#aaa;">Dossier vide</p>';
+        } else {
+            archives[folderName].forEach(doc => {
+                folderHtml += '<div class="item-card" style="display:flex; justify-content:space-between; align-items:center;"><span>' + (doc.type === 'file' ? '📄' : '📝') + ' ' + doc.name + '</span><div>' + (doc.type === 'file' ? '<a href="' + doc.content + '" download="' + doc.name + '" class="btn-blue btn-sm" style="text-decoration:none; padding:5px 10px; color:white; border-radius:4px; font-size:12px;">Télécharger</a>' : '<button class="btn-blue btn-sm" onclick="viewTextDoc(\'' + folderName + '\', \'' + doc.id + '\')">Lire</button>') + '<button class="btn-red btn-sm" onclick="deleteDoc(\'' + folderName + '\', \'' + doc.id + '\')">🗑️</button></div></div>';
             });
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (adminTranslations[currentLang] && adminTranslations[currentLang][key]) {
-                    el.placeholder = adminTranslations[currentLang][key];
+        }
+        folderHtml += '</div></div>';
+        container.innerHTML += folderHtml;
+    }
+}
+
+function createFolder() {
+    const name = document.getElementById('newFolderName').value.trim();
+    if (!name) return alert("Entrez un nom.");
+    if (archives[name]) return alert("Dossier existant.");
+    archives[name] = [];
+    document.getElementById('newFolderName').value = '';
+    renderArchives();
+    saveAllData();
+    updateEditorFolders();
+}
+
+function deleteFolder(name) {
+    if (confirm('Supprimer le dossier "' + name + '" ?')) {
+        delete archives[name];
+        renderArchives();
+        saveAllData();
+        updateEditorFolders();
+    }
+}
+
+function uploadFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const folder = prompt("Nom du dossier (laisser vide pour 'Général')");
+    const targetFolder = folder && folder.trim() !== '' ? folder.trim() : 'Général';
+    if (!archives[targetFolder]) archives[targetFolder] = [];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        archives[targetFolder].push({ id: Date.now().toString(), name: file.name, type: 'file', content: e.target.result });
+        renderArchives();
+        saveAllData();
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+}
+
+function deleteDoc(folder, id) {
+    if (confirm("Supprimer ce document ?")) {
+        archives[folder] = archives[folder].filter(doc => doc.id !== id);
+        renderArchives();
+        saveAllData();
+    }
+}
+
+function viewTextDoc(folder, id) {
+    const doc = archives[folder].find(d => d.id === id);
+    if (doc) alert("📄 " + doc.name + "\n\n" + doc.content);
+}
+
+function updateEditorFolders() {
+    const select = document.getElementById('editorFolder');
+    select.innerHTML = '<option value="Général">' + t('admin_general_folder') + '</option>';
+    for (const folderName in archives) {
+        if (folderName !== 'Général') {
+            select.innerHTML += '<option value="' + folderName + '">' + folderName + '</option>';
+        }
+    }
+}
+
+function saveTextDoc() {
+    const folder = document.getElementById('editorFolder').value;
+    const title = document.getElementById('editorTitle').value.trim();
+    const content = document.getElementById('editorContent').value.trim();
+    if (!title || !content) return alert("Remplis le titre et le contenu.");
+    if (!archives[folder]) archives[folder] = [];
+    archives[folder].push({ id: Date.now().toString(), name: title + ".txt", type: 'text', content: content });
+    saveAllData();
+    alert("✅ Document enregistré !");
+    document.getElementById('editorTitle').value = '';
+    document.getElementById('editorContent').value = '';
+}
+
+function switchBlogLang(lang) {
+    currentBlogLang = lang;
+    document.querySelectorAll('.blog-lang-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.blog-lang-tab[data-lang="' + lang + '"]').classList.add('active');
+    document.querySelectorAll('.blog-lang-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.blog-lang-panel[data-lang-panel="' + lang + '"]').classList.add('active');
+}
+
+function switchMemberLang(lang) {
+    currentMemberLang = lang;
+    document.querySelectorAll('.member-role-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.member-role-tab[data-lang="' + lang + '"]').classList.add('active');
+    document.querySelectorAll('.member-role-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.member-role-panel[data-lang-panel="' + lang + '"]').classList.add('active');
+}
+
+function updateBlogPublishState() {
+    const langs = ['fr', 'en', 'de', 'it', 'rm'];
+    let allFilled = true;
+    langs.forEach(lang => {
+        const titleEl = document.querySelector('.blog-title-input[data-lang="' + lang + '"]');
+        const contentEl = document.querySelector('.blog-content-input[data-lang="' + lang + '"]');
+        const filled = titleEl && titleEl.value.trim() && contentEl && contentEl.value.trim();
+        const tabEl = document.querySelector('.blog-lang-tab[data-lang="' + lang + '"]');
+        if (filled) tabEl.classList.add('filled');
+        else { tabEl.classList.remove('filled'); allFilled = false; }
+    });
+    const btn = document.getElementById('blogPublishBtn');
+    const status = document.getElementById('blogPublishStatus');
+    if (allFilled) {
+        btn.disabled = false;
+        status.className = 'publish-success';
+        status.textContent = '✅ Prêt à publier';
+    } else {
+        btn.disabled = true;
+        status.className = 'publish-warning';
+        status.textContent = '⚠️ Remplissez toutes les langues avant de publier';
+    }
+}
+
+document.querySelectorAll('.blog-title-input, .blog-content-input').forEach(el => {
+    el.addEventListener('input', updateBlogPublishState);
+});
+
+function publishBlogPost() {
+    const langs = ['fr', 'en', 'de', 'it', 'rm'];
+    const articleId = Date.now().toString();
+    const date = new Date().toISOString();
+    langs.forEach(lang => {
+        const title = document.querySelector('.blog-title-input[data-lang="' + lang + '"]').value.trim();
+        const content = document.querySelector('.blog-content-input[data-lang="' + lang + '"]').value.trim();
+        blogPosts.push({ id: articleId, date: date, lang: lang, title: title, content: content });
+    });
+    saveAllData();
+    renderBlog();
+    langs.forEach(lang => {
+        document.querySelector('.blog-title-input[data-lang="' + lang + '"]').value = '';
+        document.querySelector('.blog-content-input[data-lang="' + lang + '"]').value = '';
+    });
+    document.querySelectorAll('.blog-lang-tab').forEach(t => t.classList.remove('filled'));
+    updateBlogPublishState();
+    alert("✅ Article publié en 5 langues !");
+}
+
+function renderBlog() {
+    const container = document.getElementById('blogList');
+    if (blogPosts.length === 0) {
+        container.innerHTML = '<p style="color:#888;">Aucun article.</p>';
+        return;
+    }
+    const grouped = {};
+    blogPosts.forEach(post => {
+        if (!grouped[post.id]) grouped[post.id] = { id: post.id, date: post.date, titles: {}, langs: [] };
+        grouped[post.id].titles[post.lang] = post.title;
+        grouped[post.id].langs.push(post.lang);
+    });
+    const allLangs = ['fr', 'en', 'de', 'it', 'rm'];
+    container.innerHTML = Object.values(grouped).sort((a, b) => new Date(b.date) - new Date(a.date)).map(g => {
+        const chips = allLangs.map(l => '<span class="lang-chip ' + (g.langs.includes(l) ? 'filled' : '') + '">' + l.toUpperCase() + '</span>').join('');
+        return '<div class="item-card"><div class="item-card-header"><strong>' + (g.titles.fr || g.titles.en || Object.values(g.titles)[0] || '(sans titre)') + '</strong><button class="btn-red btn-sm" onclick="deleteBlogGroup(\'' + g.id + '\')">🗑️</button></div><div class="item-card-meta">' + new Date(g.date).toLocaleDateString() + '</div><div class="item-card-langs">' + chips + '</div></div>';
+    }).join('');
+}
+
+function deleteBlogGroup(id) {
+    if (confirm("Supprimer cet article dans toutes les langues ?")) {
+        blogPosts = blogPosts.filter(p => p.id !== id);
+        saveAllData();
+        renderBlog();
+    }
+}
+
+function addMember() {
+    const name = document.getElementById('memberName').value.trim();
+    const image = document.getElementById('memberImage').value.trim();
+    const group = document.getElementById('memberGroup').value;
+    if (!name) return alert("Remplis le nom.");
+    const role = {};
+    let hasAtLeastFr = false;
+    ['fr', 'en', 'de', 'it', 'rm'].forEach(lang => {
+        const val = document.querySelector('.member-role-input[data-lang="' + lang + '"]').value.trim();
+        role[lang] = val;
+        if (lang === 'fr' && val) hasAtLeastFr = true;
+    });
+    if (!hasAtLeastFr) return alert("Remplissez au moins le rôle en français.");
+    members.push({ id: Date.now().toString(), name: name, role: role, image: image, group: group });
+    saveAllData();
+    renderMembers();
+    document.getElementById('memberName').value = '';
+    document.getElementById('memberImage').value = '';
+    document.querySelectorAll('.member-role-input').forEach(el => el.value = '');
+}
+
+function renderMembers() {
+    const container = document.getElementById('memberList');
+    if (members.length === 0) {
+        container.innerHTML = '<p style="color:#888;">Aucun membre.</p>';
+        return;
+    }
+    const allLangs = ['fr', 'en', 'de', 'it', 'rm'];
+    container.innerHTML = members.map(m => {
+        const roleObj = (typeof m.role === 'object' && m.role !== null) ? m.role : { fr: m.role || '' };
+        const chips = allLangs.map(l => '<span class="lang-chip ' + (roleObj[l] ? 'filled' : '') + '">' + l.toUpperCase() + '</span>').join('');
+        return '<div class="item-card"><div class="item-card-header"><strong>' + m.name + '</strong><button class="btn-red btn-sm" onclick="deleteMember(\'' + m.id + '\')">🗑️</button></div><div class="item-card-meta">' + (m.group === 'committee' ? 'Comité' : 'Tous') + (m.image ? ' · ' + m.image : '') + '</div><div class="item-card-langs">' + chips + '</div></div>';
+    }).join('');
+}
+
+function deleteMember(id) {
+    if (confirm("Supprimer ce membre ?")) {
+        members = members.filter(m => m.id !== id);
+        saveAllData();
+        renderMembers();
+    }
+}
+
+function addThanks() {
+    const name = document.getElementById('thanksName').value.trim();
+    if (!name) return alert('Entrez un nom.');
+    specialThanks.push({ id: Date.now().toString(), name: name });
+    saveAllData();
+    renderThanks();
+    document.getElementById('thanksName').value = '';
+}
+
+function renderThanks() {
+    const container = document.getElementById('thanksList');
+    if (specialThanks.length === 0) {
+        container.innerHTML = '<p style="color:#888;">Aucun remerciement pour le moment.</p>';
+        return;
+    }
+    container.innerHTML = specialThanks.map(t => '<div class="item-card" style="display:flex; justify-content:space-between; align-items:center;"><strong>' + t.name + '</strong><button class="btn-red btn-sm" onclick="deleteThanks(\'' + t.id + '\')">🗑️</button></div>').join('');
+}
+
+function deleteThanks(id) {
+    if (confirm('Supprimer ce remerciement ?')) {
+        specialThanks = specialThanks.filter(t => t.id !== id);
+        saveAllData();
+        renderThanks();
+    }
+}
+
+function exportCSV() {
+    let csv = "Type,Date,Description,Montant (CHF)\n";
+    transactions.forEach(tx => {
+        const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
+        const montant = tx.type === 'spend' ? -Math.abs(tx.amount) : Math.abs(tx.amount);
+        csv += '"' + typeLabel + '","' + tx.date + '","' + tx.desc + '",' + montant + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Vespacaution_Caisse.csv";
+    link.click();
+}
+
+function importCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const lines = e.target.result.split('\n');
+        for (let i = 1; i < lines.length; i++) {
+            const parts = lines[i].split(',');
+            const typeStr = parts[0];
+            const date = parts[1];
+            const desc = parts[2];
+            const amountStr = parts[3];
+            if (date && desc && amountStr) {
+                const type = typeStr.replace(/"/g, '').toLowerCase().indexOf('dépense') !== -1 ? 'spend' : 'receive';
+                transactions.push({ type: type, date: date.replace(/"/g, ''), desc: desc.replace(/"/g, ''), amount: Math.abs(parseFloat(amountStr)) });
+            }
+        }
+        renderTable();
+        saveAllData();
+    };
+    reader.readAsText(file);
+}
+
+function exportPDF() {
+    const jsPDFCtor = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+    const doc = new jsPDFCtor();
+    doc.setFontSize(22);
+    doc.setTextColor(201, 155, 72);
+    doc.text("Rapport Financier - Vespacaution", 20, 20);
+    doc.setFontSize(12);
+    doc.setTextColor(50, 50, 50);
+    doc.text("Généré le : " + new Date().toLocaleDateString(), 20, 30);
+    let totalReceived = 0;
+    let totalSpent = 0;
+    const tableData = transactions.map(tx => {
+        let montant = tx.amount;
+        if (tx.type === 'spend') { montant = -Math.abs(tx.amount); totalSpent += Math.abs(tx.amount); }
+        else { montant = Math.abs(tx.amount); totalReceived += Math.abs(tx.amount); }
+        const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
+        return [tx.date, tx.desc, typeLabel, montant.toFixed(2) + " CHF"];
+    });
+    doc.autoTable({ startY: 40, head: [['Date', 'Description', 'Type', 'Montant']], body: tableData, headStyles: { fillColor: [201, 155, 72] } });
+    let finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(12);
+    doc.setTextColor(92, 184, 92);
+    doc.text("Total Reçu : " + totalReceived.toFixed(2) + " CHF", 20, finalY);
+    doc.setTextColor(217, 83, 79);
+    doc.text("Total Dépenses : " + totalSpent.toFixed(2) + " CHF", 20, finalY + 8);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont(undefined, 'bold');
+    doc.text("SOLDE TOTAL : " + (totalReceived - totalSpent).toFixed(2) + " CHF", 20, finalY + 18);
+    doc.save("Vespacaution_Rapport.pdf");
+}
+
+function downloadBackup() {
+    const data = {
+        date: new Date().toISOString(),
+        caisse: transactions,
+        archives: archives,
+        blog: blogPosts,
+        members: members,
+        specialThanks: specialThanks
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Vespacaution_Backup_' + new Date().toISOString().split('T')[0] + '.json';
+    link.click();
+}
+
+function uploadBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            if (parsed.caisse || parsed.archives || parsed.blog || parsed.members || parsed.specialThanks) {
+                if (confirm("⚠️ Cela va remplacer TOUTES les données actuelles. Continuer ?")) {
+                    transactions = parsed.caisse || [];
+                    archives = parsed.archives || {};
+                    blogPosts = parsed.blog || [];
+                    members = parsed.members || [];
+                    specialThanks = parsed.specialThanks || [];
+                    renderTable();
+                    renderArchives();
+                    renderBlog();
+                    renderMembers();
+                    renderThanks();
+                    updateEditorFolders();
+                    saveAllData();
+                    alert("✅ Sauvegarde restaurée !");
                 }
-            });
+            } else alert("❌ Fichier JSON invalide.");
+        } catch (err) {
+            alert("❌ Erreur lors de la lecture.");
         }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
 
-        // ==========================================
-        // 1. CONNEXION ADMIN
-        // ==========================================
-        const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
-        const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
-        
-        let transactions = [];
-        let archives = {};
-        let blogPosts = [];
-        let members = [];
-        let isLoggedIn = false;
+const GITHUB_TOKEN = "%%TOKEN_SECRET%%";
+const GIST_ID = "f4fe8523136960f0289660123aa32cb7";
+const GIST_FILENAME = "vespacaution_data.json";
+const GITHUB_API_URL = "https://api.github.com/gists/" + GIST_ID;
 
-        function login() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            if (email === atob(ENCODED_EMAIL) && pass === atob(ENCODED_PASSWORD)) {
-                isLoggedIn = true;
-                document.getElementById('authSection').classList.add('hidden');
-                document.getElementById('appSection').classList.remove('hidden');
-                loadAllData();
-            } else {
-                document.getElementById('authMsg').textContent = "❌ Identifiants incorrects.";
-            }
-        }
-
-        function logout() {
-            isLoggedIn = false;
-            document.getElementById('appSection').classList.add('hidden');
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        // ==========================================
-        // 2. STOCKAGE LOCAL
-        // ==========================================
-        function loadAllData() {
-            const savedCaisse = localStorage.getItem('vc_caisse');
-            if (savedCaisse) transactions = JSON.parse(savedCaisse);
-            const savedArchives = localStorage.getItem('vc_archives');
-            if (savedArchives) archives = JSON.parse(savedArchives);
-            const savedBlog = localStorage.getItem('vc_blog');
-            if (savedBlog) blogPosts = JSON.parse(savedBlog);
-            const savedMembers = localStorage.getItem('vc_members');
-            if (savedMembers) members = JSON.parse(savedMembers);
-            
-            renderTable();
-            renderArchives();
-            renderBlog();
-            renderMembers();
-            updateEditorFolders();
-        }
-
-        function saveAllData() {
-            localStorage.setItem('vc_caisse', JSON.stringify(transactions));
-            localStorage.setItem('vc_archives', JSON.stringify(archives));
-            localStorage.setItem('vc_blog', JSON.stringify(blogPosts));
-            localStorage.setItem('vc_members', JSON.stringify(members));
-        }
-
-        // ==========================================
-        // 3. ONGLETS
-        // ==========================================
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
-            
-            document.getElementById('tabCaisse').classList.add('hidden');
-            document.getElementById('tabArchives').classList.add('hidden');
-            document.getElementById('tabEditor').classList.add('hidden');
-            document.getElementById('tabBlog').classList.add('hidden');
-
-            if (tab === 'caisse') document.getElementById('tabCaisse').classList.remove('hidden');
-            if (tab === 'archives') { document.getElementById('tabArchives').classList.remove('hidden'); renderArchives(); }
-            if (tab === 'editor') { document.getElementById('tabEditor').classList.remove('hidden'); updateEditorFolders(); }
-            if (tab === 'blog') { document.getElementById('tabBlog').classList.remove('hidden'); renderBlog(); renderMembers(); }
-        }
-
-        // ==========================================
-        // 4. LOGIQUE CAISSE
-        // ==========================================
-        function renderTable() {
-            const tbody = document.querySelector('#txTable tbody');
-            tbody.innerHTML = '';
-            transactions.forEach((tx, index) => {
-                let montantAffiche = tx.amount;
-                let couleur = 'green';
-                if (tx.type === 'spend') { montantAffiche = -Math.abs(tx.amount); couleur = 'red'; }
-                else { montantAffiche = Math.abs(tx.amount); }
-                tbody.innerHTML += `<tr>
-                    <td>${tx.date}</td><td>${tx.desc}</td>
-                    <td style="color:${couleur}; font-weight:bold;">${montantAffiche.toFixed(2)} CHF</td>
-                    <td><button class="btn-red btn-sm" onclick="deleteTransaction(${index})">🗑️</button></td>
-                </tr>`;
-            });
-        }
-
-        function addTransaction() {
-            const type = document.getElementById('txType').value;
-            const date = document.getElementById('txDate').value;
-            const desc = document.getElementById('txDesc').value;
-            const amount = parseFloat(document.getElementById('txAmount').value);
-            if (!date || !desc || isNaN(amount)) return alert("Remplis tous les champs !");
-            transactions.push({ type, date, desc, amount: Math.abs(amount) });
-            renderTable(); saveAllData();
-            document.getElementById('txDate').value = '';
-            document.getElementById('txDesc').value = '';
-            document.getElementById('txAmount').value = '';
-        }
-
-        function deleteTransaction(index) {
-            if (confirm("Supprimer cette ligne ?")) {
-                transactions.splice(index, 1);
-                renderTable(); saveAllData();
-            }
-        }
-
-        // ==========================================
-        // 5. ARCHIVES
-        // ==========================================
-        function renderArchives() {
-            const container = document.getElementById('foldersContainer');
-            container.innerHTML = '';
-            if (Object.keys(archives).length === 0) {
-                container.innerHTML = '<p style="color:#888; font-style:italic;">Aucun dossier.</p>';
-                return;
-            }
-            for (const folderName in archives) {
-                let folderHtml = `<div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; background: white;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; color:#457b9d;">📁 ${folderName}</h3>
-                        <button class="btn-red btn-sm" onclick="deleteFolder('${folderName}')">Supprimer</button>
-                    </div><div style="margin-top:10px;">`;
-                if (archives[folderName].length === 0) {
-                    folderHtml += '<p style="font-size:12px; color:#aaa;">Dossier vide</p>';
-                } else {
-                    archives[folderName].forEach(doc => {
-                        folderHtml += `<div style="border-bottom: 1px solid #eee; padding: 5px 0;">
-                            <span>${doc.type === 'file' ? '📄' : '📝'} ${doc.name}</span>
-                            <div style="float:right;">
-                                ${doc.type === 'file' ? `<a href="${doc.content}" download="${doc.name}" class="btn-blue btn-sm" style="text-decoration:none; padding:2px 8px; color:white; border-radius:4px; font-size:12px;">Télécharger</a>` : `<button class="btn-blue btn-sm" onclick="viewTextDoc('${folderName}', '${doc.id}')">Lire</button>`}
-                                <button class="btn-red btn-sm" onclick="deleteDoc('${folderName}', '${doc.id}')">🗑️</button>
-                            </div>
-                        </div>`;
-                    });
-                }
-                folderHtml += `</div></div>`;
-                container.innerHTML += folderHtml;
-            }
-        }
-
-        function createFolder() {
-            const name = document.getElementById('newFolderName').value.trim();
-            if (!name) return alert("Entrez un nom.");
-            if (archives[name]) return alert("Dossier existant.");
-            archives[name] = [];
-            document.getElementById('newFolderName').value = '';
-            renderArchives(); saveAllData(); updateEditorFolders();
-        }
-
-        function deleteFolder(name) {
-            if (confirm(`Supprimer le dossier "${name}" ?`)) {
-                delete archives[name];
-                renderArchives(); saveAllData(); updateEditorFolders();
-            }
-        }
-
-        function uploadFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const folder = prompt("Nom du dossier (laisser vide pour 'Général')");
-            const targetFolder = folder && folder.trim() !== '' ? folder.trim() : 'Général';
-            if (!archives[targetFolder]) archives[targetFolder] = [];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                archives[targetFolder].push({ id: Date.now().toString(), name: file.name, type: 'file', content: e.target.result });
-                renderArchives(); saveAllData();
+async function syncCloud(action) {
+    const status = document.getElementById('syncStatus');
+    const headers = {
+        'Authorization': 'token ' + GITHUB_TOKEN,
+        'Accept': 'application/vnd.github.v3+json'
+    };
+    if (action === 'save') {
+        status.textContent = "Envoi en cours...";
+        try {
+            const data = {
+                caisse: transactions,
+                archives: archives,
+                blog: blogPosts,
+                members: members,
+                specialThanks: specialThanks
             };
-            reader.readAsDataURL(file);
-            event.target.value = '';
-        }
-
-        function deleteDoc(folder, id) {
-            if (confirm("Supprimer ce document ?")) {
-                archives[folder] = archives[folder].filter(doc => doc.id !== id);
-                renderArchives(); saveAllData();
+            const jsonString = JSON.stringify(data);
+            if (new Blob([jsonString]).size > 1048576) return alert("⚠️ Fichier trop lourd (>1Mo).");
+            const res = await fetch(GITHUB_API_URL, {
+                method: 'PATCH',
+                headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
+                body: JSON.stringify({ files: {} })
+            });
+            const body = { files: {} };
+            body.files[GIST_FILENAME] = { content: jsonString };
+            const res2 = await fetch(GITHUB_API_URL, {
+                method: 'PATCH',
+                headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
+                body: JSON.stringify(body)
+            });
+            if (res2.ok) {
+                status.textContent = "✅ Sauvegardé sur GitHub";
+                alert("Sauvegarde GitHub réussie !");
+            } else {
+                const err = await res2.json();
+                status.textContent = "❌ Erreur " + res2.status;
+                alert("Erreur : " + (err.message || res2.statusText));
             }
+        } catch (e) {
+            status.textContent = "❌ Erreur réseau";
+            console.error(e);
         }
-
-        function viewTextDoc(folder, id) {
-            const doc = archives[folder].find(d => d.id === id);
-            if (doc) alert("📄 " + doc.name + "\n\n" + doc.content);
-        }
-
-        // ==========================================
-        // 6. ÉDITEUR DE TEXTE
-        // ==========================================
-        function updateEditorFolders() {
-            const select = document.getElementById('editorFolder');
-            select.innerHTML = `<option value="Général">${t('admin_general_folder')}</option>`;
-            for (const folderName in archives) {
-                if (folderName !== 'Général') {
-                    select.innerHTML += `<option value="${folderName}">${folderName}</option>`;
+    }
+    if (action === 'load') {
+        status.textContent = "Chargement...";
+        try {
+            const res = await fetch(GITHUB_API_URL, { headers: headers });
+            const gistData = await res.json();
+            if (gistData.files && gistData.files[GIST_FILENAME]) {
+                const fileContent = gistData.files[GIST_FILENAME].content;
+                if (!fileContent || fileContent.trim() === "{}") return alert("Aucune donnée sur le Cloud.");
+                const parsed = JSON.parse(fileContent);
+                if (parsed) {
+                    if (confirm("Des données ont été trouvées sur GitHub. Voulez-vous les charger ?")) {
+                        transactions = parsed.caisse || [];
+                        archives = parsed.archives || {};
+                        blogPosts = parsed.blog || [];
+                        members = parsed.members || [];
+                        specialThanks = parsed.specialThanks || [];
+                        renderTable();
+                        renderArchives();
+                        renderBlog();
+                        renderMembers();
+                        renderThanks();
+                        updateEditorFolders();
+                        saveAllData();
+                        status.textContent = "✅ Chargé depuis GitHub";
+                    }
                 }
             }
+        } catch (e) {
+            status.textContent = "❌ Erreur de chargement";
+            console.error(e);
         }
+    }
+}
 
-        function saveTextDoc() {
-            const folder = document.getElementById('editorFolder').value;
-            const title = document.getElementById('editorTitle').value.trim();
-            const content = document.getElementById('editorContent').value.trim();
-            if (!title || !content) return alert("Remplis le titre et le contenu.");
-            if (!archives[folder]) archives[folder] = [];
-            archives[folder].push({ id: Date.now().toString(), name: title + ".txt", type: 'text', content: content });
-            saveAllData();
-            alert("✅ Document enregistré !");
-            document.getElementById('editorTitle').value = '';
-            document.getElementById('editorContent').value = '';
-        }
-
-        // ==========================================
-        // 7. BLOG & MEMBRES
-        // ==========================================
-        function addBlogPost() {
-            const title = document.getElementById('blogTitle').value.trim();
-            const content = document.getElementById('blogContent').value.trim();
-            if (!title || !content) return alert("Remplis le titre et le contenu.");
-            blogPosts.push({ id: Date.now().toString(), date: new Date().toISOString(), title, content });
-            saveAllData();
-            renderBlog();
-            document.getElementById('blogTitle').value = '';
-            document.getElementById('blogContent').value = '';
-            alert("✅ Article publié ! (N'oublie pas de Sauvegarder sur GitHub)");
-        }
-
-        function renderBlog() {
-            const container = document.getElementById('blogList');
-            container.innerHTML = blogPosts.length === 0 ? '<p style="color:#888;">Aucun article.</p>' : '';
-            blogPosts.forEach(post => {
-                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px; background:#fafafa;">
-                    <strong>${post.title}</strong> <small>(${new Date(post.date).toLocaleDateString()})</small>
-                    <p style="font-size:12px; color:#666;">${post.content.substring(0, 100)}...</p>
-                    <button class="btn-red btn-sm" onclick="deleteBlog('${post.id}')">Supprimer</button>
-                </div>`;
-            });
-        }
-
-        function deleteBlog(id) {
-            if (confirm("Supprimer cet article ?")) {
-                blogPosts = blogPosts.filter(p => p.id !== id);
-                saveAllData(); renderBlog();
-            }
-        }
-
-        function addMember() {
-            const name = document.getElementById('memberName').value.trim();
-            const role = document.getElementById('memberRole').value.trim();
-            const image = document.getElementById('memberImage').value.trim();
-            const group = document.getElementById('memberGroup').value;
-            if (!name || !role) return alert("Remplis le nom et le rôle.");
-            members.push({ id: Date.now().toString(), name, role, image, group });
-            saveAllData();
-            renderMembers();
-            document.getElementById('memberName').value = '';
-            document.getElementById('memberRole').value = '';
-            document.getElementById('memberImage').value = '';
-            alert("✅ Membre ajouté ! (N'oublie pas de Sauvegarder sur GitHub)");
-        }
-
-        function renderMembers() {
-            const container = document.getElementById('memberList');
-            container.innerHTML = members.length === 0 ? '<p style="color:#888;">Aucun membre ajouté manuellement.</p>' : '';
-            members.forEach(m => {
-                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px; background:#fafafa;">
-                    <strong>${m.name}</strong> - ${m.role} <span style="font-size:10px; background:#e6e2d8; padding:2px 5px; border-radius:4px;">${m.group === 'committee' ? 'Comité' : 'Tous'}</span>
-                    <button class="btn-red btn-sm" onclick="deleteMember('${m.id}')">Supprimer</button>
-                </div>`;
-            });
-        }
-
-        function deleteMember(id) {
-            if (confirm("Supprimer ce membre ?")) {
-                members = members.filter(m => m.id !== id);
-                saveAllData(); renderMembers();
-            }
-        }
-
-        // ==========================================
-        // 8. EXPORT / IMPORT CSV & PDF
-        // ==========================================
-        function exportCSV() {
-            let csv = "Type,Date,Description,Montant (CHF)\n";
-            transactions.forEach(tx => { 
-                const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
-                const montant = tx.type === 'spend' ? -Math.abs(tx.amount) : Math.abs(tx.amount);
-                csv += `"${typeLabel}","${tx.date}","${tx.desc}",${montant}\n`; 
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "Vespacaution_Caisse.csv";
-            link.click();
-        }
-
-        function exportPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(22); doc.setTextColor(201, 155, 72);
-            doc.text("Rapport Financier - Vespacaution", 20, 20);
-            doc.setFontSize(12); doc.setTextColor(50, 50, 50);
-            doc.text("Généré le : " + new Date().toLocaleDateString(), 20, 30);
-            let totalReceived = 0, totalSpent = 0;
-            const tableData = transactions.map(tx => {
-                let montant = tx.amount;
-                if (tx.type === 'spend') { montant = -Math.abs(tx.amount); totalSpent += Math.abs(tx.amount); }
-                else { montant = Math.abs(tx.amount); totalReceived += Math.abs(tx.amount); }
-                const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
-                return [tx.date, tx.desc, typeLabel, montant.toFixed(2) + " CHF"];
-            });
-            doc.autoTable({ startY: 40, head: [['Date', 'Description', 'Type', 'Montant']], body: tableData, headStyles: { fillColor: [201, 155, 72] } });
-            let finalY = doc.lastAutoTable.finalY + 10;
-            doc.setFontSize(12);
-            doc.setTextColor(92, 184, 92); doc.text(`Total Reçu : ${totalReceived.toFixed(2)} CHF`, 20, finalY);
-            doc.setTextColor(217, 83, 79); doc.text(`Total Dépenses : ${totalSpent.toFixed(2)} CHF`, 20, finalY + 8);
-            doc.setTextColor(50, 50, 50); doc.setFont(undefined, 'bold'); doc.text(`SOLDE TOTAL : ${(totalReceived - totalSpent).toFixed(2)} CHF`, 20, finalY + 18);
-            doc.save("Vespacaution_Rapport.pdf");
-        }
-
-        // ==========================================
-        // 9. SYNCHRONISATION GITHUB GIST
-        // ==========================================
-        const GITHUB_TOKEN = "%%TOKEN_SECRET%%"; 
-        const GIST_ID = "f4fe8523136960f0289660123aa32cb7"; 
-        const GIST_FILENAME = "vespacaution_data.json";
-        const GITHUB_API_URL = "https://api.github.com/gists/" + GIST_ID;
-
-        async function syncCloud(action) {
-            const status = document.getElementById('syncStatus');
-            const headers = { 'Authorization': 'token ' + GITHUB_TOKEN, 'Accept': 'application/vnd.github.v3+json' };
-
-            if (action === 'save') {
-                status.textContent = "Envoi en cours...";
-                try {
-                    const data = { caisse: transactions, archives: archives, blog: blogPosts, members: members };
-                    const jsonString = JSON.stringify(data);
-                    
-                    const sizeInBytes = new Blob([jsonString]).size;
-                    if (sizeInBytes > 1048576) { 
-                        alert("⚠️ Attention : Tes données dépassent 1 Mo. Retire les gros fichiers PDF/Images des archives avant de sauvegarder.");
-                        status.textContent = "❌ Trop lourd";
-                        return;
-                    }
-
-                    const res = await fetch(GITHUB_API_URL, {
-                        method: 'PATCH',
-                        headers: { ...headers, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ files: { [GIST_FILENAME]: { content: jsonString } } })
-                    });
-                    
-                    if (res.ok) {
-                        status.textContent = "✅ Sauvegardé";
-                        alert("Sauvegarde GitHub réussie ! Le site public est mis à jour.");
-                    } else {
-                        status.textContent = "❌ Erreur";
-                        alert("Erreur de sauvegarde.");
-                    }
-                } catch (e) { status.textContent = "❌ Erreur réseau"; }
-            } 
-            
-            if (action === 'load') {
-                status.textContent = "Chargement...";
-                try {
-                    const res = await fetch(GITHUB_API_URL, { headers });
-                    const gistData = await res.json();
-                    if (gistData.files && gistData.files[GIST_FILENAME]) {
-                        const fileContent = gistData.files[GIST_FILENAME].content;
-                        if (!fileContent || fileContent.trim() === "{}") return alert("Aucune donnée sur le Cloud.");
-                        
-                        let parsed;
-                        try { parsed = JSON.parse(fileContent); } 
-                        catch (e) { return alert("❌ Fichier corrompu."); }
-                        
-                        if (confirm("Charger les données depuis GitHub ? (Cela écrasera les données locales)")) {
-                            transactions = parsed.caisse || [];
-                            archives = parsed.archives || {};
-                            blogPosts = parsed.blog || [];
-                            members = parsed.members || [];
-                            saveAllData();
-                            renderTable(); renderArchives(); renderBlog(); renderMembers();
-                            status.textContent = "✅ Chargé";
-                        }
-                    }
-                } catch (e) { status.textContent = "❌ Erreur"; }
-            }
-        }
-
-        // ==========================================
-        // 10. INITIALISATION
-        // ==========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            applyTranslations();
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function() {
+    applyTranslations();
+});
+</script>
 </body>
 </html>
