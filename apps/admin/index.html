@@ -70,6 +70,8 @@ th { background: #f4ebd9; }
 .sync-status { font-size: 0.8rem; color: #888; text-align: right; }
 #authSection { max-width: 400px; margin: 10vh auto; text-align: center; }
 #authSection h1 { margin-bottom: 20px; }
+
+/* Topbar */
 .topbar {
     display: flex;
     align-items: center;
@@ -100,6 +102,38 @@ th { background: #f4ebd9; }
     padding: 0;
     margin: 0;
 }
+
+/* Language selector */
+.lang-selector {
+    display: flex;
+    gap: 2px;
+    background: #f9f7f1;
+    padding: 3px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+.lang-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 16px;
+    color: #6b6b6b;
+    font-weight: 700;
+    font-size: 0.7rem;
+    transition: all 0.2s;
+    margin: 0;
+    width: auto;
+    font-family: inherit;
+}
+.lang-btn:hover { color: var(--primary); }
+.lang-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Drawer */
 .drawer {
     position: fixed;
     top: 0;
@@ -166,6 +200,8 @@ th { background: #f4ebd9; }
     min-height: calc(100vh - 68px);
     max-width: 1000px;
 }
+
+/* Subtabs */
 .subtabs {
     display: flex;
     gap: 6px;
@@ -187,40 +223,60 @@ th { background: #f4ebd9; }
 }
 .subtab:hover { background: var(--primary-light); }
 .subtab.active { background: var(--primary-light); color: var(--primary); }
-.blog-lang-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+
+/* Blog language tabs */
+.blog-lang-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
 .blog-lang-tab {
     padding: 6px 14px;
     border-radius: 6px;
     background: #f0f0f0;
-    border: none;
+    border: 1px solid #ddd;
     color: #666;
     cursor: pointer;
     font-weight: 600;
     font-size: 0.85rem;
     margin: 0;
     width: auto;
+    font-family: inherit;
 }
-.blog-lang-tab.active { background: var(--primary); color: white; }
+.blog-lang-tab:hover { background: #e6e2d8; }
+.blog-lang-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 .blog-lang-tab.filled::after { content: ' ✓'; color: #4a9d4a; font-weight: bold; }
 .blog-lang-tab.active.filled::after { color: white; }
 .blog-lang-panel { display: none; }
 .blog-lang-panel.active { display: block; }
-.member-role-tabs { display: flex; gap: 4px; margin: 6px 0; flex-wrap: wrap; }
+
+/* Member role tabs */
+.member-role-tabs {
+    display: flex;
+    gap: 4px;
+    margin: 6px 0;
+    flex-wrap: wrap;
+}
 .member-role-tab {
     padding: 4px 10px;
     border-radius: 6px;
     background: #f0f0f0;
-    border: none;
+    border: 1px solid #ddd;
     color: #666;
     cursor: pointer;
     font-weight: 600;
     font-size: 0.8rem;
     margin: 0;
     width: auto;
+    font-family: inherit;
 }
-.member-role-tab.active { background: var(--primary); color: white; }
+.member-role-tab:hover { background: #e6e2d8; }
+.member-role-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 .member-role-panel { display: none; }
 .member-role-panel.active { display: block; }
+
+/* Item cards */
 .item-card {
     border: 1px solid #ddd;
     padding: 12px;
@@ -246,6 +302,8 @@ th { background: #f4ebd9; }
     color: #666;
 }
 .lang-chip.filled { background: #d4edda; color: #155724; }
+
+/* Publish status */
 .publish-warning {
     background: #fef3c7;
     border: 1px solid #fcd34d;
@@ -264,6 +322,7 @@ th { background: #f4ebd9; }
     color: #155724;
     margin: 8px 0;
 }
+
 @media (max-width: 768px) {
     .drawer { transform: translateX(-100%); width: 260px; }
     .drawer.open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.2); }
@@ -271,6 +330,7 @@ th { background: #f4ebd9; }
     .drawer-backdrop.open { display: block; }
     .admin-main { margin-left: 0; padding: 12px; }
     .topbar { padding: 10px 12px; }
+    .topbar-right { width: 100%; justify-content: flex-end; }
 }
 </style>
 </head>
@@ -292,6 +352,13 @@ th { background: #f4ebd9; }
             <h1 class="topbar-title" data-i18n="admin_dashboard">Tableau de bord</h1>
         </div>
         <div class="topbar-right">
+            <div class="lang-selector" id="adminLangSelector">
+                <button class="lang-btn" onclick="setAdminLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setAdminLanguage('fr')">FR</button>
+                <button class="lang-btn" onclick="setAdminLanguage('de')">DE</button>
+                <button class="lang-btn" onclick="setAdminLanguage('it')">IT</button>
+                <button class="lang-btn" onclick="setAdminLanguage('rm')">RM</button>
+            </div>
             <div id="syncStatus" class="sync-status" data-i18n="admin_sync_ready">Prêt</div>
             <button onclick="syncCloud('save')" class="btn-blue btn-sm" data-i18n="admin_sync_save">☁️ Sauvegarder</button>
             <button onclick="syncCloud('load')" class="btn-green btn-sm" data-i18n="admin_sync_load">☁️ Charger</button>
@@ -575,6 +642,22 @@ function applyTranslations() {
     });
 }
 
+function setAdminLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('vespacaution_lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + lang + '\')"]').forEach(btn => btn.classList.add('active'));
+    applyTranslations();
+    if (isLoggedIn) {
+        renderTable();
+        renderArchives();
+        renderBlog();
+        renderMembers();
+        renderThanks();
+        updateEditorFolders();
+    }
+}
+
 const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
 const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
 
@@ -594,6 +677,7 @@ function login() {
         isLoggedIn = true;
         document.getElementById('authSection').classList.add('hidden');
         document.getElementById('appSection').classList.remove('hidden');
+        document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
         loadAllData();
     } else {
         document.getElementById('authMsg').textContent = "❌ Identifiants incorrects.";
@@ -1100,26 +1184,21 @@ async function syncCloud(action) {
             };
             const jsonString = JSON.stringify(data);
             if (new Blob([jsonString]).size > 1048576) return alert("⚠️ Fichier trop lourd (>1Mo).");
-            const res = await fetch(GITHUB_API_URL, {
-                method: 'PATCH',
-                headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
-                body: JSON.stringify({ files: {} })
-            });
             const body = { files: {} };
             body.files[GIST_FILENAME] = { content: jsonString };
-            const res2 = await fetch(GITHUB_API_URL, {
+            const res = await fetch(GITHUB_API_URL, {
                 method: 'PATCH',
                 headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
                 body: JSON.stringify(body)
             });
-            if (res2.ok) {
+            if (res.ok) {
                 status.textContent = "✅ Sauvegardé sur GitHub";
                 alert("Sauvegarde GitHub réussie !");
                 try { localStorage.setItem('vc_gist_updated', Date.now().toString()); } catch(e) {}
             } else {
-                const err = await res2.json();
-                status.textContent = "❌ Erreur " + res2.status;
-                alert("Erreur : " + (err.message || res2.statusText));
+                const err = await res.json();
+                status.textContent = "❌ Erreur " + res.status;
+                alert("Erreur : " + (err.message || res.statusText));
             }
         } catch (e) {
             status.textContent = "❌ Erreur réseau";
@@ -1162,6 +1241,7 @@ async function syncCloud(action) {
 
 document.addEventListener('DOMContentLoaded', function() {
     applyTranslations();
+    document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
 });
 </script>
 </body>
