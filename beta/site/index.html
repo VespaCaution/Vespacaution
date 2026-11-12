@@ -495,12 +495,12 @@
 
     <!-- SEARCH MODAL -->
     <div id="searchModal">
-        <div class="search-box">
-            <h3>🔍 Rechercher sur Vespacaution</h3>
-            <input type="text" id="searchInput" oninput="performSearch()" placeholder="App, page, article, membre...">
-            <div id="searchResults"></div>
-            <button onclick="closeSearch()" class="btn" style="width:100%; margin-top:12px;">Fermer</button>
-        </div>
+    <div class="search-box">
+        <h3>🔍 <span data-i18n="search_title">Rechercher sur Vespacaution</span></h3>
+        <input type="text" id="searchInput" oninput="performSearch()" placeholder="App, page, article, membre..." data-i18n-placeholder="search_placeholder" autocomplete="off">
+        <div id="searchResults"></div>
+        <button onclick="closeSearch()" class="btn" style="width:100%; margin-top:12px;" data-i18n="search_close">Fermer</button>
+    </div>
     </div>
 
     <script>
@@ -1490,48 +1490,249 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
         // ==========================================
         // SEARCH
         // ==========================================
-        function openSearch() {
-            document.getElementById('searchModal').classList.add('active');
-            document.getElementById('searchInput').value = '';
-            document.getElementById('searchResults').innerHTML = '';
-            setTimeout(() => document.getElementById('searchInput').focus(), 50);
-        }
-        function closeSearch() { document.getElementById('searchModal').classList.remove('active'); }
+        // ═══════════════════════════════════════════════════════════════════
+//  SEARCH — full-site, synonym-aware, 5-language
+// ═══════════════════════════════════════════════════════════════════
 
-        function performSearch() {
-            const q = document.getElementById('searchInput').value.toLowerCase().trim();
-            const results = document.getElementById('searchResults');
-            results.innerHTML = '';
-            if (q.length < 2) { results.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tapez au moins 2 caractères...</p>'; return; }
-            const hits = [];
-            const addHit = (tag, title, desc, hash) => hits.push({ tag, title, desc, hash });
-            Object.keys(appsConfig).forEach(key => {
-                const t1 = appsConfig[key].title.toLowerCase(), d1 = (appsConfig[key].shortDesc[currentLang] || '').toLowerCase();
-                if (t1.includes(q) || d1.includes(q)) addHit('App', appsConfig[key].title, appsConfig[key].shortDesc[currentLang], '#' + key);
-            });
-            const staticPages = [['nav_home', 'home'], ['nav_apps', 'apps'], ['nav_members', 'members'], ['nav_blog', 'blog'], ['nav_support', 'support'], ['nav_contact', 'contact'], ['nav_privacy', 'privacy'], ['nav_links', 'resources'], ['nav_credits', 'resources']];
-            staticPages.forEach(([key, hash]) => { const label = t(key); if (label.toLowerCase().includes(q)) addHit('Page', label, '', '#' + hash); });
-            (dynamicBlog || []).forEach(p => {
-                const title = String(p.title || '').toLowerCase(), body = String(p.content || '').toLowerCase();
-                if (title.includes(q) || body.includes(q)) {
-                    const excerpt = String(p.content || '').slice(0, 80).replace(/\n/g, ' ');
-                    addHit('Blog', p.title, excerpt + (String(p.content || '').length > 80 ? '…' : ''), '#blog');
-                }
-            });
-            const members = dynamicMembers.length ? dynamicMembers : FALLBACK_MEMBERS;
-            members.forEach(m => {
-                const n = String(m.name || '').toLowerCase(), r = (typeof m.role === 'string' ? m.role : (m.role?.[currentLang] || '')).toLowerCase();
-                if (n.includes(q) || r.includes(q)) addHit('Membre', m.name, typeof m.role === 'string' ? m.role : m.role?.[currentLang] || '', '#members');
-            });
-            if (hits.length === 0) { results.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Aucun résultat.</p>'; return; }
-            results.innerHTML = hits.map(h => `<a class="search-result" href="${h.hash}" onclick="closeSearch()"><div><span class="sr-tag">${h.tag}</span><span class="sr-title">${h.title}</span></div>${h.desc ? `<div class="sr-desc">${h.desc}</div>` : ''}</a>`).join('');
-        }
+// Synonym groups — search any term, finds results mentioning any other
+const SEARCH_SYNONYMS = [
+    ['frelon', 'hornet', 'vespa', 'wespe', 'calabrone', 'vespra', 'asiatique', 'asian', 'asiatische'],
+    ['ruche', 'hive', 'hives', 'rucher', 'apiary', 'apiaries', 'bienenstock', 'bienenstand', 'arnia', 'arnie', 'avieul', 'avieuls', 'apiari', 'apiaris'],
+    ['essaim', 'essaimage', 'swarm', 'swarming', 'schwarm', 'sciamatura', 'sciamar', 'schigientar'],
+    ['reine', 'queen', 'königin', 'regina', 'regin'],
+    ['cadre', 'cadres', 'frame', 'frames', 'rahmen', 'telaio', 'telai', 'cader', 'caders'],
+    ['varroa', 'varroas', 'varroose'],
+    ['miel', 'honey', 'honig', 'miele', 'mel'],
+    ['couvain', 'brood', 'brut', 'covata', 'cova'],
+    ['triangulation', 'triangulaziun', 'triangulazione', 'triangulation'],
+    ['boussole', 'compass', 'kompass', 'bussola'],
+    ['chrono', 'chronomètre', 'timer', 'stopwatch', 'stoppuhr', 'cronometro', 'cronometer'],
+    ['pot', 'mèche', 'pot-à-mèche', 'meche'],
+    ['rucher', 'apiary', 'apiari', 'apiaris'],
+    ['sauvegarder', 'save', 'speichern', 'salvare', 'memorisar'],
+    ['membre', 'membres', 'member', 'members', 'mitglied', 'mitglieder', 'membro', 'membri', 'commember', 'commembers'],
+    ['contact', 'kontakt', 'contatto'],
+    ['blog', 'article', 'articles', 'artitgel', 'artitgels'],
+    ['soutenir', 'support', 'unterstützen', 'sostenere', 'sustegn', 'donation', 'don', 'spende', 'donazione', 'donaziun'],
+    ['confidentialité', 'privacy', 'datenschutz', 'confidentialite'],
+    ['ressources', 'resources', 'ressourcen', 'risorse', 'resursas', 'links'],
+    ['vcfash', 'vcflash', 'export', 'import', 'pdf', 'gpx', 'kml'],
+    ['reporter', 'signaler', 'report', 'melden', 'segnalare', 'rapportar', 'nid', 'nest', 'neste']
+];
 
-        document.getElementById('searchModal').addEventListener('click', function(e) { if (e.target === this) closeSearch(); });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeSearch();
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+// Build the searchable index from everything on the site
+function buildSearchIndex() {
+    const index = [];
+
+    // ── Apps ──
+    Object.keys(appsConfig).forEach(key => {
+        const app = appsConfig[key];
+        const desc = app.shortDesc[currentLang] || app.shortDesc.fr || '';
+        index.push({
+            tag: t('search_tag_app') || 'App',
+            title: app.title,
+            desc: desc,
+            hash: '#' + key,
+            lang: 'all'
         });
+        // Also index the full HTML content of the app page (text only)
+        ['en', 'fr', 'de', 'it', 'rm'].forEach(lang => {
+            if (app.html[lang]) {
+                const fullHtml = app.html[lang]();
+                const text = fullHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                if (text) {
+                    index.push({
+                        tag: t('search_tag_app') || 'App',
+                        title: app.title + ' (' + lang.toUpperCase() + ')',
+                        desc: text.substring(0, 200),
+                        fullText: text,
+                        hash: '#' + key,
+                        lang: lang
+                    });
+                }
+            }
+        });
+    });
+
+    // ── Static pages ──
+    const staticPages = [
+        { key: 'nav_home', hash: '#home' },
+        { key: 'nav_apps', hash: '#apps' },
+        { key: 'nav_members', hash: '#members' },
+        { key: 'nav_blog', hash: '#blog' },
+        { key: 'nav_support', hash: '#support' },
+        { key: 'nav_contact', hash: '#contact' },
+        { key: 'nav_privacy', hash: '#privacy' },
+        { key: 'nav_links', hash: '#resources' },
+        { key: 'nav_credits', hash: '#resources' }
+    ];
+    staticPages.forEach(p => {
+        const label = t(p.key);
+        if (label && label !== p.key) {
+            index.push({ tag: t('search_tag_page') || 'Page', title: label, desc: '', hash: p.hash, lang: 'all' });
+        }
+    });
+
+    // ── Privacy text ──
+    ['privacy_h1', 'privacy_h2', 'privacy_h3', 'privacy_h4', 'privacy_h5', 'privacy_h6', 'privacy_h7'].forEach(key => {
+        const label = t(key);
+        if (label && label !== key) {
+            index.push({ tag: t('search_tag_page') || 'Page', title: label, desc: '', hash: '#privacy', lang: 'all' });
+        }
+    });
+
+    // ── Resources (external links) ──
+    [
+        { title: 'frelonasiatique.ch', desc: t('link_frelon') },
+        { title: 'stopfrelons.ch', desc: t('link_stop') },
+        { title: 'abeilles.ch', desc: t('link_abeilles') },
+        { title: 'melizoe.ch', desc: t('link_melizoe') }
+    ].forEach(r => {
+        if (r.desc && r.desc !== '') {
+            index.push({ tag: t('nav_resources') || 'Ressources', title: r.title, desc: r.desc, hash: '#resources', lang: 'all' });
+        }
+    });
+
+    // ── Blog articles (all languages, deduped by article id) ──
+    const blogSeen = {};
+    (dynamicBlog || []).forEach(p => {
+        const blogKey = p.id || p.title;
+        if (blogSeen[blogKey]) return;
+        blogSeen[blogKey] = true;
+        index.push({
+            tag: t('search_tag_blog') || 'Blog',
+            title: p.title || '',
+            desc: String(p.content || '').substring(0, 200),
+            fullText: String(p.content || ''),
+            hash: '#blog',
+            lang: p.lang || 'all'
+        });
+    });
+
+    // ── Members ──
+    (dynamicMembers && dynamicMembers.length ? dynamicMembers : FALLBACK_MEMBERS).forEach(m => {
+        const role = typeof m.role === 'string' ? m.role : ((m.role && (m.role[currentLang] || m.role.fr)) || '');
+        index.push({
+            tag: t('search_tag_member') || 'Membre',
+            title: m.name || '',
+            desc: role.substring(0, 150),
+            hash: '#members',
+            lang: 'all'
+        });
+    });
+
+    // ── Special thanks ──
+    (dynamicThanks || []).forEach(p => {
+        index.push({ tag: '🙏', title: p.name || '', desc: t('support_thanks_title') || '', hash: '#support', lang: 'all' });
+    });
+
+    return index;
+}
+
+// Expand a query into synonyms
+function expandQuery(q) {
+    const terms = new Set([q]);
+    SEARCH_SYNONYMS.forEach(group => {
+        const hit = group.some(term => term.includes(q) || q.includes(term));
+        if (hit) group.forEach(term => terms.add(term));
+    });
+    return Array.from(terms);
+}
+
+// Score a single index entry against the query
+function scoreEntry(entry, query, terms) {
+    const titleLower = (entry.title || '').toLowerCase();
+    const descLower = (entry.desc || '').toLowerCase();
+    const fullLower = (entry.fullText || '').toLowerCase();
+    let score = 0;
+
+    terms.forEach(term => {
+        if (!term) return;
+        // Title exact match: highest
+        if (titleLower === term) score += 100;
+        else if (titleLower.startsWith(term)) score += 60;
+        else if (titleLower.includes(term)) score += 40;
+        // Description match
+        if (descLower.includes(term)) score += 20;
+        // Full text match: lowest
+        if (fullLower.includes(term)) score += 5;
+    });
+
+    return score;
+}
+
+// Extract a snippet around the first match
+function buildSnippet(entry, terms) {
+    const text = entry.desc || entry.fullText || '';
+    if (!text) return '';
+    for (const term of terms) {
+        if (!term) continue;
+        const idx = text.toLowerCase().indexOf(term);
+        if (idx !== -1) {
+            const start = Math.max(0, idx - 40);
+            const end = Math.min(text.length, idx + term.length + 80);
+            let snippet = text.substring(start, end).trim();
+            if (start > 0) snippet = '…' + snippet;
+            if (end < text.length) snippet = snippet + '…';
+            return snippet;
+        }
+    }
+    return text.substring(0, 140) + (text.length > 140 ? '…' : '');
+}
+
+function openSearch() {
+    document.getElementById('searchModal').classList.add('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+}
+
+function closeSearch() {
+    document.getElementById('searchModal').classList.remove('active');
+}
+
+function performSearch() {
+    const input = document.getElementById('searchInput').value.toLowerCase().trim();
+    const results = document.getElementById('searchResults');
+    results.innerHTML = '';
+
+    if (input.length < 2) {
+        results.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">' + (t('search_empty') || 'Tapez au moins 2 caractères...') + '</p>';
+        return;
+    }
+
+    const terms = expandQuery(input);
+    const index = buildSearchIndex();
+
+    // Score everything
+    const scored = index
+        .map(entry => ({ entry, score: scoreEntry(entry, input, terms) }))
+        .filter(x => x.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 20); // top 20 results
+
+    if (scored.length === 0) {
+        results.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">' + (t('search_no_results') || 'Aucun résultat.') + '</p>';
+        return;
+    }
+
+    results.innerHTML = scored.map(x => {
+        const e = x.entry;
+        const snippet = buildSnippet(e, terms);
+        const escaped = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        return `<a class="search-result" href="${escaped(e.hash)}" onclick="closeSearch()">
+            <div><span class="sr-tag">${escaped(e.tag)}</span><span class="sr-title">${escaped(e.title)}</span></div>
+            ${snippet ? `<div class="sr-desc">${escaped(snippet)}</div>` : ''}
+        </a>`;
+    }).join('');
+}
+
+// Existing listeners — keep these if already present, otherwise add
+document.getElementById('searchModal').addEventListener('click', function(e) { if (e.target === this) closeSearch(); });
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeSearch();
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+});
 
         window.addEventListener('hashchange', render);
         
