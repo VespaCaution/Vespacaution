@@ -1115,6 +1115,7 @@ async function syncCloud(action) {
             if (res2.ok) {
                 status.textContent = "✅ Sauvegardé sur GitHub";
                 alert("Sauvegarde GitHub réussie !");
+                try { localStorage.setItem('vc_gist_updated', Date.now().toString()); } catch(e) {}
             } else {
                 const err = await res2.json();
                 status.textContent = "❌ Erreur " + res2.status;
