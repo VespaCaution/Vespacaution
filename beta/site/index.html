@@ -1617,35 +1617,7 @@ function closeBlogArticle() {
     main.innerHTML = getBlogHtml();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-    const postHtml = articles.map(p => {
-        const langMarker = (p.showingLang !== currentLang && p.showingLang !== 'legacy')
-            ? `<span style="font-size:0.7rem; color:var(--primary); background:var(--primary-light); padding:2px 8px; border-radius:12px; margin-left:6px;">${p.showingLang.toUpperCase()}</span>`
-            : '';
-        // No thumbnail = no element at all (no empty wrapper, no blank space)
-        const thumb = p.image
-            ? `<div class="blog-thumbnail"><img src="${escape(resolveImage(p.image))}" alt="" style="width:100%;max-height:280px;object-fit:cover;border-radius:10px;margin-bottom:14px;" onerror="this.parentElement.style.display='none'"></div>`
-            : '';
-        return `
-        <div class="blog-item" data-post-id="${escape(p.id)}">
-            <button class="blog-item-header" onclick="toggleBlogPost(this)" aria-expanded="false">
-                <div class="blog-item-summary">
-                    <h3>${escape(p.title)}</h3>
-                    <span class="blog-item-date">${fmtDate(p.date)}${langMarker}</span>
-                </div>
-                <span class="blog-item-icon">+</span>
-            </button>
-            <div class="blog-item-content">
-                <div class="blog-body" style="padding: 20px;">
-                    ${thumb}
-                    ${renderContent(p.content)}
-                </div>
-            </div>
-        </div>`;
-    }).join('');
-
-    return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box">${postHtml}</div>`;
-};
-
+    
         function toggleBlogPost(button) {
             const item = button.parentElement;
             const content = item.querySelector('.blog-item-content');
