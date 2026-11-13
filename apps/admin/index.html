@@ -447,23 +447,28 @@ th { background: #f4ebd9; }
                 <div id="blogLangPanels">
                     <div class="blog-lang-panel active" data-lang-panel="fr">
                         <input type="text" class="blog-title-input" data-lang="fr" placeholder="Titre (FR)">
-                        <textarea class="blog-content-input" data-lang="fr" placeholder="Contenu (FR)" style="min-height: 100px;"></textarea>
+                        <input type="text" class="blog-image-input" data-lang="fr" placeholder="Image de couverture (ex: cover.jpg)">
+                        <textarea class="blog-content-input" data-lang="fr" placeholder="Contenu (FR) — utilisez [image.jpg] pour insérer une image" style="min-height: 100px;"></textarea>
                     </div>
                     <div class="blog-lang-panel" data-lang-panel="en">
                         <input type="text" class="blog-title-input" data-lang="en" placeholder="Title (EN)">
-                        <textarea class="blog-content-input" data-lang="en" placeholder="Content (EN)" style="min-height: 100px;"></textarea>
+                        <input type="text" class="blog-image-input" data-lang="en" placeholder="Cover image (e.g. cover.jpg)">
+                        <textarea class="blog-content-input" data-lang="en" placeholder="Content (EN) — use [image.jpg] to insert an image" style="min-height: 100px;"></textarea>
                     </div>
                     <div class="blog-lang-panel" data-lang-panel="de">
                         <input type="text" class="blog-title-input" data-lang="de" placeholder="Titel (DE)">
-                        <textarea class="blog-content-input" data-lang="de" placeholder="Inhalt (DE)" style="min-height: 100px;"></textarea>
+                        <input type="text" class="blog-image-input" data-lang="de" placeholder="Titelbild (z.B. cover.jpg)">
+                        <textarea class="blog-content-input" data-lang="de" placeholder="Inhalt (DE) — verwenden Sie [bild.jpg], um ein Bild einzufügen" style="min-height: 100px;"></textarea>
                     </div>
                     <div class="blog-lang-panel" data-lang-panel="it">
                         <input type="text" class="blog-title-input" data-lang="it" placeholder="Titolo (IT)">
-                        <textarea class="blog-content-input" data-lang="it" placeholder="Contenuto (IT)" style="min-height: 100px;"></textarea>
+                        <input type="text" class="blog-image-input" data-lang="it" placeholder="Immagine di copertina (es: cover.jpg)">
+                        <textarea class="blog-content-input" data-lang="it" placeholder="Contenuto (IT) — usa [immagine.jpg] per inserire un'immagine" style="min-height: 100px;"></textarea>
                     </div>
                     <div class="blog-lang-panel" data-lang-panel="rm">
                         <input type="text" class="blog-title-input" data-lang="rm" placeholder="Titel (RM)">
-                        <textarea class="blog-content-input" data-lang="rm" placeholder="Cuntegn (RM)" style="min-height: 100px;"></textarea>
+                        <input type="text" class="blog-image-input" data-lang="rm" placeholder="Maletg da cuvertura (p.ex. cover.jpg)">
+                        <textarea class="blog-content-input" data-lang="rm" placeholder="Cuntegn (RM) — duvra [maletg.jpg] per inserir in maletg" style="min-height: 100px;"></textarea>
                     </div>
                 </div>
                 <div id="blogPublishStatus" class="publish-warning" data-i18n="admin_blog_status_missing">
@@ -971,13 +976,15 @@ function publishBlogPost() {
     langs.forEach(lang => {
         const title = document.querySelector('.blog-title-input[data-lang="' + lang + '"]').value.trim();
         const content = document.querySelector('.blog-content-input[data-lang="' + lang + '"]').value.trim();
-        blogPosts.push({ id: articleId, date: date, lang: lang, title: title, content: content });
+        const image = document.querySelector('.blog-image-input[data-lang="' + lang + '"]').value.trim();
+        blogPosts.push({ id: articleId, date: date, lang: lang, title: title, content: content, image: image });
     });
     saveAllData();
     renderBlog();
     langs.forEach(lang => {
         document.querySelector('.blog-title-input[data-lang="' + lang + '"]').value = '';
         document.querySelector('.blog-content-input[data-lang="' + lang + '"]').value = '';
+        document.querySelector('.blog-image-input[data-lang="' + lang + '"]').value = '';
     });
     document.querySelectorAll('.blog-lang-tab').forEach(t => t.classList.remove('filled'));
     updateBlogPublishState();
@@ -992,14 +999,22 @@ function renderBlog() {
     }
     const grouped = {};
     blogPosts.forEach(post => {
-        if (!grouped[post.id]) grouped[post.id] = { id: post.id, date: post.date, titles: {}, langs: [] };
+        if (!grouped[post.id]) grouped[post.id] = { id: post.id, date: post.date, titles: {}, images: {}, langs: [] };
         grouped[post.id].titles[post.lang] = post.title;
+        if (post.image) grouped[post.id].images[post.lang] = post.image;
         grouped[post.id].langs.push(post.lang);
     });
     const allLangs = ['fr', 'en', 'de', 'it', 'rm'];
+    const imgBase = window.location.pathname.includes('/beta/')
+        ? '../../../site/blog-images/'
+        : '../../site/blog-images/';
     container.innerHTML = Object.values(grouped).sort((a, b) => new Date(b.date) - new Date(a.date)).map(g => {
         const chips = allLangs.map(l => '<span class="lang-chip ' + (g.langs.includes(l) ? 'filled' : '') + '">' + l.toUpperCase() + '</span>').join('');
-        return '<div class="item-card"><div class="item-card-header"><strong>' + (g.titles.fr || g.titles.en || Object.values(g.titles)[0] || '(sans titre)') + '</strong><button class="btn-red btn-sm" onclick="deleteBlogGroup(\'' + g.id + '\')">🗑️</button></div><div class="item-card-meta">' + new Date(g.date).toLocaleDateString() + '</div><div class="item-card-langs">' + chips + '</div></div>';
+        const firstImage = Object.values(g.images)[0] || '';
+        const thumb = firstImage
+            ? '<img src="' + imgBase + firstImage.split('/').pop() + '" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px; margin-right: 10px; flex-shrink: 0;" onerror="this.style.display=\'none\'">'
+            : '';
+        return '<div class="item-card"><div class="item-card-header"><div style="display:flex;align-items:center;min-width:0;flex:1;">' + thumb + '<strong style="overflow:hidden;text-overflow:ellipsis;">' + (g.titles.fr || g.titles.en || Object.values(g.titles)[0] || '(sans titre)') + '</strong></div><button class="btn-red btn-sm" onclick="deleteBlogGroup(\'' + g.id + '\')">🗑️</button></div><div class="item-card-meta">' + new Date(g.date).toLocaleDateString() + '</div><div class="item-card-langs">' + chips + '</div></div>';
     }).join('');
 }
 
