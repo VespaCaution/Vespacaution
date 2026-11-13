@@ -277,6 +277,149 @@
 .blog-body { padding: 20px; font-size: 0.95rem; color: var(--text-main); line-height: 1.7; }
 .blog-body p { margin-bottom: 12px; }
 .blog-body p:last-child { margin-bottom: 0; }
+       /* ═══ BLOG CARDS (list view) ═══ */
+.blog-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    overflow: hidden;
+}
+.blog-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-color: var(--primary-light);
+}
+.blog-card-body {
+    flex: 1;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+.blog-card-body h3 {
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin: 0;
+    line-height: 1.35;
+}
+.blog-card-body .blog-item-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.blog-card-thumb {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
+}
+.blog-card:hover .blog-card-thumb {
+    transform: scale(1.02);
+}
+.blog-card-chevron {
+    font-size: 1.6rem;
+    color: var(--primary);
+    padding: 20px 16px;
+    opacity: 0.4;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: transform 0.2s, opacity 0.2s;
+}
+.blog-card:hover .blog-card-chevron {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* ═══ ARTICLE VIEW (full-screen) ═══ */
+.article-view {
+    background: var(--surface);
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
+}
+.article-back {
+    background: var(--primary-light);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-bottom: 20px;
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+    font-family: inherit;
+    line-height: 1;
+}
+.article-back:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateX(-3px);
+}
+.article-back-bottom {
+    margin-top: 40px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    width: 42px;
+    height: 42px;
+}
+.article-title {
+    font-size: 2rem;
+    color: var(--primary);
+    line-height: 1.25;
+    margin-bottom: 8px;
+}
+.article-date {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+.article-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-main);
+}
+.article-content p {
+    margin-bottom: 16px;
+}
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 16px auto;
+    display: block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+@media (max-width: 768px) {
+    .article-view { padding: 20px 16px; }
+    .article-title { font-size: 1.5rem; }
+    .blog-card-thumb { height: 160px; }
+}
         /* --- PDF MODAL --- */
         .pdf-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -1363,13 +1506,10 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
         catch (e) { return ''; }
     };
 
-    // Blog images live at site/blog-images/.
-    // Stable site is at /site/index.html → path = 'blog-images/'
-    const IMG_BASE = 'blog-images/';
+    const IMG_BASE = window.location.pathname.includes('/beta/')
+        ? '../../../site/blog-images/'
+        : 'blog-images/';
 
-    // Bare filename → IMG_BASE + filename
-    // Path with slash → treat as root-relative (e.g. 'apps/vespatimer/1.png' → '../apps/vespatimer/1.png' if needed, but here we keep it simple)
-    // Full URL → as-is
     const resolveImage = (raw) => {
         if (!raw) return '';
         if (/^https?:\/\//i.test(raw)) return raw;
@@ -1377,14 +1517,13 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
         return IMG_BASE + raw;
     };
 
-    // Replace [filename.ext] with <img> tags
     const renderContent = (content) => {
         return String(content || '').split(/\n{2,}/).map(par => {
             const withImages = escape(par).replace(
                 /\[([^\]\s]+\.(png|jpg|jpeg|gif|webp|svg))\]/gi,
                 (match, filename) => {
                     const src = resolveImage(filename);
-                    return '<img src="' + escape(src) + '" alt="" style="max-width:100%;height:auto;border-radius:10px;margin:12px auto;display:block;" onerror="this.style.display=\'none\'">';
+                    return '<img src="' + escape(src) + '" alt="" style="max-width:100%;height:auto;border-radius:10px;margin:16px auto;display:block;" onerror="this.style.display=\'none\'">';
                 }
             );
             if (/^<img /.test(withImages.trim())) return withImages;
@@ -1416,6 +1555,91 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
         return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box"><p style="color:var(--text-muted); text-align:center;">${t('blog_empty')}</p></div>`;
     }
 
+    window._blogArticles = articles;
+
+    const postHtml = articles.map(p => {
+        const langMarker = (p.showingLang !== currentLang && p.showingLang !== 'legacy')
+            ? `<span style="font-size:0.7rem; color:var(--primary); background:var(--primary-light); padding:2px 8px; border-radius:12px; margin-left:6px;">${p.showingLang.toUpperCase()}</span>`
+            : '';
+        const thumb = p.image
+            ? `<img class="blog-card-thumb" src="${escape(resolveImage(p.image))}" alt="" onerror="this.style.display='none'">`
+            : '';
+        return `
+        <button class="blog-card" onclick="openBlogArticle('${escape(p.id)}')">
+            <div class="blog-card-body">
+                <h3>${escape(p.title)}</h3>
+                <span class="blog-item-date">${fmtDate(p.date)}${langMarker}</span>
+                ${thumb}
+            </div>
+            <span class="blog-card-chevron">›</span>
+        </button>`;
+    }).join('');
+
+    return `<h1 class="page-title">${t('blog_title')}</h1><div class="app-content-box">${postHtml}</div>`;
+};
+
+function openBlogArticle(id) {
+    const articles = window._blogArticles || [];
+    const article = articles.find(a => a.id === id);
+    if (!article) return;
+
+    const escape = (s) => String(s || '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+    const fmtDate = (iso) => {
+        try { return new Date(iso).toLocaleDateString(currentLang, { year: 'numeric', month: 'long', day: 'numeric' }); }
+        catch (e) { return ''; }
+    };
+    const IMG_BASE = window.location.pathname.includes('/beta/')
+        ? '../../../site/blog-images/'
+        : 'blog-images/';
+    const resolveImage = (raw) => {
+        if (!raw) return '';
+        if (/^https?:\/\//i.test(raw)) return raw;
+        if (raw.includes('/')) return raw;
+        return IMG_BASE + raw;
+    };
+    const renderContent = (content) => {
+        return String(content || '').split(/\n{2,}/).map(par => {
+            const withImages = escape(par).replace(
+                /\[([^\]\s]+\.(png|jpg|jpeg|gif|webp|svg))\]/gi,
+                (match, filename) => {
+                    const src = resolveImage(filename);
+                    return '<img src="' + escape(src) + '" alt="" style="max-width:100%;height:auto;border-radius:10px;margin:16px auto;display:block;" onerror="this.style.display=\'none\'">';
+                }
+            );
+            if (/^<img /.test(withImages.trim())) return withImages;
+            return '<p>' + withImages + '</p>';
+        }).join('');
+    };
+
+    const langMarker = (article.showingLang !== currentLang && article.showingLang !== 'legacy')
+        ? `<span style="font-size:0.7rem; color:var(--primary); background:var(--primary-light); padding:2px 8px; border-radius:12px; margin-left:6px;">${article.showingLang.toUpperCase()}</span>`
+        : '';
+    const cover = article.image
+        ? `<img src="${escape(resolveImage(article.image))}" alt="" style="width:100%;max-height:340px;object-fit:cover;border-radius:12px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.08);" onerror="this.style.display='none'">`
+        : '';
+
+    const html = `
+        <div class="article-view">
+            <button class="article-back" onclick="closeBlogArticle()" aria-label="Back">←</button>
+            <h1 class="article-title">${escape(article.title)}</h1>
+            <div class="article-date">${fmtDate(article.date)}${langMarker}</div>
+            ${cover}
+            <div class="article-content">${renderContent(article.content)}</div>
+            <button class="article-back article-back-bottom" onclick="closeBlogArticle()" aria-label="Back">←</button>
+        </div>`;
+
+    const main = document.getElementById('app-content');
+    main.innerHTML = html;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeBlogArticle() {
+    const main = document.getElementById('app-content');
+    main.innerHTML = getBlogHtml();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
     const postHtml = articles.map(p => {
         const langMarker = (p.showingLang !== currentLang && p.showingLang !== 'legacy')
             ? `<span style="font-size:0.7rem; color:var(--primary); background:var(--primary-light); padding:2px 8px; border-radius:12px; margin-left:6px;">${p.showingLang.toUpperCase()}</span>`
