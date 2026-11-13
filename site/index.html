@@ -1362,17 +1362,44 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
         catch (e) { return ''; }
     };
 
+    // Blog images live at site/blog-images/.
+    // Stable site is at /site/index.html → path = 'blog-images/'
+    const IMG_BASE = 'blog-images/';
+
+    // Bare filename → IMG_BASE + filename
+    // Path with slash → treat as root-relative (e.g. 'apps/vespatimer/1.png' → '../apps/vespatimer/1.png' if needed, but here we keep it simple)
+    // Full URL → as-is
+    const resolveImage = (raw) => {
+        if (!raw) return '';
+        if (/^https?:\/\//i.test(raw)) return raw;
+        if (raw.includes('/')) return raw;
+        return IMG_BASE + raw;
+    };
+
+    // Replace [filename.ext] with <img> tags
+    const renderContent = (content) => {
+        return String(content || '').split(/\n{2,}/).map(par => {
+            const withImages = escape(par).replace(
+                /\[([^\]\s]+\.(png|jpg|jpeg|gif|webp|svg))\]/gi,
+                (match, filename) => {
+                    const src = resolveImage(filename);
+                    return '<img src="' + escape(src) + '" alt="" style="max-width:100%;height:auto;border-radius:10px;margin:12px auto;display:block;" onerror="this.style.display=\'none\'">';
+                }
+            );
+            if (/^<img /.test(withImages.trim())) return withImages;
+            return '<p>' + withImages + '</p>';
+        }).join('');
+    };
+
     const allPosts = dynamicBlog || [];
 
-    // Group all language variants by article id
     const grouped = {};
     allPosts.forEach(p => {
         if (!grouped[p.id]) grouped[p.id] = { id: p.id, date: p.date, translations: {} };
-        if (p.lang) grouped[p.id].translations[p.lang] = { title: p.title, content: p.content };
-        else grouped[p.id].translations['_legacy'] = { title: p.title, content: p.content };
+        if (p.lang) grouped[p.id].translations[p.lang] = { title: p.title, content: p.content, image: p.image || '' };
+        else grouped[p.id].translations['_legacy'] = { title: p.title, content: p.content, image: p.image || '' };
     });
 
-    // For each article, pick the current language (or fall back to FR / legacy)
     const articles = Object.values(grouped).map(g => {
         const tr = g.translations;
         const wanted = tr[currentLang];
@@ -1381,7 +1408,7 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
         const pick = wanted || fallbackFr || legacy;
         if (!pick || !pick.title || !pick.content) return null;
         const showingLang = wanted ? currentLang : (fallbackFr ? 'fr' : 'legacy');
-        return { id: g.id, date: g.date, title: pick.title, content: pick.content, showingLang: showingLang };
+        return { id: g.id, date: g.date, title: pick.title, content: pick.content, image: pick.image || '', showingLang: showingLang };
     }).filter(Boolean).sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (articles.length === 0) {
@@ -1391,6 +1418,10 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
     const postHtml = articles.map(p => {
         const langMarker = (p.showingLang !== currentLang && p.showingLang !== 'legacy')
             ? `<span style="font-size:0.7rem; color:var(--primary); background:var(--primary-light); padding:2px 8px; border-radius:12px; margin-left:6px;">${p.showingLang.toUpperCase()}</span>`
+            : '';
+        // No thumbnail = no element at all (no empty wrapper, no blank space)
+        const thumb = p.image
+            ? `<div class="blog-thumbnail"><img src="${escape(resolveImage(p.image))}" alt="" style="width:100%;max-height:280px;object-fit:cover;border-radius:10px;margin-bottom:14px;" onerror="this.parentElement.style.display='none'"></div>`
             : '';
         return `
         <div class="blog-item" data-post-id="${escape(p.id)}">
@@ -1402,7 +1433,10 @@ const allMembers = members.filter(m => m.group !== 'committee').sort((a, b) => (
                 <span class="blog-item-icon">+</span>
             </button>
             <div class="blog-item-content">
-                <div class="blog-body">${String(p.content || '').split(/\n{2,}/).map(par => `<p>${escape(par)}</p>`).join('')}</div>
+                <div class="blog-body" style="padding: 20px;">
+                    ${thumb}
+                    ${renderContent(p.content)}
+                </div>
             </div>
         </div>`;
     }).join('');
