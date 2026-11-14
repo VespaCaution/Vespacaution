@@ -1714,31 +1714,41 @@ function toggleBlogPost(button) {
         }
 
         function render() {
-            const hash = window.location.hash.replace('#', '') || 'home';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    let hash = window.location.hash.replace('#', '') || 'home';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            if (appsConfig[hash]) {
-                mainContent.innerHTML = appsConfig[hash].html[currentLang]();
-            } else if (hash === 'apps') {
-                mainContent.innerHTML = getHomeHtml();
-                const el = document.getElementById('apps');
-                if(el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
-            } else if (hash === 'resources') {
-                mainContent.innerHTML = getResourcesHtml('links');
-            } else if (hash === 'support') {
-                mainContent.innerHTML = getSupportHtml();
-            } else if (hash === 'members') {
-                mainContent.innerHTML = getMembersHtml();
-            } else if (hash === 'blog') {
-                mainContent.innerHTML = getBlogHtml();
-            } else if (hash === 'contact') {
-                mainContent.innerHTML = getContactHtml();
-                setupContactForm();
-            } else if (hash === 'privacy') {
-                mainContent.innerHTML = getPrivacyHtml();
-            } else {
-                mainContent.innerHTML = getHomeHtml();
-            }
+    // ── Per-page language override: #vespatimer-de ─────────────────────
+    // The suffix after the last dash is used ONLY to render that one page
+    // in the requested language. The rest of the site keeps currentLang.
+    let pageLang = currentLang;
+    const overrideMatch = hash.match(/^(.+)-(en|fr|de|it|rm)$/);
+    if (overrideMatch && appsConfig[overrideMatch[1]]) {
+        hash = overrideMatch[1];
+        pageLang = overrideMatch[2];
+    }
+
+    if (appsConfig[hash]) {
+        mainContent.innerHTML = appsConfig[hash].html[pageLang]();
+    } else if (hash === 'apps') {
+        mainContent.innerHTML = getHomeHtml();
+        const el = document.getElementById('apps');
+        if(el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+    } else if (hash === 'resources') {
+        mainContent.innerHTML = getResourcesHtml('links');
+    } else if (hash === 'support') {
+        mainContent.innerHTML = getSupportHtml();
+    } else if (hash === 'members') {
+        mainContent.innerHTML = getMembersHtml();
+    } else if (hash === 'blog') {
+        mainContent.innerHTML = getBlogHtml();
+    } else if (hash === 'contact') {
+        mainContent.innerHTML = getContactHtml();
+        setupContactForm();
+    } else if (hash === 'privacy') {
+        mainContent.innerHTML = getPrivacyHtml();
+    } else {
+        mainContent.innerHTML = getHomeHtml();
+    }
         }
 
         // ==========================================
@@ -1828,21 +1838,21 @@ function buildSearchIndex() {
         });
         // Also index the full HTML content of the app page (text only)
         ['en', 'fr', 'de', 'it', 'rm'].forEach(lang => {
-            if (app.html[lang]) {
-                const fullHtml = app.html[lang]();
-                const text = fullHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                if (text) {
-                    index.push({
-                        tag: t('search_tag_app') || 'App',
-                        title: app.title + ' (' + lang.toUpperCase() + ')',
-                        desc: text.substring(0, 200),
-                        fullText: text,
-                        hash: '#' + key,
-                        lang: lang
-                    });
-                }
-            }
-        });
+    if (app.html[lang]) {
+        const fullHtml = app.html[lang]();
+        const text = fullHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        if (text) {
+            index.push({
+                tag: t('search_tag_app') || 'App',
+                title: app.title + ' (' + lang.toUpperCase() + ')',
+                desc: text.substring(0, 200),
+                fullText: text,
+                hash: '#' + key + (lang === currentLang ? '' : '-' + lang),
+lang: lang
+            });
+        }
+    }
+});
     });
 
     // ── Static pages ──
