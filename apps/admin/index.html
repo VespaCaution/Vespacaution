@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Comité — Vespacaution</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="theme-color" content="#c99b48">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Comité">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -782,6 +789,7 @@ function login() {
     const pass = document.getElementById('password').value;
     if (email === atob(ENCODED_EMAIL) && pass === atob(ENCODED_PASSWORD)) {
         isLoggedIn = true;
+        localStorage.setItem('vc_admin_session', 'true');   // ← ADD THIS
         document.getElementById('authSection').classList.add('hidden');
         document.getElementById('appSection').classList.remove('hidden');
         document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
@@ -794,6 +802,7 @@ function login() {
 
 function logout() {
     isLoggedIn = false;
+    localStorage.removeItem('vc_admin_session');   // ← ADD THIS
     document.getElementById('appSection').classList.add('hidden');
     document.getElementById('authSection').classList.remove('hidden');
     document.getElementById('email').value = '';
@@ -1363,6 +1372,24 @@ document.addEventListener('DOMContentLoaded', function() {
     applyTranslations();
     document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
     updateBlogPublishState();
+
+    // Auto-login if previously signed in
+    if (localStorage.getItem('vc_admin_session') === 'true') {
+        isLoggedIn = true;
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('appSection').classList.remove('hidden');
+        loadAllData();
+        updateBlogPublishState();
+    }
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Admin SW registered:', reg.scope))
+                .catch(err => console.log('Admin SW error:', err));
+        });
+    }
 });
 </script>
 </body>
