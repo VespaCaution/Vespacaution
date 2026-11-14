@@ -1717,9 +1717,7 @@ function toggleBlogPost(button) {
     let hash = window.location.hash.replace('#', '') || 'home';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // ── Per-page language override: #vespatimer-de ─────────────────────
-    // The suffix after the last dash is used ONLY to render that one page
-    // in the requested language. The rest of the site keeps currentLang.
+    // Per-page language override: #vespatimer-de
     let pageLang = currentLang;
     const overrideMatch = hash.match(/^(.+)-(en|fr|de|it|rm)$/);
     if (overrideMatch && appsConfig[overrideMatch[1]]) {
@@ -1728,11 +1726,15 @@ function toggleBlogPost(button) {
     }
 
     if (appsConfig[hash]) {
+        // Temporarily switch currentLang so t() returns the right strings
+        const savedLang = currentLang;
+        currentLang = pageLang;
         mainContent.innerHTML = appsConfig[hash].html[pageLang]();
+        currentLang = savedLang;
     } else if (hash === 'apps') {
         mainContent.innerHTML = getHomeHtml();
         const el = document.getElementById('apps');
-        if(el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+        if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
     } else if (hash === 'resources') {
         mainContent.innerHTML = getResourcesHtml('links');
     } else if (hash === 'support') {
