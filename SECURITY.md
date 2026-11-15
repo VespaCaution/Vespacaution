@@ -1,14 +1,11 @@
-# Security Policy
+# Politique de sécurité
 
-## Supported Versions
+## Versions prises en charge
 
-| Version | Supported          |
+| Version | Prise en charge    |
 | ------- | ------------------ |
-| A  | :white_check_mark: |
-| L  | ✅:                |
-| L  | :white_check_mark: |
-|    | ✅:                |
+| Toutes  | :white_check_mark: |
 
-## Reporting a Vulnerability
+## Signaler une vulnérabilité
 
 info@vespacaution.ch
