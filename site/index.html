@@ -486,7 +486,20 @@
 .dropdown-btn { width: 100%; justify-content: center; font-size: 1.1rem; margin: 0; padding: 0; }
 /* FIN DE L'AJOUT */
             .social-icons { justify-content: center; width: 100%; margin-top: 10px; }
-
+/* --- API GUIDE WARNING BADGE --- */
+.apiguide-warning {
+    display: inline-block;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 10px;
+    text-align: center;
+    line-height: 1.4;
+}
             main { padding: 0 12px; margin: 20px auto; }
             .hero h1 { font-size: 1.8rem; }
             .app-grid { grid-template-columns: 1fr; gap: 15px; }
@@ -1150,7 +1163,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
             </div>`; }
         }
     },
-    'apiguide': {
+                         'apiguide': {
         title: 'ApiGuide',
         icon: '<img src="../apps/apiguide/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
         shortDesc: {
@@ -1161,11 +1174,11 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
             rm: "Cudesch da las stagiuns e activitats da las avieuls"
         },
         html: {
-            en: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.en}</p></div>
+            en: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.en}</p><div class="apiguide-warning">🚧 Work in progress. ApiGuide is based on my personal experience.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide is a PWA designed to accompany beekeepers throughout the year, organizing activities by season.</p>
                 <h3>Structure de navigation</h3>
-                <ul><li><strong>Seasons:</strong> Spring, Summer, Autumn, Winter.</li><li><strong>Activities:</strong> 10 main activities per season.</li><li><strong>Sub-activities:</strong> Detailed breakdown.</li><li><strong>Sheets:</strong> Read-only text sheets with advice.</li></ul>
+                <ul><li><strong>Seasons:</strong> Spring, Summer, Autumn, Winter.</li><li><strong>Activities:</strong> Organized by season.</li><li><strong>Sub-activities:</strong> Detailed breakdown.</li><li><strong>Sheets:</strong> Read-only text sheets with advice.</li></ul>
                 <h3>🌍 Multilingual & Offline</h3>
                 <p>Available in 5 independent languages (FR, EN, DE, IT, RM) and works 100% offline.</p>
                 <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
@@ -1178,11 +1191,11 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            fr: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.fr}</p></div>
+            fr: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.fr}</p><div class="apiguide-warning">🚧 En cours de développement. ApiGuide est fait selon mon expérience.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide est une application web (PWA) conçue pour accompagner les apiculteurs tout au long de l'année, en organisant les activités selon les quatre saisons.</p>
                 <h3>Structure de navigation</h3>
-                <ul><li><strong>Saisons :</strong> Printemps, Été, Automne, Hiver.</li><li><strong>Activités :</strong> 10 activités principales par saison.</li><li><strong>Sous-activités :</strong> Affinage des sujets.</li><li><strong>Fiches :</strong> Textes de conseils en lecture seule.</li></ul>
+                <ul><li><strong>Saisons :</strong> Printemps, Été, Automne, Hiver.</li><li><strong>Activités :</strong> Organisées par saison.</li><li><strong>Sous-activités :</strong> Affinage des sujets.</li><li><strong>Fiches :</strong> Textes de conseils en lecture seule.</li></ul>
                 <h3>🌍 Multilingue & Hors ligne</h3>
                 <p>Disponible en 5 langues indépendantes (FR, EN, DE, IT, RM) et fonctionne 100% hors ligne.</p>
                 <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
@@ -1195,11 +1208,11 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            de: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.de}</p></div>
+            de: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.de}</p><div class="apiguide-warning">🚧 In Entwicklung. ApiGuide basiert auf meiner Erfahrung.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide ist eine PWA, die Imker das ganze Jahr über begleiten soll und die Aktivitäten nach Jahreszeiten organisiert.</p>
                 <h3>Navigationsstruktur</h3>
-                <ul><li><strong>Jahreszeiten:</strong> Frühling, Sommer, Herbst, Winter.</li><li><strong>Aktivitäten:</strong> 10 Hauptaktivitäten pro Jahreszeit.</li><li><strong>Unteraktivitäten:</strong> Detaillierte Aufschlüsselung.</li><li><strong>Textblätter:</strong> Read-only Textblätter mit Ratschlägen.</li></ul>
+                <ul><li><strong>Jahreszeiten:</strong> Frühling, Sommer, Herbst, Winter.</li><li><strong>Aktivitäten:</strong> Nach Jahreszeit organisiert.</li><li><strong>Unteraktivitäten:</strong> Detaillierte Aufschlüsselung.</li><li><strong>Textblätter:</strong> Read-only Textblätter mit Ratschlägen.</li></ul>
                 <h3>🌍 Mehrsprachig & Offline</h3>
                 <p>Verfügbar in 5 unabhängigen Sprachen (FR, EN, DE, IT, RM) und funktioniert 100% offline.</p>
                 <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
@@ -1212,11 +1225,11 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            it: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.it}</p></div>
+            it: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.it}</p><div class="apiguide-warning">🚧 In fase di sviluppo. ApiGuide si basa sulla mia esperienza.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide è una PWA progettata per accompagnare gli apicoltori durante tutto l'anno, organizzando le attività per stagione.</p>
                 <h3>Struttura di navigazione</h3>
-                <ul><li><strong>Stagioni:</strong> Primavera, Estate, Autunno, Inverno.</li><li><strong>Attività:</strong> 10 attività principali per stagione.</li><li><strong>Sotto-attività:</strong> Suddivisione dettagliata.</li><li><strong>Schede:</strong> Schede di testo in sola lettura con consigli.</li></ul>
+                <ul><li><strong>Stagioni:</strong> Primavera, Estate, Autunno, Inverno.</li><li><strong>Attività:</strong> Organizzate per stagione.</li><li><strong>Sotto-attività:</strong> Suddivisione dettagliata.</li><li><strong>Schede:</strong> Schede di testo in sola lettura con consigli.</li></ul>
                 <h3>🌍 Multilingue e Offline</h3>
                 <p>Disponibile in 5 lingue indipendenti (FR, EN, DE, IT, RM) e funziona 100% offline.</p>
                 <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
@@ -1229,11 +1242,11 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            rm: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.rm}</p></div>
+            rm: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.rm}</p><div class="apiguide-warning">🚧 En svilupp. ApiGuide è basa sin mia experientscha.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide è ina PWA concepidà per accumpagnar ils apiculturs durant tut l'on, organisond las activitats per stagiun.</p>
                 <h3>Structura da navigaziun</h3>
-                <ul><li><strong>Stagiuns:</strong> Primavaira, Stad, Atun, Enviern.</li><li><strong>Activitats:</strong> 10 activitats principalas per stagiun.</li><li><strong>Sut-activitats:</strong> Detaglià.</li><li><strong>Fichas:</strong> Fichas da text cun cussegls.</li></ul>
+                <ul><li><strong>Stagiuns:</strong> Primavaira, Stad, Atun, Enviern.</li><li><strong>Activitats:</strong> Organisadas per stagiun.</li><li><strong>Sut-activitats:</strong> Detaglià.</li><li><strong>Fichas:</strong> Fichas da text cun cussegls.</li></ul>
                 <h3>🌍 Multilingua & Offline</h3>
                 <p>Disponibel en 5 linguas independentas (FR, EN, DE, IT, RM) e funcziunescha 100% offline.</p>
                 <div style="text-align:center"><a href="../apps/apiguide/index.html" class="btn main-open-btn">${t('btn_open')}</a></div>
