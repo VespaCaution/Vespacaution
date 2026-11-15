@@ -343,11 +343,133 @@ th { background: #f4ebd9; }
     display: block;
 }
 
+/* ===== ApiGuide editor styles (mirrors old standalone editor) ===== */
+.ag-lang-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+.ag-lang-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #666;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0;
+    width: auto;
+    font-family: inherit;
+}
+.ag-lang-btn:hover { background: #e6e2d8; }
+.ag-lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.ag-lang-btn.filled::after { content: ' ✓'; color: #4a9d4a; font-weight: bold; }
+.ag-lang-btn.active.filled::after { color: white; }
+
+.ag-breadcrumb-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.ag-breadcrumb { font-weight: 600; color: var(--primary); flex: 1; min-width: 160px; font-size: 0.95rem; }
+.ag-back-btn {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: auto;
+    margin: 0;
+}
+.ag-back-btn:hover { background: var(--primary-hover); }
+
+.ag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 10px 0 20px;
+}
+.ag-grid.seasons { grid-template-columns: repeat(2, 1fr); }
+.ag-cell { position: relative; }
+.ag-grid-btn {
+    width: 100%;
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 26px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--primary);
+    text-align: center;
+    word-break: break-word;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+    margin: 0;
+    font-family: inherit;
+}
+.ag-grid-btn:hover { border-color: var(--primary); }
+.ag-grid-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--primary); }
+.ag-btn-edit, .ag-btn-del {
+    position: absolute;
+    top: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    font-size: 0.7rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ag-btn-edit { right: 4px; background: var(--primary); color: #fff; }
+.ag-btn-del { left: 4px; background: var(--danger); color: #fff; font-size: 0.85rem; }
+.ag-add-btn { opacity: 0.55; }
+
+.ag-hidden-flag { opacity: 0.4; }
+.ag-hint {
+    background: #fff4d6;
+    border-left: 4px solid var(--primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: #7a5a20;
+    margin-bottom: 10px;
+}
+.ag-textbox {
+    background: #fffdf7;
+    border-radius: 16px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    margin: 10px 0;
+}
+.ag-textbox h2 { font-size: 1.05rem; color: var(--primary); margin-bottom: 8px; }
+.ag-textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.95rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: #fef9e7;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 180px;
+}
+.ag-textarea:focus { outline: none; border-color: var(--primary); background: #fffdf7; }
+.ag-save-note { font-size: 0.8rem; color: var(--muted); margin-top: 6px; font-style: italic; }
+.ag-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.ag-toolbar button { width: auto; }
+
 @media (max-width: 768px) {
     .topbar { padding: 10px 12px; }
     .topbar-right { width: 100%; justify-content: flex-end; }
     .admin-main { padding: 12px; }
     .analytics-iframe-wrapper iframe { height: 60vh; }
+    .ag-grid.seasons { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -458,6 +580,7 @@ th { background: #f4ebd9; }
                 <button class="subtab active" data-sub="blog" onclick="switchSubTab('blog')" data-i18n="admin_site_blog_tab">📰 Blog</button>
                 <button class="subtab" data-sub="members" onclick="switchSubTab('members')" data-i18n="admin_site_members_tab">👥 Membres</button>
                 <button class="subtab" data-sub="thanks" onclick="switchSubTab('thanks')" data-i18n="admin_site_thanks_tab">🙏 Remerciements</button>
+                <button class="subtab" data-sub="apiguide" onclick="switchSubTab('apiguide')" data-i18n="admin_site_apiguide_tab">🐝 ApiGuide</button>
             </div>
 
             <div id="subTabBlog" class="subtab-content">
@@ -545,6 +668,30 @@ th { background: #f4ebd9; }
                 <h3 style="margin-top: 24px;" data-i18n="admin_thanks_existing">Remerciements existants</h3>
                 <div id="thanksList"></div>
             </div>
+
+            <!-- ==================== ApiGuide editor ==================== -->
+            <div id="subTabApiguide" class="subtab-content hidden">
+                <h3 data-i18n="admin_ag_title">🐝 Éditeur ApiGuide (saisons & activités)</h3>
+                <p style="font-size:0.85rem; color:#666; margin-bottom:10px;" data-i18n="admin_ag_desc">
+                    Contenu affiché en lecture seule dans l'application ApiGuide. Sauvegardé localement puis publié sur le cloud via ☁️ Sauvegarder.
+                </p>
+
+                <div class="ag-lang-bar" id="agLangBar"></div>
+
+                <div class="ag-toolbar">
+                    <button class="btn-blue btn-sm" onclick="agOpenInNewWindow()" data-i18n="admin_ag_preview">👁️ Aperçu</button>
+                    <button class="btn-green btn-sm" onclick="agPublish()" data-i18n="admin_ag_publish">☁️ Publier ApiGuide</button>
+                    <button class="btn-grey btn-sm" onclick="agLoadFromGist()" data-i18n="admin_ag_pull">⬇️ Charger depuis le cloud</button>
+                    <button class="btn-red btn-sm" onclick="agReset()" data-i18n="admin_ag_reset">Réinitialiser</button>
+                    <button class="btn-grey btn-sm" onclick="agExportFinalHtml()" data-i18n="admin_ag_export_html">⬇ Exporter HTML final</button>
+                </div>
+
+                <div class="ag-hint" data-i18n="admin_ag_hint">
+                    ✏️ Stylo pour modifier · × pour masquer · ＋ pour ajouter un bouton d'activité avec sa propre page de texte.
+                </div>
+
+                <div id="agEditorView"></div>
+            </div>
         </div>
 
         <div id="tabAnalytics" class="card hidden">
@@ -576,6 +723,9 @@ th { background: #f4ebd9; }
 </div>
 
 <script>
+/* =================================================================
+   ADMIN TRANSLATIONS (existing + new ApiGuide keys)
+   ================================================================= */
 const adminTranslations = {
     fr: {
         admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres du comité.", admin_login_btn: "Se connecter",
@@ -589,7 +739,7 @@ const adminTranslations = {
         admin_archives_title: "📁 Archives", admin_folder_placeholder: "Nom du dossier", admin_create_folder: "Créer dossier",
         admin_editor_title: "📝 Éditeur de texte", admin_general_folder: "Général", admin_title_placeholder: "Titre du document", admin_text_placeholder: "Écrivez votre texte ici...", admin_save_doc: "💾 Enregistrer le document",
         admin_save_local: "💾 Sauvegarde locale (JSON)", admin_restore_local: "📂 Restaurer (JSON)",
-        admin_site_title: "🛠️ Modifier le site", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Membres", admin_site_thanks_tab: "🙏 Remerciements",
+        admin_site_title: "🛠️ Modifier le site", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Membres", admin_site_thanks_tab: "🙏 Remerciements", admin_site_apiguide_tab: "🐝 ApiGuide",
         admin_blog_add_title: "Ajouter un article de blog", admin_blog_publish: "Publier l'article", admin_blog_existing: "Articles existants",
         admin_blog_status_ready: "✅ Prêt à publier",
         admin_blog_status_missing: "⚠️ Remplissez toutes les langues avant de publier",
@@ -604,7 +754,34 @@ const adminTranslations = {
         admin_confirm_delete: "Voulez-vous vraiment supprimer cet élément ?",
         admin_analytics_title: "📊 Analytics",
         admin_analytics_desc: "Tableau de bord des statistiques Umami (vue publique).",
-        admin_analytics_open: "Ouvrir dans un onglet"
+        admin_analytics_open: "Ouvrir dans un onglet",
+        admin_ag_title: "🐝 Éditeur ApiGuide (saisons & activités)",
+        admin_ag_desc: "Contenu affiché en lecture seule dans l'application ApiGuide. Sauvegardé localement puis publié sur le cloud via ☁️ Sauvegarder.",
+        admin_ag_preview: "👁️ Aperçu",
+        admin_ag_publish: "☁️ Publier ApiGuide",
+        admin_ag_pull: "⬇️ Charger depuis le cloud",
+        admin_ag_reset: "Réinitialiser",
+        admin_ag_export_html: "⬇ Exporter HTML final",
+        admin_ag_hint: "✏️ Stylo pour modifier · × pour masquer · ＋ pour ajouter un bouton d'activité avec sa propre page de texte.",
+        admin_ag_back: "← Retour",
+        admin_ag_notes: "📝 Notes",
+        admin_ag_saved_auto: "Sauvegardé automatiquement.",
+        admin_ag_no_text: "(aucun texte)",
+        admin_ag_choose_season: "Choisir une saison",
+        admin_ag_activity: "Activité",
+        admin_ag_add_season: "➕ Ajouter une saison",
+        admin_ag_add_activity: "➕ Ajouter une activité",
+        admin_ag_title_prompt: "Titre (vide = blanc, \"null\" = masqué) :",
+        admin_ag_season_prompt: "Titre de la nouvelle saison :",
+        admin_ag_activity_prompt: "Titre de la nouvelle activité :",
+        admin_ag_confirm_hide: "Masquer ce bouton ? (null → invisible pour les lecteurs)",
+        admin_ag_confirm_reset: "Effacer TOUTES les données ApiGuide locales ? (Publier d'abord si vous voulez les garder.)",
+        admin_ag_publish_ok: "✅ ApiGuide publié sur le cloud (Gist).",
+        admin_ag_publish_err: "❌ Impossible de publier. Vérifiez le token GitHub.",
+        admin_ag_pull_ok: "✅ ApiGuide chargé depuis le cloud.",
+        admin_ag_pull_err: "❌ Impossible de charger depuis le cloud.",
+        admin_ag_pull_none: "Aucune donnée ApiGuide sur le cloud.",
+        admin_ag_confirm_pull: "Charger ApiGuide depuis le cloud ? Cela remplacera le contenu local de l'éditeur."
     },
     en: {
         admin_login_title: "Committee Space", admin_login_desc: "Committee members only.", admin_login_btn: "Log in",
@@ -618,7 +795,7 @@ const adminTranslations = {
         admin_archives_title: "📁 Archives", admin_folder_placeholder: "Folder name", admin_create_folder: "Create folder",
         admin_editor_title: "📝 Text Editor", admin_general_folder: "General", admin_title_placeholder: "Document title", admin_text_placeholder: "Write your text here...", admin_save_doc: "💾 Save document",
         admin_save_local: "💾 Local Backup (JSON)", admin_restore_local: "📂 Restore (JSON)",
-        admin_site_title: "🛠️ Modify site", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Members", admin_site_thanks_tab: "🙏 Thanks",
+        admin_site_title: "🛠️ Modify site", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Members", admin_site_thanks_tab: "🙏 Thanks", admin_site_apiguide_tab: "🐝 ApiGuide",
         admin_blog_add_title: "Add blog article", admin_blog_publish: "Publish article", admin_blog_existing: "Existing articles",
         admin_blog_status_ready: "✅ Ready to publish",
         admin_blog_status_missing: "⚠️ Fill all languages before publishing",
@@ -633,7 +810,34 @@ const adminTranslations = {
         admin_confirm_delete: "Are you sure you want to delete this item?",
         admin_analytics_title: "📊 Analytics",
         admin_analytics_desc: "Umami statistics dashboard (public view).",
-        admin_analytics_open: "Open in new tab"
+        admin_analytics_open: "Open in new tab",
+        admin_ag_title: "🐝 ApiGuide editor (seasons & activities)",
+        admin_ag_desc: "Content shown read-only in the ApiGuide app. Saved locally then published to the cloud via ☁️ Save.",
+        admin_ag_preview: "👁️ Preview",
+        admin_ag_publish: "☁️ Publish ApiGuide",
+        admin_ag_pull: "⬇️ Load from cloud",
+        admin_ag_reset: "Reset",
+        admin_ag_export_html: "⬇ Export final HTML",
+        admin_ag_hint: "✏️ Pencil to edit · × to hide · ＋ to add an activity button that opens its own text page.",
+        admin_ag_back: "← Back",
+        admin_ag_notes: "📝 Notes",
+        admin_ag_saved_auto: "Saved automatically.",
+        admin_ag_no_text: "(no text)",
+        admin_ag_choose_season: "choose a season",
+        admin_ag_activity: "activity",
+        admin_ag_add_season: "➕ Add a season",
+        admin_ag_add_activity: "➕ Add an activity",
+        admin_ag_title_prompt: "Title (empty = blank, \"null\" = hidden):",
+        admin_ag_season_prompt: "Title of the new season:",
+        admin_ag_activity_prompt: "Title of the new activity:",
+        admin_ag_confirm_hide: "Hide this button? (null → not visible to readers)",
+        admin_ag_confirm_reset: "Erase ALL local ApiGuide data? (Publish first if you want to keep it.)",
+        admin_ag_publish_ok: "✅ ApiGuide published to the cloud (Gist).",
+        admin_ag_publish_err: "❌ Could not publish. Check the GitHub token.",
+        admin_ag_pull_ok: "✅ ApiGuide loaded from the cloud.",
+        admin_ag_pull_err: "❌ Could not load from the cloud.",
+        admin_ag_pull_none: "No ApiGuide data in the cloud.",
+        admin_ag_confirm_pull: "Load ApiGuide from the cloud? This will replace the local editor content."
     },
     de: {
         admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Komitee-Mitglieder.", admin_login_btn: "Anmelden",
@@ -647,7 +851,7 @@ const adminTranslations = {
         admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Ordnername", admin_create_folder: "Ordner erstellen",
         admin_editor_title: "📝 Texteditor", admin_general_folder: "Allgemein", admin_title_placeholder: "Dokumenttitel", admin_text_placeholder: "Schreiben Sie hier...", admin_save_doc: "💾 Dokument speichern",
         admin_save_local: "💾 Lokales Backup (JSON)", admin_restore_local: "📂 Wiederherstellen (JSON)",
-        admin_site_title: "🛠️ Website bearbeiten", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Mitglieder", admin_site_thanks_tab: "🙏 Danksagungen",
+        admin_site_title: "🛠️ Website bearbeiten", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Mitglieder", admin_site_thanks_tab: "🙏 Danksagungen", admin_site_apiguide_tab: "🐝 ApiGuide",
         admin_blog_add_title: "Blog-Artikel hinzufügen", admin_blog_publish: "Artikel veröffentlichen", admin_blog_existing: "Bestehende Artikel",
         admin_blog_status_ready: "✅ Bereit zum Veröffentlichen",
         admin_blog_status_missing: "⚠️ Füllen Sie alle Sprachen aus, bevor Sie veröffentlichen",
@@ -662,7 +866,34 @@ const adminTranslations = {
         admin_confirm_delete: "Diesen Eintrag wirklich löschen?",
         admin_analytics_title: "📊 Analytics",
         admin_analytics_desc: "Umami-Statistik-Dashboard (öffentliche Ansicht).",
-        admin_analytics_open: "In neuem Tab öffnen"
+        admin_analytics_open: "In neuem Tab öffnen",
+        admin_ag_title: "🐝 ApiGuide-Editor (Jahreszeiten & Aktivitäten)",
+        admin_ag_desc: "Inhalt wird in der ApiGuide-App schreibgeschützt angezeigt. Lokal gespeichert, dann per ☁️ Speichern in die Cloud veröffentlicht.",
+        admin_ag_preview: "👁️ Vorschau",
+        admin_ag_publish: "☁️ ApiGuide veröffentlichen",
+        admin_ag_pull: "⬇️ Aus Cloud laden",
+        admin_ag_reset: "Zurücksetzen",
+        admin_ag_export_html: "⬇ Finale HTML exportieren",
+        admin_ag_hint: "✏️ Stift zum Bearbeiten · × zum Ausblenden · ＋ zum Hinzufügen einer Aktivität mit eigener Textseite.",
+        admin_ag_back: "← Zurück",
+        admin_ag_notes: "📝 Notizen",
+        admin_ag_saved_auto: "Automatisch gespeichert.",
+        admin_ag_no_text: "(kein Text)",
+        admin_ag_choose_season: "Jahreszeit wählen",
+        admin_ag_activity: "Aktivität",
+        admin_ag_add_season: "➕ Jahreszeit hinzufügen",
+        admin_ag_add_activity: "➕ Aktivität hinzufügen",
+        admin_ag_title_prompt: "Titel (leer = leer, \"null\" = versteckt):",
+        admin_ag_season_prompt: "Titel der neuen Jahreszeit:",
+        admin_ag_activity_prompt: "Titel der neuen Aktivität:",
+        admin_ag_confirm_hide: "Diesen Button ausblenden? (null → für Leser unsichtbar)",
+        admin_ag_confirm_reset: "ALLE lokalen ApiGuide-Daten löschen? (Erst veröffentlichen, wenn Sie sie behalten wollen.)",
+        admin_ag_publish_ok: "✅ ApiGuide in der Cloud veröffentlicht (Gist).",
+        admin_ag_publish_err: "❌ Veröffentlichen fehlgeschlagen. GitHub-Token prüfen.",
+        admin_ag_pull_ok: "✅ ApiGuide aus der Cloud geladen.",
+        admin_ag_pull_err: "❌ Laden aus der Cloud fehlgeschlagen.",
+        admin_ag_pull_none: "Keine ApiGuide-Daten in der Cloud.",
+        admin_ag_confirm_pull: "ApiGuide aus der Cloud laden? Der lokale Editorinhalt wird ersetzt."
     },
     it: {
         admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri del comitato.", admin_login_btn: "Accedi",
@@ -676,7 +907,7 @@ const adminTranslations = {
         admin_archives_title: "📁 Archivio", admin_folder_placeholder: "Nome cartella", admin_create_folder: "Crea cartella",
         admin_editor_title: "📝 Editor di testo", admin_general_folder: "Generale", admin_title_placeholder: "Titolo documento", admin_text_placeholder: "Scrivi qui...", admin_save_doc: "💾 Salva documento",
         admin_save_local: "💾 Backup locale (JSON)", admin_restore_local: "📂 Ripristina (JSON)",
-        admin_site_title: "🛠️ Modifica sito", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Membri", admin_site_thanks_tab: "🙏 Ringraziamenti",
+        admin_site_title: "🛠️ Modifica sito", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Membri", admin_site_thanks_tab: "🙏 Ringraziamenti", admin_site_apiguide_tab: "🐝 ApiGuide",
         admin_blog_add_title: "Aggiungi articolo blog", admin_blog_publish: "Pubblica articolo", admin_blog_existing: "Articoli esistenti",
         admin_blog_status_ready: "✅ Pronto per pubblicare",
         admin_blog_status_missing: "⚠️ Compila tutte le lingue prima di pubblicare",
@@ -691,7 +922,34 @@ const adminTranslations = {
         admin_confirm_delete: "Eliminare davvero questo elemento?",
         admin_analytics_title: "📊 Analytics",
         admin_analytics_desc: "Dashboard delle statistiche Umami (vista pubblica).",
-        admin_analytics_open: "Apri in nuova scheda"
+        admin_analytics_open: "Apri in nuova scheda",
+        admin_ag_title: "🐝 Editor ApiGuide (stagioni & attività)",
+        admin_ag_desc: "Contenuto mostrato in sola lettura nell'app ApiGuide. Salvato localmente, poi pubblicato nel cloud con ☁️ Salva.",
+        admin_ag_preview: "👁️ Anteprima",
+        admin_ag_publish: "☁️ Pubblica ApiGuide",
+        admin_ag_pull: "⬇️ Carica dal cloud",
+        admin_ag_reset: "Reimposta",
+        admin_ag_export_html: "⬇ Esporta HTML finale",
+        admin_ag_hint: "✏️ Matita per modificare · × per nascondere · ＋ per aggiungere un'attività con la sua pagina di testo.",
+        admin_ag_back: "← Indietro",
+        admin_ag_notes: "📝 Note",
+        admin_ag_saved_auto: "Salvato automaticamente.",
+        admin_ag_no_text: "(nessun testo)",
+        admin_ag_choose_season: "scegli una stagione",
+        admin_ag_activity: "attività",
+        admin_ag_add_season: "➕ Aggiungi una stagione",
+        admin_ag_add_activity: "➕ Aggiungi un'attività",
+        admin_ag_title_prompt: "Titolo (vuoto = vuoto, \"null\" = nascosto):",
+        admin_ag_season_prompt: "Titolo della nuova stagione:",
+        admin_ag_activity_prompt: "Titolo della nuova attività:",
+        admin_ag_confirm_hide: "Nascondere questo pulsante? (null → invisibile ai lettori)",
+        admin_ag_confirm_reset: "Cancellare TUTTI i dati ApiGuide locali? (Pubblica prima se vuoi conservarli.)",
+        admin_ag_publish_ok: "✅ ApiGuide pubblicato nel cloud (Gist).",
+        admin_ag_publish_err: "❌ Pubblicazione fallita. Controlla il token GitHub.",
+        admin_ag_pull_ok: "✅ ApiGuide caricato dal cloud.",
+        admin_ag_pull_err: "❌ Caricamento dal cloud fallito.",
+        admin_ag_pull_none: "Nessun dato ApiGuide nel cloud.",
+        admin_ag_confirm_pull: "Caricare ApiGuide dal cloud? Il contenuto locale dell'editor sarà sostituito."
     },
     rm: {
         admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers dal comité.", admin_login_btn: "S'annunziar",
@@ -705,7 +963,7 @@ const adminTranslations = {
         admin_archives_title: "📁 Archiv", admin_folder_placeholder: "Num da l'ordinatur", admin_create_folder: "Crear ordinatur",
         admin_editor_title: "📝 Editor da text", admin_general_folder: "General", admin_title_placeholder: "Titel dal document", admin_text_placeholder: "Scriva qua...", admin_save_doc: "💾 Memorisar il document",
         admin_save_local: "💾 Backup local (JSON)", admin_restore_local: "📂 Restaurar (JSON)",
-        admin_site_title: "🛠️ Modifitgar il sit", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Commembers", admin_site_thanks_tab: "🙏 Grazias",
+        admin_site_title: "🛠️ Modifitgar il sit", admin_site_blog_tab: "📰 Blog", admin_site_members_tab: "👥 Commembers", admin_site_thanks_tab: "🙏 Grazias", admin_site_apiguide_tab: "🐝 ApiGuide",
         admin_blog_add_title: "Agiuntar in artitgel da blog", admin_blog_publish: "Publitgar l'artitgel", admin_blog_existing: "Artitgels existents",
         admin_blog_status_ready: "✅ Pront per publitgar",
         admin_blog_status_missing: "⚠️ Emplenescha tut las linguas avant da publitgar",
@@ -720,7 +978,34 @@ const adminTranslations = {
         admin_confirm_delete: "Stizzar propi quest element?",
         admin_analytics_title: "📊 Analytics",
         admin_analytics_desc: "Dashboard da las statisticas Umami (vista publica).",
-        admin_analytics_open: "Avrir en in nov tab"
+        admin_analytics_open: "Avrir en in nov tab",
+        admin_ag_title: "🐝 Editor ApiGuide (stagiuns & activitads)",
+        admin_ag_desc: "Cuntegn mussà en lectura be en l'app ApiGuide. Memorisà localmain, publitgà en il cloud cun ☁️ Memorisar.",
+        admin_ag_preview: "👁️ Previsiun",
+        admin_ag_publish: "☁️ Publitgar ApiGuide",
+        admin_ag_pull: "⬇️ Chargiar dal cloud",
+        admin_ag_reset: "Redefinir",
+        admin_ag_export_html: "⬇ Exportar HTML final",
+        admin_ag_hint: "✏️ Stil per modifitgar · × per zuppar · ＋ per agiuntar in'activitad cun sia atgna pagina da text.",
+        admin_ag_back: "← Enavos",
+        admin_ag_notes: "📝 Notas",
+        admin_ag_saved_auto: "Memorisà automaticamain.",
+        admin_ag_no_text: "(nagin text)",
+        admin_ag_choose_season: "tscherna ina stagiun",
+        admin_ag_activity: "activitad",
+        admin_ag_add_season: "➕ Agiuntar ina stagiun",
+        admin_ag_add_activity: "➕ Agiuntar in'activitad",
+        admin_ag_title_prompt: "Titel (vid = vid, \"null\" = zuppà):",
+        admin_ag_season_prompt: "Titel da la nova stagiun:",
+        admin_ag_activity_prompt: "Titel da la nova activitad:",
+        admin_ag_confirm_hide: "Zuppar quest buttun? (null → betg visibel per lecturs)",
+        admin_ag_confirm_reset: "Stizzar TUT las datas ApiGuide localas? (Publitgar avant sche ti vuls las salvar.)",
+        admin_ag_publish_ok: "✅ ApiGuide publitgà en il cloud (Gist).",
+        admin_ag_publish_err: "❌ Publitgar n'è betg reussì. Controlla il token GitHub.",
+        admin_ag_pull_ok: "✅ ApiGuide chargià dal cloud.",
+        admin_ag_pull_err: "❌ Chargiar dal cloud n'è betg reussì.",
+        admin_ag_pull_none: "Naginas datas ApiGuide en il cloud.",
+        admin_ag_confirm_pull: "Chargiar ApiGuide dal cloud? Il cuntegn local da l'editor vegn remplazzà."
     }
 };
 
@@ -759,9 +1044,14 @@ function setAdminLanguage(lang) {
         renderThanks();
         updateEditorFolders();
         updateBlogPublishState();
+        agRenderLangBar();
+        agRender();
     }
 }
 
+/* =================================================================
+   DATA MODEL (existing admin data + ApiGuide)
+   ================================================================= */
 const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
 const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
 
@@ -774,6 +1064,82 @@ let isLoggedIn = false;
 let currentBlogLang = 'fr';
 let currentMemberLang = 'fr';
 
+/* ---- ApiGuide state (mirrors old standalone editor) ---- */
+const AG_LANGS = ['en', 'fr', 'it', 'de', 'rm'];
+const AG_LANG_LABELS = { en: 'English', fr: 'Français', it: 'Italiano', de: 'Deutsch', rm: 'Rumantsch' };
+const AG_LS_KEY = 'apiguide_v1_content';
+const AG_LS_LANG = 'apiguide_v1_lang';
+const E10 = () => ['', '', '', '', '', '', '', '', '', ''];
+function agBlankLang() {
+    return {
+        season: ['', '', '', ''],
+        level1: Array.from({ length: 4 }, E10),
+        text:   Array.from({ length: 4 }, E10)
+    };
+}
+function agBlankContent() {
+    const c = {};
+    AG_LANGS.forEach(l => { c[l] = agBlankLang(); });
+    return c;
+}
+let AG_CONTENT = null;
+try {
+    const raw = localStorage.getItem(AG_LS_KEY);
+    AG_CONTENT = raw ? JSON.parse(raw) : agBlankContent();
+} catch (e) {
+    AG_CONTENT = agBlankContent();
+}
+AG_LANGS.forEach(l => { if (!AG_CONTENT[l]) AG_CONTENT[l] = agBlankLang(); });
+
+let agLang = localStorage.getItem(AG_LS_LANG) || 'en';
+if (!AG_LANGS.includes(agLang)) agLang = 'en';
+
+let agS = null, agL1 = null;
+
+function agSaveLocal() {
+    try {
+        localStorage.setItem(AG_LS_KEY, JSON.stringify(AG_CONTENT));
+        localStorage.setItem(AG_LS_LANG, agLang);
+    } catch (e) {}
+}
+
+function agCurrentTitles(level) {
+    const C = AG_CONTENT[agLang];
+    if (level === 'season') return C.season;
+    if (level === 'level1') return C.level1[agS];
+    return [];
+}
+
+function agEnsureChildBranch(level, parentIdx) {
+    const C = AG_CONTENT[agLang];
+    if (level === 'season') {
+        while (C.level1.length <= parentIdx) C.level1.push(E10());
+        while (C.text.length   <= parentIdx) C.text.push(E10());
+    }
+}
+
+/* Normalize an incoming raw object (from Gist) into our full shape,
+   identical to normalizeContent() used by the read-only ApiGuide. */
+function agNormalize(raw) {
+    const out = agBlankContent();
+    AG_LANGS.forEach(lang => {
+        if (raw && raw[lang]) {
+            const src = raw[lang];
+            if (Array.isArray(src.season) && src.season.length === 4) out[lang].season = src.season.slice();
+            if (Array.isArray(src.level1)) {
+                out[lang].level1 = src.level1.map(arr => Array.isArray(arr) ? arr.slice(0, 10) : E10());
+            }
+            if (Array.isArray(src.text)) {
+                out[lang].text = src.text.map(arr => Array.isArray(arr) ? arr.slice(0, 10) : E10());
+            }
+        }
+    });
+    return out;
+}
+
+/* =================================================================
+   AUTH / BOOT
+   ================================================================= */
 function login() {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('password').value;
@@ -785,6 +1151,8 @@ function login() {
         document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
         loadAllData();
         updateBlogPublishState();
+        agRenderLangBar();
+        agRender();
     } else {
         document.getElementById('authMsg').textContent = "❌ Identifiants incorrects.";
     }
@@ -802,6 +1170,8 @@ function logout() {
     blogPosts = [];
     members = [];
     specialThanks = [];
+    AG_CONTENT = agBlankContent();
+    agS = agL1 = null;
 }
 
 function loadAllData() {
@@ -820,6 +1190,7 @@ function loadAllData() {
     renderBlog();
     renderMembers();
     renderThanks();
+    agRender();
 }
 
 function saveAllData() {
@@ -828,20 +1199,20 @@ function saveAllData() {
     localStorage.setItem('vc_blog', JSON.stringify(blogPosts));
     localStorage.setItem('vc_members', JSON.stringify(members));
     localStorage.setItem('vc_thanks', JSON.stringify(specialThanks));
+    agSaveLocal();
 }
 
 function toggleDrawer() {
     document.getElementById('drawer').classList.toggle('open');
     document.getElementById('drawerBackdrop').classList.toggle('open');
 }
-
 function closeDrawer() {
     document.getElementById('drawer').classList.remove('open');
     document.getElementById('drawerBackdrop').classList.remove('open');
 }
 
 function switchTab(tab) {
-    document.querySelectorAll('.drawer-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.drawer-item').forEach(el => el.classList.remove('active'));
     const item = document.querySelector('.drawer-item[data-tab="' + tab + '"]');
     if (item) item.classList.add('active');
     document.getElementById('tabCaisse').classList.add('hidden');
@@ -858,15 +1229,21 @@ function switchTab(tab) {
 }
 
 function switchSubTab(sub) {
-    document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
-    document.querySelector('.subtab[data-sub="' + sub + '"]').classList.add('active');
-    document.querySelectorAll('.subtab-content').forEach(c => c.classList.add('hidden'));
-    document.getElementById('subTab' + sub.charAt(0).toUpperCase() + sub.slice(1)).classList.remove('hidden');
+    document.querySelectorAll('.subtab').forEach(el => el.classList.remove('active'));
+    const tabBtn = document.querySelector('.subtab[data-sub="' + sub + '"]');
+    if (tabBtn) tabBtn.classList.add('active');
+    document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
+    const panel = document.getElementById('subTab' + sub.charAt(0).toUpperCase() + sub.slice(1));
+    if (panel) panel.classList.remove('hidden');
     if (sub === 'blog') renderBlog();
     if (sub === 'members') renderMembers();
     if (sub === 'thanks') renderThanks();
+    if (sub === 'apiguide') { agRenderLangBar(); agRender(); }
 }
 
+/* =================================================================
+   CAISSE (unchanged)
+   ================================================================= */
 function renderTable() {
     const tbody = document.querySelector('#txTable tbody');
     tbody.innerHTML = '';
@@ -878,7 +1255,6 @@ function renderTable() {
         tbody.innerHTML += '<tr><td>' + tx.date + '</td><td>' + tx.desc + '</td><td style="color:' + couleur + '; font-weight:bold;">' + montantAffiche.toFixed(2) + ' CHF</td><td><button class="btn-red btn-sm" onclick="deleteTransaction(' + index + ')">🗑️</button></td></tr>';
     });
 }
-
 function addTransaction() {
     const type = document.getElementById('txType').value;
     const date = document.getElementById('txDate').value;
@@ -892,7 +1268,6 @@ function addTransaction() {
     document.getElementById('txDesc').value = '';
     document.getElementById('txAmount').value = '';
 }
-
 function deleteTransaction(index) {
     if (confirm(t('admin_confirm_delete'))) {
         transactions.splice(index, 1);
@@ -900,7 +1275,73 @@ function deleteTransaction(index) {
         saveAllData();
     }
 }
+function exportCSV() {
+    let csv = "Type,Date,Description,Montant (CHF)\n";
+    transactions.forEach(tx => {
+        const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
+        const montant = tx.type === 'spend' ? -Math.abs(tx.amount) : Math.abs(tx.amount);
+        csv += '"' + typeLabel + '","' + tx.date + '","' + tx.desc + '",' + montant + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Vespacaution_Caisse.csv";
+    link.click();
+}
+function importCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const lines = e.target.result.split('\n');
+        for (let i = 1; i < lines.length; i++) {
+            const parts = lines[i].split(',');
+            const typeStr = parts[0];
+            const date = parts[1];
+            const desc = parts[2];
+            const amountStr = parts[3];
+            if (date && desc && amountStr) {
+                const type = typeStr.replace(/"/g, '').toLowerCase().indexOf('dépense') !== -1 ? 'spend' : 'receive';
+                transactions.push({ type: type, date: date.replace(/"/g, ''), desc: desc.replace(/"/g, ''), amount: Math.abs(parseFloat(amountStr)) });
+            }
+        }
+        renderTable();
+        saveAllData();
+    };
+    reader.readAsText(file);
+}
+function exportPDF() {
+    const jsPDFCtor = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+    const doc = new jsPDFCtor();
+    doc.setFontSize(22);
+    doc.setTextColor(201, 155, 72);
+    doc.text("Rapport Financier - Vespacaution", 20, 20);
+    doc.setFontSize(12);
+    doc.setTextColor(50, 50, 50);
+    doc.text("Généré le : " + new Date().toLocaleDateString(), 20, 30);
+    let totalReceived = 0, totalSpent = 0;
+    const tableData = transactions.map(tx => {
+        let montant = tx.amount;
+        if (tx.type === 'spend') { montant = -Math.abs(tx.amount); totalSpent += Math.abs(tx.amount); }
+        else { montant = Math.abs(tx.amount); totalReceived += Math.abs(tx.amount); }
+        return [tx.date, tx.desc, tx.type === 'spend' ? 'Dépense' : 'Reçu', montant.toFixed(2) + " CHF"];
+    });
+    doc.autoTable({ startY: 40, head: [['Date', 'Description', 'Type', 'Montant']], body: tableData, headStyles: { fillColor: [201, 155, 72] } });
+    let finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(12);
+    doc.setTextColor(92, 184, 92);
+    doc.text("Total Reçu : " + totalReceived.toFixed(2) + " CHF", 20, finalY);
+    doc.setTextColor(217, 83, 79);
+    doc.text("Total Dépenses : " + totalSpent.toFixed(2) + " CHF", 20, finalY + 8);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont(undefined, 'bold');
+    doc.text("SOLDE TOTAL : " + (totalReceived - totalSpent).toFixed(2) + " CHF", 20, finalY + 18);
+    doc.save("Vespacaution_Rapport.pdf");
+}
 
+/* =================================================================
+   ARCHIVES + ÉDITEUR (unchanged)
+   ================================================================= */
 function renderArchives() {
     const container = document.getElementById('foldersContainer');
     container.innerHTML = '';
@@ -921,7 +1362,6 @@ function renderArchives() {
         container.innerHTML += folderHtml;
     }
 }
-
 function createFolder() {
     const name = document.getElementById('newFolderName').value.trim();
     if (!name) return alert("Entrez un nom.");
@@ -932,7 +1372,6 @@ function createFolder() {
     saveAllData();
     updateEditorFolders();
 }
-
 function deleteFolder(name) {
     if (confirm('Supprimer le dossier "' + name + '" ?')) {
         delete archives[name];
@@ -941,7 +1380,6 @@ function deleteFolder(name) {
         updateEditorFolders();
     }
 }
-
 function uploadFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -957,7 +1395,6 @@ function uploadFile(event) {
     reader.readAsDataURL(file);
     event.target.value = '';
 }
-
 function deleteDoc(folder, id) {
     if (confirm(t('admin_confirm_delete'))) {
         archives[folder] = archives[folder].filter(doc => doc.id !== id);
@@ -965,12 +1402,10 @@ function deleteDoc(folder, id) {
         saveAllData();
     }
 }
-
 function viewTextDoc(folder, id) {
     const doc = archives[folder].find(d => d.id === id);
     if (doc) alert("📄 " + doc.name + "\n\n" + doc.content);
 }
-
 function updateEditorFolders() {
     const select = document.getElementById('editorFolder');
     select.innerHTML = '<option value="Général">' + t('admin_general_folder') + '</option>';
@@ -980,7 +1415,6 @@ function updateEditorFolders() {
         }
     }
 }
-
 function saveTextDoc() {
     const folder = document.getElementById('editorFolder').value;
     const title = document.getElementById('editorTitle').value.trim();
@@ -994,22 +1428,16 @@ function saveTextDoc() {
     document.getElementById('editorContent').value = '';
 }
 
+/* =================================================================
+   BLOG (unchanged)
+   ================================================================= */
 function switchBlogLang(lang) {
     currentBlogLang = lang;
-    document.querySelectorAll('.blog-lang-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.blog-lang-tab').forEach(el => el.classList.remove('active'));
     document.querySelector('.blog-lang-tab[data-lang="' + lang + '"]').classList.add('active');
-    document.querySelectorAll('.blog-lang-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.blog-lang-panel').forEach(el => el.classList.remove('active'));
     document.querySelector('.blog-lang-panel[data-lang-panel="' + lang + '"]').classList.add('active');
 }
-
-function switchMemberLang(lang) {
-    currentMemberLang = lang;
-    document.querySelectorAll('.member-role-tab').forEach(t => t.classList.remove('active'));
-    document.querySelector('.member-role-tab[data-lang="' + lang + '"]').classList.add('active');
-    document.querySelectorAll('.member-role-panel').forEach(p => p.classList.remove('active'));
-    document.querySelector('.member-role-panel[data-lang-panel="' + lang + '"]').classList.add('active');
-}
-
 function updateBlogPublishState() {
     const langs = ['fr', 'en', 'de', 'it', 'rm'];
     let allFilled = true;
@@ -1033,11 +1461,9 @@ function updateBlogPublishState() {
         status.textContent = t('admin_blog_status_missing');
     }
 }
-
 document.querySelectorAll('.blog-title-input, .blog-content-input').forEach(el => {
     el.addEventListener('input', updateBlogPublishState);
 });
-
 function publishBlogPost() {
     const langs = ['fr', 'en', 'de', 'it', 'rm'];
     const articleId = Date.now().toString();
@@ -1055,11 +1481,10 @@ function publishBlogPost() {
         document.querySelector('.blog-content-input[data-lang="' + lang + '"]').value = '';
         document.querySelector('.blog-image-input[data-lang="' + lang + '"]').value = '';
     });
-    document.querySelectorAll('.blog-lang-tab').forEach(t => t.classList.remove('filled'));
+    document.querySelectorAll('.blog-lang-tab').forEach(el => el.classList.remove('filled'));
     updateBlogPublishState();
     alert(t('admin_blog_published'));
 }
-
 function renderBlog() {
     const container = document.getElementById('blogList');
     if (blogPosts.length === 0) {
@@ -1086,7 +1511,6 @@ function renderBlog() {
         return '<div class="item-card"><div class="item-card-header"><div style="display:flex;align-items:center;min-width:0;flex:1;">' + thumb + '<strong style="overflow:hidden;text-overflow:ellipsis;">' + (g.titles.fr || g.titles.en || Object.values(g.titles)[0] || '(sans titre)') + '</strong></div><button class="btn-red btn-sm" onclick="deleteBlogGroup(\'' + g.id + '\')">🗑️</button></div><div class="item-card-meta">' + new Date(g.date).toLocaleDateString() + '</div><div class="item-card-langs">' + chips + '</div></div>';
     }).join('');
 }
-
 function deleteBlogGroup(id) {
     if (confirm(t('admin_blog_confirm_delete'))) {
         blogPosts = blogPosts.filter(p => p.id !== id);
@@ -1095,6 +1519,16 @@ function deleteBlogGroup(id) {
     }
 }
 
+/* =================================================================
+   MEMBERS + THANKS (unchanged)
+   ================================================================= */
+function switchMemberLang(lang) {
+    currentMemberLang = lang;
+    document.querySelectorAll('.member-role-tab').forEach(el => el.classList.remove('active'));
+    document.querySelector('.member-role-tab[data-lang="' + lang + '"]').classList.add('active');
+    document.querySelectorAll('.member-role-panel').forEach(el => el.classList.remove('active'));
+    document.querySelector('.member-role-panel[data-lang-panel="' + lang + '"]').classList.add('active');
+}
 function addMember() {
     const name = document.getElementById('memberName').value.trim();
     const image = document.getElementById('memberImage').value.trim();
@@ -1115,7 +1549,6 @@ function addMember() {
     document.getElementById('memberImage').value = '';
     document.querySelectorAll('.member-role-input').forEach(el => el.value = '');
 }
-
 function renderMembers() {
     const container = document.getElementById('memberList');
     if (members.length === 0) {
@@ -1129,7 +1562,6 @@ function renderMembers() {
         return '<div class="item-card"><div class="item-card-header"><strong>' + m.name + '</strong><button class="btn-red btn-sm" onclick="deleteMember(\'' + m.id + '\')">🗑️</button></div><div class="item-card-meta">' + (m.group === 'committee' ? 'Comité' : 'Tous') + (m.image ? ' · ' + m.image : '') + '</div><div class="item-card-langs">' + chips + '</div></div>';
     }).join('');
 }
-
 function deleteMember(id) {
     if (confirm(t('admin_confirm_delete'))) {
         members = members.filter(m => m.id !== id);
@@ -1137,7 +1569,6 @@ function deleteMember(id) {
         renderMembers();
     }
 }
-
 function addThanks() {
     const name = document.getElementById('thanksName').value.trim();
     if (!name) return alert(t('admin_thanks_need_name'));
@@ -1146,92 +1577,25 @@ function addThanks() {
     renderThanks();
     document.getElementById('thanksName').value = '';
 }
-
 function renderThanks() {
     const container = document.getElementById('thanksList');
     if (specialThanks.length === 0) {
         container.innerHTML = '<p style="color:#888;">Aucun remerciement pour le moment.</p>';
         return;
     }
-    container.innerHTML = specialThanks.map(t => '<div class="item-card" style="display:flex; justify-content:space-between; align-items:center;"><strong>' + t.name + '</strong><button class="btn-red btn-sm" onclick="deleteThanks(\'' + t.id + '\')">🗑️</button></div>').join('');
+    container.innerHTML = specialThanks.map(tk => '<div class="item-card" style="display:flex; justify-content:space-between; align-items:center;"><strong>' + tk.name + '</strong><button class="btn-red btn-sm" onclick="deleteThanks(\'' + tk.id + '\')">🗑️</button></div>').join('');
 }
-
 function deleteThanks(id) {
     if (confirm(t('admin_confirm_delete'))) {
-        specialThanks = specialThanks.filter(t => t.id !== id);
+        specialThanks = specialThanks.filter(tk => tk.id !== id);
         saveAllData();
         renderThanks();
     }
 }
 
-function exportCSV() {
-    let csv = "Type,Date,Description,Montant (CHF)\n";
-    transactions.forEach(tx => {
-        const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
-        const montant = tx.type === 'spend' ? -Math.abs(tx.amount) : Math.abs(tx.amount);
-        csv += '"' + typeLabel + '","' + tx.date + '","' + tx.desc + '",' + montant + '\n';
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "Vespacaution_Caisse.csv";
-    link.click();
-}
-
-function importCSV(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const lines = e.target.result.split('\n');
-        for (let i = 1; i < lines.length; i++) {
-            const parts = lines[i].split(',');
-            const typeStr = parts[0];
-            const date = parts[1];
-            const desc = parts[2];
-            const amountStr = parts[3];
-            if (date && desc && amountStr) {
-                const type = typeStr.replace(/"/g, '').toLowerCase().indexOf('dépense') !== -1 ? 'spend' : 'receive';
-                transactions.push({ type: type, date: date.replace(/"/g, ''), desc: desc.replace(/"/g, ''), amount: Math.abs(parseFloat(amountStr)) });
-            }
-        }
-        renderTable();
-        saveAllData();
-    };
-    reader.readAsText(file);
-}
-
-function exportPDF() {
-    const jsPDFCtor = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
-    const doc = new jsPDFCtor();
-    doc.setFontSize(22);
-    doc.setTextColor(201, 155, 72);
-    doc.text("Rapport Financier - Vespacaution", 20, 20);
-    doc.setFontSize(12);
-    doc.setTextColor(50, 50, 50);
-    doc.text("Généré le : " + new Date().toLocaleDateString(), 20, 30);
-    let totalReceived = 0;
-    let totalSpent = 0;
-    const tableData = transactions.map(tx => {
-        let montant = tx.amount;
-        if (tx.type === 'spend') { montant = -Math.abs(tx.amount); totalSpent += Math.abs(tx.amount); }
-        else { montant = Math.abs(tx.amount); totalReceived += Math.abs(tx.amount); }
-        const typeLabel = tx.type === 'spend' ? 'Dépense' : 'Reçu';
-        return [tx.date, tx.desc, typeLabel, montant.toFixed(2) + " CHF"];
-    });
-    doc.autoTable({ startY: 40, head: [['Date', 'Description', 'Type', 'Montant']], body: tableData, headStyles: { fillColor: [201, 155, 72] } });
-    let finalY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(12);
-    doc.setTextColor(92, 184, 92);
-    doc.text("Total Reçu : " + totalReceived.toFixed(2) + " CHF", 20, finalY);
-    doc.setTextColor(217, 83, 79);
-    doc.text("Total Dépenses : " + totalSpent.toFixed(2) + " CHF", 20, finalY + 8);
-    doc.setTextColor(50, 50, 50);
-    doc.setFont(undefined, 'bold');
-    doc.text("SOLDE TOTAL : " + (totalReceived - totalSpent).toFixed(2) + " CHF", 20, finalY + 18);
-    doc.save("Vespacaution_Rapport.pdf");
-}
-
+/* =================================================================
+   BACKUP JSON (unchanged, extended with apiguide)
+   ================================================================= */
 function downloadBackup() {
     const data = {
         date: new Date().toISOString(),
@@ -1239,7 +1603,8 @@ function downloadBackup() {
         archives: archives,
         blog: blogPosts,
         members: members,
-        specialThanks: specialThanks
+        specialThanks: specialThanks,
+        apiguide: AG_CONTENT
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const link = document.createElement("a");
@@ -1247,7 +1612,6 @@ function downloadBackup() {
     link.download = 'Vespacaution_Backup_' + new Date().toISOString().split('T')[0] + '.json';
     link.click();
 }
-
 function uploadBackup(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1255,19 +1619,21 @@ function uploadBackup(event) {
     reader.onload = function(e) {
         try {
             const parsed = JSON.parse(e.target.result);
-            if (parsed.caisse || parsed.archives || parsed.blog || parsed.members || parsed.specialThanks) {
+            if (parsed.caisse || parsed.archives || parsed.blog || parsed.members || parsed.specialThanks || parsed.apiguide) {
                 if (confirm("⚠️ Cela va remplacer TOUTES les données actuelles. Continuer ?")) {
                     transactions = parsed.caisse || [];
                     archives = parsed.archives || {};
                     blogPosts = parsed.blog || [];
                     members = parsed.members || [];
                     specialThanks = parsed.specialThanks || [];
+                    if (parsed.apiguide) AG_CONTENT = agNormalize(parsed.apiguide);
                     renderTable();
                     renderArchives();
                     renderBlog();
                     renderMembers();
                     renderThanks();
                     updateEditorFolders();
+                    agRender();
                     saveAllData();
                     alert("✅ Sauvegarde restaurée !");
                 }
@@ -1280,6 +1646,9 @@ function uploadBackup(event) {
     event.target.value = '';
 }
 
+/* =================================================================
+   CLOUD SYNC (Gist) — now includes apiguide payload
+   ================================================================= */
 const GITHUB_TOKEN = "%%TOKEN_SECRET%%";
 const GIST_ID = "f4fe8523136960f0289660123aa32cb7";
 const GIST_FILENAME = "vespacaution_data.json";
@@ -1294,13 +1663,26 @@ async function syncCloud(action) {
     if (action === 'save') {
         status.textContent = "Envoi en cours...";
         try {
-            const data = {
+            /* Read current gist first so we don't wipe unrelated keys. */
+            let merged = {};
+            try {
+                const cur = await fetch(GITHUB_API_URL, { headers: headers });
+                if (cur.ok) {
+                    const curJson = await cur.json();
+                    if (curJson.files && curJson.files[GIST_FILENAME] && curJson.files[GIST_FILENAME].content) {
+                        merged = JSON.parse(curJson.files[GIST_FILENAME].content) || {};
+                    }
+                }
+            } catch (e) { /* ignore, we'll overwrite with our payload */ }
+
+            const data = Object.assign({}, merged, {
                 caisse: transactions,
                 archives: archives,
                 blog: blogPosts,
                 members: members,
-                specialThanks: specialThanks
-            };
+                specialThanks: specialThanks,
+                apiguide: AG_CONTENT
+            });
             const jsonString = JSON.stringify(data);
             if (new Blob([jsonString]).size > 1048576) return alert("⚠️ Fichier trop lourd (>1Mo).");
             const body = { files: {} };
@@ -1340,12 +1722,14 @@ async function syncCloud(action) {
                         blogPosts = parsed.blog || [];
                         members = parsed.members || [];
                         specialThanks = parsed.specialThanks || [];
+                        if (parsed.apiguide) AG_CONTENT = agNormalize(parsed.apiguide);
                         renderTable();
                         renderArchives();
                         renderBlog();
                         renderMembers();
                         renderThanks();
                         updateEditorFolders();
+                        agRender();
                         saveAllData();
                         status.textContent = "✅ Chargé depuis GitHub";
                     }
@@ -1358,21 +1742,407 @@ async function syncCloud(action) {
     }
 }
 
+/* =================================================================
+   ApiGuide EDITOR (moved from standalone editor)
+   ================================================================= */
+function agRenderLangBar() {
+    const bar = document.getElementById('agLangBar');
+    if (!bar) return;
+    bar.innerHTML = AG_LANGS.map(l => {
+        const C = AG_CONTENT[l];
+        /* Mark filled if season titles or any activity title exists */
+        const seasonFilled = C.season.some(s => s && s !== 'null' && s.trim && s.trim() !== '');
+        const activityFilled = C.level1.some(row => row.some(v => v && v !== 'null'));
+        const hasText = C.text.some(row => row.some(v => v && v.trim && v.trim() !== ''));
+        const filled = seasonFilled || activityFilled || hasText;
+        return `<button class="ag-lang-btn ${l === agLang ? 'active' : ''} ${filled ? 'filled' : ''}"
+                        data-ag-lang="${l}" onclick="agSetLang('${l}')">${AG_LANG_LABELS[l]}</button>`;
+    }).join('');
+}
+
+function agSetLang(lang) {
+    agLang = lang;
+    agS = null; agL1 = null;
+    agSaveLocal();
+    agRenderLangBar();
+    agRender();
+}
+
+function agRender() {
+    agRenderLangBar();
+    const host = document.getElementById('agEditorView');
+    if (!host) return;
+
+    /* ---------- TEXT VIEW ---------- */
+    if (agS !== null && agL1 !== null) {
+        const C = AG_CONTENT[agLang];
+        const text = (C.text[agS] || [])[agL1] || '';
+        host.innerHTML = `
+            <div class="ag-breadcrumb-row">
+                <button class="ag-back-btn" id="agBackBtn">${esc(t('admin_ag_back'))}</button>
+                <span class="ag-breadcrumb">${esc(AG_LANG_LABELS[agLang])} · S${agS + 1} · ${agL1 + 1}</span>
+            </div>
+            <div class="ag-textbox">
+                <h2>${esc(t('admin_ag_notes'))}</h2>
+                <textarea class="ag-textarea" id="agEditText" placeholder="Type the final text…">${esc(text)}</textarea>
+                <div class="ag-save-note">${esc(t('admin_ag_saved_auto'))}</div>
+            </div>
+        `;
+        document.getElementById('agBackBtn').onclick = () => { agL1 = null; agRender(); };
+        const ta = document.getElementById('agEditText');
+        ta.addEventListener('input', () => {
+            AG_CONTENT[agLang].text[agS][agL1] = ta.value;
+            agSaveLocal();
+        });
+        return;
+    }
+
+    /* ---------- GRID VIEW ---------- */
+    let level;
+    if (agS !== null) level = 'level1';
+    else level = 'season';
+
+    const crumbText = {
+        season: `${esc(AG_LANG_LABELS[agLang])} · ${esc(t('admin_ag_choose_season'))}`,
+        level1: `${esc(AG_LANG_LABELS[agLang])} · S${agS + 1} → ${esc(t('admin_ag_activity'))}`
+    }[level];
+
+    const titles = agCurrentTitles(level);
+
+    let gridHtml = '';
+    for (let i = 0; i < titles.length; i++) {
+        const title = titles[i];
+        const hidden = title === null;
+        gridHtml += `
+            <div class="ag-cell ${hidden ? 'ag-hidden-flag' : ''}" data-i="${i}">
+                <button class="ag-grid-btn" data-open="${i}">${esc(title == null ? '' : title)}</button>
+                <button class="ag-btn-edit" data-edit="${i}" title="Edit title">✏️</button>
+                <button class="ag-btn-del" data-del="${i}" title="Hide / remove">×</button>
+            </div>
+        `;
+    }
+    gridHtml += `<div class="ag-cell"><button class="ag-grid-btn ag-add-btn" id="agAddBtn">＋</button></div>`;
+
+    host.innerHTML = `
+        <div class="ag-breadcrumb-row">
+            ${level === 'season' ? '' : `<button class="ag-back-btn" id="agBackBtn">${esc(t('admin_ag_back'))}</button>`}
+            <span class="ag-breadcrumb">${crumbText}</span>
+        </div>
+        <div class="ag-grid ${level === 'season' ? 'seasons' : ''}" id="agGrid">${gridHtml}</div>
+    `;
+
+    if (level !== 'season') {
+        document.getElementById('agBackBtn').onclick = () => { agS = null; agRender(); };
+    }
+
+    host.querySelectorAll('[data-open]').forEach(btn => {
+        btn.onclick = () => {
+            const i = +btn.dataset.open;
+            const cur = agCurrentTitles(level);
+            if (cur[i] === null) return;
+            if (level === 'season') { agS = i; agL1 = null; }
+            else { agL1 = i; }
+            agRender();
+        };
+    });
+
+    host.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.onclick = () => {
+            const i = +btn.dataset.edit;
+            const cur = agCurrentTitles(level);
+            const next = prompt(t('admin_ag_title_prompt'), cur == null ? '' : cur);
+            if (next === null) return;
+            agCurrentTitles(level)[i] = (next === 'null') ? null : next;
+            agSaveLocal();
+            agRenderLangBar();
+            agRender();
+        };
+    });
+
+    host.querySelectorAll('[data-del]').forEach(btn => {
+        btn.onclick = () => {
+            const i = +btn.dataset.del;
+            if (!confirm(t('admin_ag_confirm_hide'))) return;
+            agCurrentTitles(level)[i] = null;
+            agSaveLocal();
+            agRenderLangBar();
+            agRender();
+        };
+    });
+
+    const addBtn = document.getElementById('agAddBtn');
+    if (addBtn) {
+        addBtn.onclick = () => {
+            const promptMsg = level === 'season' ? t('admin_ag_season_prompt') : t('admin_ag_activity_prompt');
+            const name = prompt(promptMsg, '');
+            if (name === null) return;
+            const titles = agCurrentTitles(level);
+            const newIdx = titles.length;
+            titles.push(name === '' ? '' : name);
+            agEnsureChildBranch(level, newIdx);
+            agSaveLocal();
+            agRenderLangBar();
+            agRender();
+        };
+    }
+}
+
+/* ---- ApiGuide editor actions ---- */
+
+function agPublish() {
+    agSaveLocal();
+    /* Delegate to syncCloud('save') so the same PATCH writes apiguide + other data. */
+    syncCloud('save');
+}
+
+async function agLoadFromGist() {
+    if (!confirm(t('admin_ag_confirm_pull'))) return;
+    const status = document.getElementById('syncStatus');
+    status.textContent = "Chargement ApiGuide...";
+    try {
+        const res = await fetch(GITHUB_API_URL, {
+            headers: {
+                'Authorization': 'token ' + GITHUB_TOKEN,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        const gistData = await res.json();
+        const file = gistData.files && gistData.files[GIST_FILENAME];
+        if (!file || !file.content) { alert(t('admin_ag_pull_none')); return; }
+        const parsed = JSON.parse(file.content);
+        if (!parsed.apiguide) { alert(t('admin_ag_pull_none')); return; }
+        AG_CONTENT = agNormalize(parsed.apiguide);
+        agSaveLocal();
+        agS = null; agL1 = null;
+        agRenderLangBar();
+        agRender();
+        status.textContent = "✅ ApiGuide chargé";
+        alert(t('admin_ag_pull_ok'));
+    } catch (e) {
+        console.error(e);
+        status.textContent = "❌ Erreur ApiGuide";
+        alert(t('admin_ag_pull_err'));
+    }
+}
+
+function agReset() {
+    if (!confirm(t('admin_ag_confirm_reset'))) return;
+    AG_CONTENT = agBlankContent();
+    agS = null; agL1 = null;
+    agSaveLocal();
+    agRenderLangBar();
+    agRender();
+}
+
+function agOpenInNewWindow() {
+    /* Open a read-only preview of the current AG_CONTENT in a new tab. */
+    const baked = JSON.stringify(AG_CONTENT);
+    const html = agBuildFinalHtml(baked, agLang);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+}
+
+function agExportFinalHtml() {
+    const baked = JSON.stringify(AG_CONTENT);
+    const html = agBuildFinalHtml(baked, agLang);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'api-guide-final.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
+
+/* Build a self-contained read-only ApiGuide HTML, matching the old editor's export. */
+function agBuildFinalHtml(bakedContentJson, startingLang) {
+    const finalScript = `
+/* ===== ApiGuide v1.0 — FINAL (read-only) ===== */
+const FINAL_MODE = true;
+const LANGS = ['en','fr','it','de','rm'];
+const LANG_LABELS = { en:'English', fr:'Français', it:'Italiano', de:'Deutsch', rm:'Rumantsch' };
+
+const CONTENT = ${bakedContentJson};
+let currentLang = '${startingLang}';
+
+let s = null, l1 = null;
+function resetNav(){ s=l1=null; }
+function back(){ if(l1!==null)l1=null; else if(s!==null)s=null; render(); }
+function esc(str){ return String(str==null?'':str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function currentTitles(level){
+  const C = CONTENT[currentLang];
+  if (level==='season') return C.season;
+  if (level==='level1') return C.level1[s];
+  return [];
+}
+function render(){
+  const app = document.getElementById('app');
+  if (s!==null && l1!==null){
+    const txt = CONTENT[currentLang].text[s][l1];
+    app.innerHTML = \`
+      <div class="row">
+        <button class="back-btn" id="backBtn">← Back</button>
+        <span class="breadcrumb">\${esc(LANG_LABELS[currentLang])} · S\${s+1} · \${l1+1}</span>
+      </div>
+      <div class="textbox-container">
+        <h2>📝 Notes</h2>
+        \${txt && txt.length ? \`<div class="text-content">\${esc(txt)}</div>\` : '<div class="empty-note">(no text)</div>'}
+      </div>\`;
+    document.getElementById('backBtn').onclick = back;
+    return;
+  }
+  let level = (s!==null) ? 'level1' : 'season';
+  const crumbText = {
+    season: esc(LANG_LABELS[currentLang]) + ' · choose a season',
+    level1: esc(LANG_LABELS[currentLang]) + ' · S' + (s+1) + ' → activity'
+  }[level];
+  const titles = currentTitles(level);
+  let html = '';
+  for (let i = 0; i < titles.length; i++) {
+    if (titles[i] === null) continue;
+    html += \`<div class="cell"><button class="grid-btn" data-i="\${i}">\${esc(titles[i])}</button></div>\`;
+  }
+  app.innerHTML = \`
+    <div class="row">
+      \${level==='season' ? '' : '<button class="back-btn" id="backBtn">← Back</button>'}
+      <span class="breadcrumb">\${crumbText}</span>
+    </div>
+    <div class="grid-container" id="grid" \${level==='season'?'style="grid-template-columns:repeat(2,1fr);"':''}>\${html}</div>\`;
+  if (level!=='season') document.getElementById('backBtn').onclick = back;
+  document.querySelectorAll('[data-i]').forEach(b=>{
+    b.onclick = ()=>{
+      const i = +b.dataset.i;
+      if (level==='season'){ s=i; l1=null; } else { l1=i; }
+      render();
+    };
+  });
+}
+function renderLangSwitcher(){
+  const bar = document.getElementById('editorBar');
+  bar.innerHTML = \`
+    <select class="lang-select" id="langSelect">
+      \${LANGS.map(l => \`<option value="\${l}" \${l===currentLang?'selected':''}>\${esc(LANG_LABELS[l])}</option>\`).join('')}
+    </select>\`;
+  document.getElementById('langSelect').onchange = (e)=>{
+    currentLang = e.target.value;
+    resetNav();
+    render();
+  };
+}
+let deferredInstallPrompt = null;
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstallPrompt = e; });
+function isIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
+function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+const installBtn = document.getElementById('installBtn');
+const iosModal = document.getElementById('iosModal');
+const iosClose = document.getElementById('iosClose');
+if (installBtn) {
+  if (isStandalone()) installBtn.style.display = 'none';
+  installBtn.addEventListener('click', async () => {
+    if (isStandalone()) return;
+    if (deferredInstallPrompt) { deferredInstallPrompt.prompt(); const c = await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; return; }
+    if (isIOS()) { iosModal.style.display = 'flex'; return; }
+    alert("Ouvrez le menu de votre navigateur (⋮) puis « Installer l'application » ou « Ajouter à l'écran d'accueil ».");
+  });
+}
+if (iosClose) iosClose.addEventListener('click', () => { iosModal.style.display = 'none'; });
+if (iosModal) iosModal.addEventListener('click', (e) => { if (e.target === iosModal) iosModal.style.display = 'none'; });
+renderLangSwitcher();
+render();
+`;
+    /* Reuse the ApiGuide front-end styling verbatim (from index-6.html / index.html). */
+    const agStyle = `
+html, body { overscroll-behavior-y: contain; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: #fef9e7; color: #2c2c2c; line-height: 1.5; padding: 0.75rem; min-height: 100vh; display: flex; flex-direction: column; }
+.app-header { display: flex; align-items: baseline; justify-content: space-between; padding: 0.25rem 0.5rem 0.75rem 0.5rem; border-bottom: 2px solid #d4a373; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+.app-title { font-size: 1.8rem; font-weight: 700; color: #7f5539; letter-spacing: -0.5px; }
+.app-title small { font-size: 0.85rem; font-weight: 400; color: #9c6644; margin-left: 0.5rem; }
+.editor-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.lang-select { background: #e6ccb2; border: 1px solid #b08968; padding: 0.4rem 0.6rem; border-radius: 30px; font-size: 0.85rem; font-weight: 600; color: #5e3a1c; cursor: pointer; }
+.back-btn { background: #b08968; border: none; color: white; padding: 0.5rem 1rem; border-radius: 30px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+.back-btn:active { transform: scale(0.97); }
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; margin: 0.75rem 0 1.5rem 0; }
+.cell { position: relative; }
+.grid-btn { width: 100%; background: #fff6e9; border: 2px solid #d4a373; border-radius: 18px; padding: 1rem; font-size: 1rem; font-weight: 600; color: #4a2e1b; cursor: pointer; box-shadow: 0 3px 0 #b08968; text-align: center; word-break: break-word; display: flex; align-items: center; justify-content: center; min-height: 80px; }
+.grid-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #b08968; }
+.textbox-container { background: #fffdf7; border-radius: 24px; padding: 1.2rem; box-shadow: 0 8px 20px rgba(127,85,57,0.1); border: 1px solid #e6ccb2; margin: 1rem 0; }
+.textbox-container h2 { font-size: 1.1rem; color: #7f5539; margin-bottom: 0.75rem; }
+.text-content { white-space: pre-wrap; color: #2c2c2c; font-size: 1rem; }
+.empty-note { font-style: italic; color: #9c6644; font-size: 0.9rem; }
+.breadcrumb { font-weight: 500; color: #7f5539; flex: 1; min-width: 180px; }
+.row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+footer { margin-top: auto; text-align: center; font-size: 0.75rem; color: #b08968; padding: 1.5rem 0 0.5rem 0; border-top: 1px dashed #e6ccb2; }
+.install-wrap { text-align: center; padding: 1rem 0 0.5rem 0; }
+.install-btn { background: #4a7c2e; color: white; border: none; padding: 0.8rem 1.6rem; border-radius: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 #2f5419; letter-spacing: 0.5px; }
+.install-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #2f5419; }
+.btn { background: #b08968; border: none; color: white; padding: 0.5rem 1rem; border-radius: 30px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+@media (max-width: 480px) { .grid-container { grid-template-columns: repeat(2, 1fr); } .app-title { font-size: 1.3rem; } }
+`;
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#7f5539">
+<title>ApiGuide v1.0</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ApiGuide">
+<style>${agStyle}</style>
+</head>
+<body>
+<div class="app-header">
+  <div class="app-title">ApiGuide <small>v1.0 · beekeeping seasons & activities</small></div>
+  <div class="editor-bar" id="editorBar"></div>
+</div>
+<main id="app"></main>
+<div class="install-wrap" id="installWrap">
+  <button class="install-btn" id="installBtn">⬇ Installer l'application</button>
+</div>
+<footer>ApiGuide v1.0</footer>
+<div id="iosModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center; padding:1rem;">
+  <div style="background:#fffdf7; border-radius:24px; padding:1.4rem; max-width:420px; width:100%; border:2px solid #d4a373;">
+    <h2 style="color:#7f5539; margin-bottom:.75rem; font-size:1.1rem;">📲 Installer ApiGuide sur iPhone / iPad</h2>
+    <ol style="padding-left:1.2rem; color:#4a2e1b; line-height:1.6; font-size:0.95rem;">
+      <li>Ouvrez ApiGuide dans <strong>Safari</strong>.</li>
+      <li>Appuyez sur le bouton <strong>Partager</strong>.</li>
+      <li>Choisissez <strong>« Sur l'écran d'accueil »</strong>.</li>
+      <li>Appuyez sur <strong>« Ajouter »</strong>.</li>
+    </ol>
+    <button class="btn" id="iosClose" style="margin-top:1rem; width:100%;">Fermer</button>
+  </div>
+</div>
+<script>${finalScript}<\/script>
+</body>
+</html>`;
+}
+
+/* =================================================================
+   SERVICE WORKER + BOOT
+   ================================================================= */
 document.addEventListener('DOMContentLoaded', function() {
     applyTranslations();
     document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
     updateBlogPublishState();
 
-    // Auto-login if previously signed in
     if (localStorage.getItem('vc_admin_session') === 'true') {
         isLoggedIn = true;
         document.getElementById('authSection').classList.add('hidden');
         document.getElementById('appSection').classList.remove('hidden');
         loadAllData();
         updateBlogPublishState();
+        agRenderLangBar();
+        agRender();
     }
 
-    // Register service worker (no cache version to bump)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
