@@ -5,9 +5,9 @@
 | Version | Supported          |
 | ------- | ------------------ |
 | A  | :white_check_mark: |
-| L  | :x:                |
+| L  | ✅:                |
 | L  | :white_check_mark: |
-|    | :x:                |
+|    | ✅:                |
 
 ## Reporting a Vulnerability
 
