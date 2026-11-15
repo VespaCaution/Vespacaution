@@ -10,6 +10,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="theme-color" content="#c99b48">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Comité">
 
@@ -343,7 +344,7 @@ th { background: #f4ebd9; }
     display: block;
 }
 
-/* ===== ApiGuide editor styles (mirrors old standalone editor) ===== */
+/* ===== ApiGuide editor styles ===== */
 .ag-lang-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
 .ag-lang-btn {
     padding: 6px 14px;
@@ -680,10 +681,8 @@ th { background: #f4ebd9; }
 
                 <div class="ag-toolbar">
                     <button class="btn-blue btn-sm" onclick="agOpenInNewWindow()" data-i18n="admin_ag_preview">👁️ Aperçu</button>
-                    <button class="btn-green btn-sm" onclick="agPublish()" data-i18n="admin_ag_publish">☁️ Publier ApiGuide</button>
-                    <button class="btn-grey btn-sm" onclick="agLoadFromGist()" data-i18n="admin_ag_pull">⬇️ Charger depuis le cloud</button>
-                    <button class="btn-red btn-sm" onclick="agReset()" data-i18n="admin_ag_reset">Réinitialiser</button>
                     <button class="btn-grey btn-sm" onclick="agExportFinalHtml()" data-i18n="admin_ag_export_html">⬇ Exporter HTML final</button>
+                    <button class="btn-red btn-sm" onclick="agReset()" data-i18n="admin_ag_reset">Réinitialiser</button>
                 </div>
 
                 <div class="ag-hint" data-i18n="admin_ag_hint">
@@ -724,7 +723,7 @@ th { background: #f4ebd9; }
 
 <script>
 /* =================================================================
-   ADMIN TRANSLATIONS (existing + new ApiGuide keys)
+   ADMIN TRANSLATIONS
    ================================================================= */
 const adminTranslations = {
     fr: {
@@ -758,8 +757,6 @@ const adminTranslations = {
         admin_ag_title: "🐝 Éditeur ApiGuide (saisons & activités)",
         admin_ag_desc: "Contenu affiché en lecture seule dans l'application ApiGuide. Sauvegardé localement puis publié sur le cloud via ☁️ Sauvegarder.",
         admin_ag_preview: "👁️ Aperçu",
-        admin_ag_publish: "☁️ Publier ApiGuide",
-        admin_ag_pull: "⬇️ Charger depuis le cloud",
         admin_ag_reset: "Réinitialiser",
         admin_ag_export_html: "⬇ Exporter HTML final",
         admin_ag_hint: "✏️ Stylo pour modifier · × pour masquer · ＋ pour ajouter un bouton d'activité avec sa propre page de texte.",
@@ -814,8 +811,6 @@ const adminTranslations = {
         admin_ag_title: "🐝 ApiGuide editor (seasons & activities)",
         admin_ag_desc: "Content shown read-only in the ApiGuide app. Saved locally then published to the cloud via ☁️ Save.",
         admin_ag_preview: "👁️ Preview",
-        admin_ag_publish: "☁️ Publish ApiGuide",
-        admin_ag_pull: "⬇️ Load from cloud",
         admin_ag_reset: "Reset",
         admin_ag_export_html: "⬇ Export final HTML",
         admin_ag_hint: "✏️ Pencil to edit · × to hide · ＋ to add an activity button that opens its own text page.",
@@ -870,8 +865,6 @@ const adminTranslations = {
         admin_ag_title: "🐝 ApiGuide-Editor (Jahreszeiten & Aktivitäten)",
         admin_ag_desc: "Inhalt wird in der ApiGuide-App schreibgeschützt angezeigt. Lokal gespeichert, dann per ☁️ Speichern in die Cloud veröffentlicht.",
         admin_ag_preview: "👁️ Vorschau",
-        admin_ag_publish: "☁️ ApiGuide veröffentlichen",
-        admin_ag_pull: "⬇️ Aus Cloud laden",
         admin_ag_reset: "Zurücksetzen",
         admin_ag_export_html: "⬇ Finale HTML exportieren",
         admin_ag_hint: "✏️ Stift zum Bearbeiten · × zum Ausblenden · ＋ zum Hinzufügen einer Aktivität mit eigener Textseite.",
@@ -926,8 +919,6 @@ const adminTranslations = {
         admin_ag_title: "🐝 Editor ApiGuide (stagioni & attività)",
         admin_ag_desc: "Contenuto mostrato in sola lettura nell'app ApiGuide. Salvato localmente, poi pubblicato nel cloud con ☁️ Salva.",
         admin_ag_preview: "👁️ Anteprima",
-        admin_ag_publish: "☁️ Pubblica ApiGuide",
-        admin_ag_pull: "⬇️ Carica dal cloud",
         admin_ag_reset: "Reimposta",
         admin_ag_export_html: "⬇ Esporta HTML finale",
         admin_ag_hint: "✏️ Matita per modificare · × per nascondere · ＋ per aggiungere un'attività con la sua pagina di testo.",
@@ -982,8 +973,6 @@ const adminTranslations = {
         admin_ag_title: "🐝 Editor ApiGuide (stagiuns & activitads)",
         admin_ag_desc: "Cuntegn mussà en lectura be en l'app ApiGuide. Memorisà localmain, publitgà en il cloud cun ☁️ Memorisar.",
         admin_ag_preview: "👁️ Previsiun",
-        admin_ag_publish: "☁️ Publitgar ApiGuide",
-        admin_ag_pull: "⬇️ Chargiar dal cloud",
         admin_ag_reset: "Redefinir",
         admin_ag_export_html: "⬇ Exportar HTML final",
         admin_ag_hint: "✏️ Stil per modifitgar · × per zuppar · ＋ per agiuntar in'activitad cun sia atgna pagina da text.",
@@ -1010,6 +999,11 @@ const adminTranslations = {
 };
 
 let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
+
+/* FIX: Added missing esc() function */
+function esc(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 function t(key) {
     return (adminTranslations[currentLang] && adminTranslations[currentLang][key]) ? adminTranslations[currentLang][key] : key;
@@ -1050,7 +1044,7 @@ function setAdminLanguage(lang) {
 }
 
 /* =================================================================
-   DATA MODEL (existing admin data + ApiGuide)
+   DATA MODEL
    ================================================================= */
 const ENCODED_EMAIL = "Y29taXRlQHZlc3BhY2F1dGlvbi5jaA==";
 const ENCODED_PASSWORD = "VjM1cGFjYXV0MTBuMjY=";
@@ -1064,7 +1058,7 @@ let isLoggedIn = false;
 let currentBlogLang = 'fr';
 let currentMemberLang = 'fr';
 
-/* ---- ApiGuide state (mirrors old standalone editor) ---- */
+/* ---- ApiGuide state ---- */
 const AG_LANGS = ['en', 'fr', 'it', 'de', 'rm'];
 const AG_LANG_LABELS = { en: 'English', fr: 'Français', it: 'Italiano', de: 'Deutsch', rm: 'Rumantsch' };
 const AG_LS_KEY = 'apiguide_v1_content';
@@ -1118,8 +1112,6 @@ function agEnsureChildBranch(level, parentIdx) {
     }
 }
 
-/* Normalize an incoming raw object (from Gist) into our full shape,
-   identical to normalizeContent() used by the read-only ApiGuide. */
 function agNormalize(raw) {
     const out = agBlankContent();
     AG_LANGS.forEach(lang => {
@@ -1240,13 +1232,14 @@ function switchSubTab(sub) {
     if (sub === 'members') renderMembers();
     if (sub === 'thanks') renderThanks();
     if (sub === 'apiguide') { 
-        // Fix: Ensure the editor renders as soon as the tab is clicked
         agRenderLangBar(); 
         agRender(); 
+        setTimeout(agRender, 10); 
     }
 }
+
 /* =================================================================
-   CAISSE (unchanged)
+   CAISSE
    ================================================================= */
 function renderTable() {
     const tbody = document.querySelector('#txTable tbody');
@@ -1344,7 +1337,7 @@ function exportPDF() {
 }
 
 /* =================================================================
-   ARCHIVES + ÉDITEUR (unchanged)
+   ARCHIVES + ÉDITEUR
    ================================================================= */
 function renderArchives() {
     const container = document.getElementById('foldersContainer');
@@ -1433,7 +1426,7 @@ function saveTextDoc() {
 }
 
 /* =================================================================
-   BLOG (unchanged)
+   BLOG
    ================================================================= */
 function switchBlogLang(lang) {
     currentBlogLang = lang;
@@ -1524,7 +1517,7 @@ function deleteBlogGroup(id) {
 }
 
 /* =================================================================
-   MEMBERS + THANKS (unchanged)
+   MEMBERS + THANKS
    ================================================================= */
 function switchMemberLang(lang) {
     currentMemberLang = lang;
@@ -1598,7 +1591,7 @@ function deleteThanks(id) {
 }
 
 /* =================================================================
-   BACKUP JSON (unchanged, extended with apiguide)
+   BACKUP JSON
    ================================================================= */
 function downloadBackup() {
     const data = {
@@ -1651,7 +1644,7 @@ function uploadBackup(event) {
 }
 
 /* =================================================================
-   CLOUD SYNC (Gist) — now includes apiguide payload
+   CLOUD SYNC (Gist)
    ================================================================= */
 const GITHUB_TOKEN = "%%TOKEN_SECRET%%";
 const GIST_ID = "f4fe8523136960f0289660123aa32cb7";
@@ -1667,7 +1660,6 @@ async function syncCloud(action) {
     if (action === 'save') {
         status.textContent = "Envoi en cours...";
         try {
-            /* Read current gist first so we don't wipe unrelated keys. */
             let merged = {};
             try {
                 const cur = await fetch(GITHUB_API_URL, { headers: headers });
@@ -1677,7 +1669,7 @@ async function syncCloud(action) {
                         merged = JSON.parse(curJson.files[GIST_FILENAME].content) || {};
                     }
                 }
-            } catch (e) { /* ignore, we'll overwrite with our payload */ }
+            } catch (e) { }
 
             const data = Object.assign({}, merged, {
                 caisse: transactions,
@@ -1747,14 +1739,13 @@ async function syncCloud(action) {
 }
 
 /* =================================================================
-   ApiGuide EDITOR (moved from standalone editor)
+   ApiGuide EDITOR
    ================================================================= */
 function agRenderLangBar() {
     const bar = document.getElementById('agLangBar');
     if (!bar) return;
     bar.innerHTML = AG_LANGS.map(l => {
         const C = AG_CONTENT[l];
-        /* Mark filled if season titles or any activity title exists */
         const seasonFilled = C.season.some(s => s && s !== 'null' && s.trim && s.trim() !== '');
         const activityFilled = C.level1.some(row => row.some(v => v && v !== 'null'));
         const hasText = C.text.some(row => row.some(v => v && v.trim && v.trim() !== ''));
@@ -1777,7 +1768,6 @@ function agRender() {
     const host = document.getElementById('agEditorView');
     if (!host) return;
 
-    /* ---------- TEXT VIEW ---------- */
     if (agS !== null && agL1 !== null) {
         const C = AG_CONTENT[agLang];
         const text = (C.text[agS] || [])[agL1] || '';
@@ -1801,10 +1791,7 @@ function agRender() {
         return;
     }
 
-    /* ---------- GRID VIEW ---------- */
-    let level;
-    if (agS !== null) level = 'level1';
-    else level = 'season';
+    let level = (agS !== null) ? 'level1' : 'season';
 
     const crumbText = {
         season: `${esc(AG_LANG_LABELS[agLang])} · ${esc(t('admin_ag_choose_season'))}`,
@@ -1891,44 +1878,6 @@ function agRender() {
     }
 }
 
-/* ---- ApiGuide editor actions ---- */
-
-function agPublish() {
-    agSaveLocal();
-    /* Delegate to syncCloud('save') so the same PATCH writes apiguide + other data. */
-    syncCloud('save');
-}
-
-async function agLoadFromGist() {
-    if (!confirm(t('admin_ag_confirm_pull'))) return;
-    const status = document.getElementById('syncStatus');
-    status.textContent = "Chargement ApiGuide...";
-    try {
-        const res = await fetch(GITHUB_API_URL, {
-            headers: {
-                'Authorization': 'token ' + GITHUB_TOKEN,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        const gistData = await res.json();
-        const file = gistData.files && gistData.files[GIST_FILENAME];
-        if (!file || !file.content) { alert(t('admin_ag_pull_none')); return; }
-        const parsed = JSON.parse(file.content);
-        if (!parsed.apiguide) { alert(t('admin_ag_pull_none')); return; }
-        AG_CONTENT = agNormalize(parsed.apiguide);
-        agSaveLocal();
-        agS = null; agL1 = null;
-        agRenderLangBar();
-        agRender();
-        status.textContent = "✅ ApiGuide chargé";
-        alert(t('admin_ag_pull_ok'));
-    } catch (e) {
-        console.error(e);
-        status.textContent = "❌ Erreur ApiGuide";
-        alert(t('admin_ag_pull_err'));
-    }
-}
-
 function agReset() {
     if (!confirm(t('admin_ag_confirm_reset'))) return;
     AG_CONTENT = agBlankContent();
@@ -1939,7 +1888,6 @@ function agReset() {
 }
 
 function agOpenInNewWindow() {
-    /* Open a read-only preview of the current AG_CONTENT in a new tab. */
     const baked = JSON.stringify(AG_CONTENT);
     const html = agBuildFinalHtml(baked, agLang);
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -1961,7 +1909,6 @@ function agExportFinalHtml() {
     URL.revokeObjectURL(url);
 }
 
-/* Build a self-contained read-only ApiGuide HTML, matching the old editor's export. */
 function agBuildFinalHtml(bakedContentJson, startingLang) {
     const finalScript = `
 /* ===== ApiGuide v1.0 — FINAL (read-only) ===== */
@@ -2058,7 +2005,6 @@ if (iosModal) iosModal.addEventListener('click', (e) => { if (e.target === iosMo
 renderLangSwitcher();
 render();
 `;
-    // Updated CSS to match index-6.html perfectly
     const agStyle = `
 html, body { overscroll-behavior-y: contain; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2215,13 +2161,17 @@ footer {
 </body>
 </html>`;
 }
+
 /* =================================================================
-   SERVICE WORKER + BOOT
+   BOOT
    ================================================================= */
 document.addEventListener('DOMContentLoaded', function() {
     applyTranslations();
     document.querySelectorAll('.lang-btn[onclick="setAdminLanguage(\'' + currentLang + '\')"]').forEach(btn => btn.classList.add('active'));
     updateBlogPublishState();
+
+    agRenderLangBar();
+    agRender();
 
     if (localStorage.getItem('vc_admin_session') === 'true') {
         isLoggedIn = true;
