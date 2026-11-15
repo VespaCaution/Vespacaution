@@ -1,4 +1,4 @@
-#🐝 ApiGuide v1.0
+🐝 ApiGuide v1.0
 
 Un guide apicole saisonnier en cinq langues, installable comme application.
 
