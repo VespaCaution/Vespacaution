@@ -489,16 +489,17 @@
 /* --- API GUIDE WARNING BADGE --- */
 .apiguide-warning {
     display: inline-block;
-    background: #fef3c7;
-    border: 1px solid #fcd34d;
-    color: #92400e;
-    padding: 6px 16px;
+    background: linear-gradient(135deg, #fee2e2, #ffedd5, #fce7f3);
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+    padding: 8px 18px;
     border-radius: 20px;
     font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 10px;
+    font-weight: 700;
+    margin-top: 12px;
     text-align: center;
     line-height: 1.4;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
 }
             main { padding: 0 12px; margin: 20px auto; }
             .hero h1 { font-size: 1.8rem; }
@@ -1163,7 +1164,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
             </div>`; }
         }
     },
-                         'apiguide': {
+                            'apiguide': {
         title: 'ApiGuide',
         icon: '<img src="../apps/apiguide/icon.png" style="width:30px; height:30px; border-radius:5px; vertical-align:middle; margin-right:8px;">',
         shortDesc: {
@@ -1174,7 +1175,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
             rm: "Cudesch da las stagiuns e activitats da las avieuls"
         },
         html: {
-            en: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.en}</p><div class="apiguide-warning">🚧 Work in progress. ApiGuide is based on my personal experience.</div></div>
+            en: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.en}</p><div class="apiguide-warning">🚧 ApiGuide is available but still in development. ApiGuide is based on my experience and beekeeping books from SAR.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide is a PWA designed to accompany beekeepers throughout the year, organizing activities by season.</p>
                 <h3>Structure de navigation</h3>
@@ -1191,7 +1192,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            fr: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.fr}</p><div class="apiguide-warning">🚧 En cours de développement. ApiGuide est fait selon mon expérience.</div></div>
+            fr: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.fr}</p><div class="apiguide-warning">🚧 ApiGuide est disponible mais en développement. ApiGuide est fait selon mon expérience et les livres d'apiculture de la SAR.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide est une application web (PWA) conçue pour accompagner les apiculteurs tout au long de l'année, en organisant les activités selon les quatre saisons.</p>
                 <h3>Structure de navigation</h3>
@@ -1208,7 +1209,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            de: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.de}</p><div class="apiguide-warning">🚧 In Entwicklung. ApiGuide basiert auf meiner Erfahrung.</div></div>
+            de: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.de}</p><div class="apiguide-warning">🚧 ApiGuide ist verfügbar, aber noch in Entwicklung. ApiGuide basiert auf meiner Erfahrung und den Imkereibüchern der SAR.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide ist eine PWA, die Imker das ganze Jahr über begleiten soll und die Aktivitäten nach Jahreszeiten organisiert.</p>
                 <h3>Navigationsstruktur</h3>
@@ -1225,7 +1226,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            it: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.it}</p><div class="apiguide-warning">🚧 In fase di sviluppo. ApiGuide si basa sulla mia esperienza.</div></div>
+            it: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.it}</p><div class="apiguide-warning">🚧 ApiGuide è disponibile ma in fase di sviluppo. ApiGuide si basa sulla mia esperienza e sui libri di apicoltura della SAR.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide è una PWA progettata per accompagnare gli apicoltori durante tutto l'anno, organizzando le attività per stagione.</p>
                 <h3>Struttura di navigazione</h3>
@@ -1242,7 +1243,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
                     </div>
                 </div>
             </div>`; },
-            rm: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.rm}</p><div class="apiguide-warning">🚧 En svilupp. ApiGuide è basa sin mia experientscha.</div></div>
+            rm: function() { return `<div class="app-header"><h1><img src="../apps/apiguide/icon.png" style="width: 50px; height: 50px; border-radius: 10px; vertical-align: middle; margin-right: 10px; display: inline-block;"> ApiGuide</h1><p>${appsConfig['apiguide'].shortDesc.rm}</p><div class="apiguide-warning">🚧 ApiGuide è disponibel ma en svilupp. ApiGuide è basa sin mia experientscha e sin ils cudeschs d'apicultura da la SAR.</div></div>
             <div class="app-content-box">
                 <p>ApiGuide è ina PWA concepidà per accumpagnar ils apiculturs durant tut l'on, organisond las activitats per stagiun.</p>
                 <h3>Structura da navigaziun</h3>
