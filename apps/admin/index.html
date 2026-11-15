@@ -1235,12 +1235,16 @@ function switchSubTab(sub) {
     document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
     const panel = document.getElementById('subTab' + sub.charAt(0).toUpperCase() + sub.slice(1));
     if (panel) panel.classList.remove('hidden');
+    
     if (sub === 'blog') renderBlog();
     if (sub === 'members') renderMembers();
     if (sub === 'thanks') renderThanks();
-    if (sub === 'apiguide') { agRenderLangBar(); agRender(); }
+    if (sub === 'apiguide') { 
+        // Fix: Ensure the editor renders as soon as the tab is clicked
+        agRenderLangBar(); 
+        agRender(); 
+    }
 }
-
 /* =================================================================
    CAISSE (unchanged)
    ================================================================= */
