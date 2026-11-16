@@ -598,8 +598,8 @@
     <span id="dropdownTriangle" style="font-size:0.7rem; transition: transform 0.3s; display: inline-block; margin-left:5px;">▼</span>
 </button>
         <div class="dropdown-content" id="resourcesDropdown">
-    <button onclick="renderStaticPage('links'); closeDropdown(); event.stopPropagation();" data-i18n="nav_links">🔗 Liens utiles</button>
-<button onclick="renderStaticPage('credits'); closeDropdown(); event.stopPropagation();" data-i18n="nav_credits">🏆 Crédits</button>
+   <button onclick="renderStaticPage('links'); closeDropdown(); closeMobileMenu(); event.stopPropagation();" data-i18n="nav_links">🔗 Liens utiles</button>
+<button onclick="renderStaticPage('credits'); closeDropdown(); closeMobileMenu(); event.stopPropagation();" data-i18n="nav_credits">🏆 Crédits</button>
             <div class="dropdown-divider"></div>
     <button onclick="openPdf('status.pdf'); closeDropdown()">📄 <span data-i18n="file_status">Fichier Status (PDF)</span></button>
     <button onclick="openPdf('imprimable.pdf'); closeDropdown()">🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></button>
