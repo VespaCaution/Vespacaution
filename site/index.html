@@ -486,7 +486,62 @@
 .dropdown-btn { width: 100%; justify-content: center; font-size: 1.1rem; margin: 0; padding: 0; }
 /* FIN DE L'AJOUT */
             .social-icons { justify-content: center; width: 100%; margin-top: 10px; }
-/* --- API GUIDE WARNING BADGE --- */
+/* =========================================
+   DARK MODE (Automatic based on system)
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1a1a;
+        --surface: #2d2d2d;
+        --text-main: #f0f0f0;
+        --text-muted: #a0a0a0;
+        --border: #404040;
+        --primary-light: #3d3326; /* Darker gold tint */
+        --danger-bg: #4a1c1c;
+        
+        /* Keep primary gold same, it looks good on dark */
+        --primary: #c99b48;
+        --primary-hover: #d4aa5c;
+    }
+
+    /* Fix specific elements that use hardcoded light colors */
+    header {
+        background: rgba(45, 45, 45, 0.98);
+    }
+    
+    .dropdown-content {
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    
+    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .accordion-header {
+        background: var(--surface);
+    }
+
+    .search-box, .pdf-header {
+        background: var(--surface);
+    }
+
+    .search-box input, .form-group input, .form-group textarea, .form-group select {
+        background: #1a1a1a;
+        color: var(--text-main);
+        border-color: var(--border);
+    }
+
+    .search-result {
+        background: var(--surface);
+    }
+
+    /* Fix logo if it's dark text on transparent */
+    .logo-container img {
+        filter: brightness(0) invert(1); /* Makes black logo white */
+    }
+    /* If your logo is colored and shouldn't be inverted, remove the filter above */
+}
+            /* --- API GUIDE WARNING BADGE --- */
 .apiguide-warning {
     display: inline-block;
     background: linear-gradient(135deg, #fee2e2, #ffedd5, #fce7f3);
@@ -544,9 +599,9 @@
     <span id="dropdownTriangle" style="font-size:0.7rem; transition: transform 0.3s; display: inline-block; margin-left:5px;">▼</span>
 </button>
         <div class="dropdown-content" id="resourcesDropdown">
-    <button onclick="renderStaticPage('links'); closeDropdown()" data-i18n="nav_links">🔗 Liens utiles</button>
-    <button onclick="renderStaticPage('credits'); closeDropdown()" data-i18n="nav_credits">🏆 Crédits</button>
-    <div class="dropdown-divider"></div>
+    <button onclick="renderStaticPage('links'); closeDropdown(); event.stopPropagation();" data-i18n="nav_links">🔗 Liens utiles</button>
+<button onclick="renderStaticPage('credits'); closeDropdown(); event.stopPropagation();" data-i18n="nav_credits">🏆 Crédits</button>
+            <div class="dropdown-divider"></div>
     <button onclick="openPdf('status.pdf'); closeDropdown()">📄 <span data-i18n="file_status">Fichier Status (PDF)</span></button>
     <button onclick="openPdf('imprimable.pdf'); closeDropdown()">🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></button>
         </div>
