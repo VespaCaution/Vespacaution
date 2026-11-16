@@ -26,78 +26,105 @@ body {
     flex-direction: column;
 }
 /* =========================================
-   DARK MODE (Automatic based on system)
+   DARK MODE - APIGUIDE
    ========================================= */
 @media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
-        
-        --bg-color: #121212;
-        --surface: #1e1e1e;
-        --text-main: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --border: #333333;
-        --primary-light: #3d3326;
-        --danger-bg: #4a1c1c;
-        
-        --primary: #c99b48;
-        --primary-hover: #d4aa5c;
+    :root { color-scheme: dark; }
+
+    body { 
+        background: #121212 !important; 
+        color: #f0f0f0 !important; 
     }
 
-    /* Fix specific elements that use hardcoded light colors */
-    header {
-        background: rgba(30, 30, 30, 0.98);
+    .app-header { 
+        border-bottom-color: #333 !important; 
     }
     
-    .dropdown-content {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    .app-title { 
+        color: #c99b48 !important; 
     }
     
-    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    .app-title small { 
+        color: #a0a0a0 !important; 
     }
 
-    .accordion-header {
-        background: var(--surface);
+    .lang-select { 
+        background: #2a2a2a !important; 
+        color: #c99b48 !important; 
+        border-color: #444 !important; 
     }
 
-    .search-box, .pdf-header {
-        background: var(--surface);
-    }
-
-    .search-box input, 
-    .form-group input, 
-    .form-group textarea, 
-    .form-group select,
-    #searchInput {
-        background: #121212;
-        color: var(--text-main);
-        border-color: var(--border);
-    }
-
-    .search-result {
-        background: var(--surface);
-    }
-
-    .form-group select option {
-        background: var(--surface);
-        color: var(--text-main);
-    }
-
-    /* PDF Overlay fixes */
-    .pdf-overlay {
-        background: var(--bg-color);
+    .back-btn, .btn { 
+        background: #c99b48 !important; 
+        color: #121212 !important; 
     }
     
-    /* Footer fix for border */
-    footer {
-        border-top-color: var(--border);
+    .btn-ghost { 
+        background: transparent !important; 
+        border-color: #c99b48 !important; 
+        color: #c99b48 !important; 
     }
 
-    /* If your logo is dark, keep this to invert it in dark mode. 
-       If your logo is already light/colorful, remove or comment out these 3 lines. */
-    .logo-container img {
-        filter: brightness(0) invert(1);
+    .grid-btn { 
+        background: #1e1e1e !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
+        box-shadow: 0 3px 0 #c99b48 !important; 
+    }
+
+    .textbox-container { 
+        background: #1e1e1e !important; 
+        border-color: #333 !important; 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important; 
+    }
+    
+    .textbox-container h2 { 
+        color: #c99b48 !important; 
+    }
+    
+    .text-content { 
+        color: #f0f0f0 !important; 
+    }
+    
+    .breadcrumb { 
+        color: #c99b48 !important; 
+    }
+
+    textarea { 
+        background: #121212 !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
+    }
+    
+    .empty-note { 
+        color: #a0a0a0 !important; 
+    }
+
+    footer { 
+        color: #a0a0a0 !important; 
+        border-top-color: #333 !important; 
+    }
+
+    .install-btn { 
+        background: #4a7c2e !important; 
+        color: #ffffff !important; 
+    }
+    
+    .editor-hint { 
+        background: #3d3326 !important; 
+        color: #c99b48 !important; 
+        border-left-color: #c99b48 !important; 
+    }
+    
+    .hidden-flag { opacity: 0.4; }
+
+    #iosModal > div { 
+        background: #1e1e1e !important; 
+        border-color: #444 !important; 
+    }
+    
+    #iosModal h2, #iosModal p, #iosModal li { 
+        color: #f0f0f0 !important; 
     }
 }
     .app-header {
