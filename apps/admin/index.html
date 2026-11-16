@@ -36,124 +36,37 @@
    ========================================= */
 @media (prefers-color-scheme: dark) {
     :root { color-scheme: dark; }
-
-    body { background: #121212 !important; color: #f0f0f0 !important; }
-
-    .card, 
-    #foldersContainer > div > div,
-    .doc-item {
-        background: #1e1e1e !important; 
-        border-color: #333 !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-    }
-
-    h1, h2, h3 { color: #c99b48 !important; }
-
-    input, select, textarea {
-        background: #2a2a2a !important;
-        color: #f0f0f0 !important;
-        border-color: #444 !important;
-    }
     
+    body { background: #121212 !important; color: #f0f0f0 !important; }
+    .card, #foldersContainer > div > div, .doc-item { background: #1e1e1e !important; border-color: #333 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important; }
+    
+    h1, h2, h3 { color: #c99b48 !important; }
+    
+    input, select, textarea { background: #2a2a2a !important; color: #f0f0f0 !important; border-color: #444 !important; }
     button { background: #c99b48 !important; color: #121212 !important; }
     button:hover { background: #b5883b !important; }
     
-    table th { background: #333 !important; color: #f0f0f0 !important; border-color: #444 !important; }
+    table th { background: #2a2a2a !important; color: #ffffff !important; border-color: #444 !important; }
     table td { border-color: #444 !important; }
     
     .tab { color: #a0a0a0 !important; }
     .tab.active { background: #3d3326 !important; color: #c99b48 !important; }
     
-    p[style*="color:#888"], 
-    p[style*="color:#aaa"] { color: #888 !important; }
-
-    #authSection { background: #1e1e1e !important; }
-    .sync-status { color: #a0a0a0 !important; }
-}
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    font-family: system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-}
-.card {
-    background: var(--surface);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-    border: 1px solid var(--border);
-}
-h1, h2, h3 { color: var(--primary); }
-input, button, select, textarea {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    width: 100%;
-    font-family: inherit;
-    font-size: 14px;
-}
-textarea { resize: vertical; min-height: 80px; }
-button {
-    background: var(--primary);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    transition: 0.2s;
-}
-    /* Fixes for Admin Panel Drawer and Tables */
-@media (prefers-color-scheme: dark) {
-    /* 1. Fix the Side Menu (Drawer) */
-    .drawer {
-        background: #1e1e1e !important;
-        border-right-color: #333 !important;
-    }
-    
-    .drawer-item {
-        color: #f0f0f0 !important;
-    }
-    
-    .drawer-item:hover, 
-    .drawer-item.active {
-        background: #2a2a2a !important;
-        color: #c99b48 !important;
-    }
-    
-    .drawer-close {
-        color: #f0f0f0 !important;
-    }
-
-    /* 2. Fix the Table Header text color */
-    table th {
-        background: #2a2a2a !important;
-        color: #ffffff !important; /* Forces white text */
-        border-color: #444 !important;
-    }
-
-    /* 3. Fix the Admin top bar if it's too bright */
-    .topbar {
-        background: #1e1e1e !important;
-        border-bottom-color: #333 !important;
-    }
-    @media (prefers-color-scheme: dark) {
-    /* Fix the language selector */
-    .lang-selector { background: #2a2a2a !important; border-color: #444 !important; }
-    .lang-btn.active { background: #c99b48 !important; color: #121212 !important; }
-    .lang-btn { color: #a0a0a0 !important; }
-
     /* Fix the Side Menu (Drawer) */
-    .drawer { background: #1e1e1e !important; border-right-color: #333 !important; }
-    .drawer-header { border-bottom-color: #333 !important; }
-    .drawer-item { color: #f0f0f0 !important; }
-    .drawer-item:hover, .drawer-item.active { background: #2a2a2a !important; color: #c99b48 !important; }
+    .drawer { background: #1e1e1e !important; border-right: 1px solid #333 !important; }
+    .drawer-header { border-bottom: 1px solid #333 !important; }
     .drawer-close { color: #f0f0f0 !important; }
+    .drawer-item { color: #121212 !important; background: #c99b48 !important; }
+    .drawer-item:hover, .drawer-item.active { background: #2a2a2a !important; color: #c99b48 !important; }
 
-    /* Fix table headers */
-    table th { background: #2a2a2a !important; color: #ffffff !important; border-color: #444 !important; }
-        }     
+    /* Fix the Language Selector */
+    .lang-selector { background: #2a2a2a !important; border-color: #444 !important; }
+    .lang-btn { background: transparent !important; color: #a0a0a0 !important; }
+    .lang-btn.active { background: #c99b48 !important; color: #121212 !important; box-shadow: none !important; }
+    
+    /* Fix the Topbar */
+    .topbar { background: #1e1e1e !important; border-bottom: 1px solid #333 !important; }
+    .sync-status { color: #a0a0a0 !important; }
 }
 button:hover { background: var(--primary-hover); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
