@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -30,7 +29,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --bg: #f5f2e6; --card: #ffffff; --text: #3b2e1e; --gold: #d4a853; --danger: #c47b6b; --border: #e7d7b8; }
+        :root { 
+            --bg: #f5f2e6; 
+            --card: #ffffff; 
+            --text: #3b2e1e; 
+            --gold: #d4a853; 
+            --danger: #c47b6b; 
+            --border: #e7d7b8;
+            color-scheme: light;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --card: #1e1e1e;
+                --text: #f0f0f0;
+                --border: #444444;
+                color-scheme: dark;
+            }
+        }
+
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background:var(--bg); font-family:Arial,sans-serif; padding:8px; color:var(--text); max-width:750px; margin:0 auto; padding-bottom:80px; }
         .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px; background:var(--card); padding:12px 16px; border-radius:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
@@ -44,13 +62,13 @@
         .btn-gold { background:var(--gold); color:white; }
         .btn-red { background:var(--danger); color:white; }
         .btn-sm { padding:6px 12px; font-size:0.78rem; }
-        input, textarea { font-size:16px; padding:10px; border-radius:14px; border:2px solid #e0d5c0; width:100%; background:#fefdf9; margin:4px 0; }
+        input, textarea { font-size:16px; padding:10px; border-radius:14px; border:2px solid var(--border); width:100%; background:var(--card); margin:4px 0; color:var(--text); }
         textarea { resize:none; -webkit-appearance:none; }
-        .hornet-card { background:#fefaf2; border-radius:16px; margin-bottom:10px; overflow:hidden; display:flex; padding:0; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+        .hornet-card { background:var(--card); border-radius:16px; margin-bottom:10px; overflow:hidden; display:flex; padding:0; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; border:1px solid var(--border); }
         .hornet-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
-        .hornet-name-input { border:none!important; background:transparent!important; font-weight:700; font-size:1.05rem!important; width:130px!important; padding:2px!important; }
+        .hornet-name-input { border:none!important; background:transparent!important; font-weight:700; font-size:1.05rem!important; width:130px!important; padding:2px!important; color:var(--text)!important; }
         .dir-input { width:70px!important; text-align:center; display:inline-block; }
-        .timer-display { font-size:1.5rem; font-weight:700; background:#f0ede5; padding:6px 16px; border-radius:30px; display:inline-block; min-width:100px; text-align:center; }
+        .timer-display { font-size:1.5rem; font-weight:700; background:var(--bg); padding:6px 16px; border-radius:30px; display:inline-block; min-width:100px; text-align:center; color:var(--text); }
         .timer-display.running { background:var(--danger); color:white; }
         .badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:700; color:white; }
         .collapse-icon { font-size:1.2rem; transition:transform 0.3s; display:inline-block; }
@@ -60,279 +78,34 @@
         .collapsed-info { display:none; align-items:center; gap:12px; flex-wrap:wrap; }
         .hornet-card.collapsed-card .collapsed-info { display:flex; }
         .hornet-card.collapsed-card .hornet-body { max-height:0; opacity:0; }
-        .flight-item { display:inline-flex; align-items:center; gap:4px; background:#e8e0d0; padding:3px 10px; border-radius:15px; margin:2px; font-size:0.85rem; }
+        .flight-item { display:inline-flex; align-items:center; gap:4px; background:var(--bg); padding:3px 10px; border-radius:15px; margin:2px; font-size:0.85rem; color:var(--text); }
         .flight-delete-btn { background:none; border:none; color:#c47b6b; cursor:pointer; font-size:0.9rem; padding:0 2px; }
-        #map { height:350px; width:100%; border-radius:16px; background:#e8e0d0; }
+        #map { height:350px; width:100%; border-radius:16px; background:var(--bg); }
         .banner-live { background:var(--danger); color:white; padding:10px 16px; border-radius:20px; display:none; margin-top:8px; font-weight:bold; text-align:center; }
         .flex-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
         @media (max-width:400px) { .grid-2{grid-template-columns:1fr} }
-        #historyPanel { max-height:250px; overflow-y:auto; display:none; margin-top:10px; background:#f9f4e8; border-radius:14px; padding:8px; }
-        .history-item { background:white; padding:10px; border-radius:10px; margin:6px 0; font-size:0.85rem; border-left:4px solid var(--gold); }
+        #historyPanel { max-height:250px; overflow-y:auto; display:none; margin-top:10px; background:var(--bg); border-radius:14px; padding:8px; }
+        .history-item { background:var(--card); padding:10px; border-radius:10px; margin:6px 0; font-size:0.85rem; border-left:4px solid var(--gold); }
         .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center; }     
-        .modal { background:white; border-radius:20px; padding:20px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative; }
-        .modal-close { position:absolute; top:10px; right:14px; font-size:1.5rem; cursor:pointer; background:none; border:none; z-index:10001; }
+        .modal { background:var(--card); border-radius:20px; padding:20px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative; color:var(--text); }
+        .modal-close { position:absolute; top:10px; right:14px; font-size:1.5rem; cursor:pointer; background:none; border:none; z-index:10001; color:var(--text); }
         .delete-hornet-btn { background:none; border:none; color:#c47b6b; cursor:pointer; font-size:1.2rem; padding:2px 6px; opacity:0.6; }
-       /* =========================================
-   DARK MODE - VESPATIMER
-   ========================================= */
-@media (prefers-color-scheme: dark) {
-    :root { color-scheme: dark; }
-
-    body { 
-        background: #121212 !important; 
-        color: #f0f0f0 !important; 
-    }
-
-    /* Main containers and cards */
-    .card, 
-    .app, 
-    .container, 
-    .timer-card, 
-    .results-card, 
-    .map-card,
-    .modal {
-        background: #1e1e1e !important; 
-        border-color: #333 !important;
-        color: #f0f0f0 !important;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
-    }
-
-    /* Headings and text */
-    h1, h2, h3, h4 { 
-        color: #c99b48 !important; 
-    }
-    
-    .subtitle, 
-    .description, 
-    p, 
-    label, 
-    span {
-        color: #f0f0f0 !important;
-    }
-
-    /* Inputs and Form Elements */
-    input, select, textarea { 
-        background: #121212 !important; 
-        color: #f0f0f0 !important; 
-        border-color: #444 !important; 
-    }
-    
-    input:focus, select:focus, textarea:focus {
-        border-color: #c99b48 !important;
-        outline: none !important;
-    }
-
-    /* Buttons */
-    button { 
-        background: #2a2a2a !important; 
-        color: #f0f0f0 !important; 
-        border-color: #444 !important; 
-    }
-    
-    button.primary, 
-    button.primary-btn,
-    .btn-primary { 
-        background: #c99b48 !important; 
-        color: #121212 !important; 
-    }
-    
-    button.danger, 
-    button.danger-btn,
-    .btn-danger { 
-        background: #4a1c1c !important; 
-        color: #ff8a80 !important; 
-        border-color: #4a1c1c !important;
-    }
-    
-    button.outline, 
-    button.secondary,
-    .btn-outline { 
-        background: transparent !important; 
-        border-color: #444 !important; 
-        color: #f0f0f0 !important; 
-    }
-
-    /* Timer specific overrides (if they use specific hardcoded classes) */
-    .timer-display,
-    .timer-value,
-    .stopwatch-time {
-        color: #c99b48 !important;
-        background: #121212 !important;
-        border-color: #444 !important;
-    }
-
-    .timer-running {
-        background: #1e1e1e !important;
-        border-color: #c99b48 !important;
-    }
-
-    /* History / Tables */
-    table { 
-        border-color: #444 !important; 
-    }
-    
-    table th { 
-        background: #2a2a2a !important; 
-        color: #f0f0f0 !important; 
-        border-color: #444 !important; 
-    }
-    
-    table td { 
-        border-color: #333 !important; 
-        color: #f0f0f0 !important; 
-    }
-    
-    tr:nth-child(even) {
-        background: #1a1a1a !important;
-    }
-
-    /* Map & Triangulation specific overrides */
-    #map, 
-    .map-container {
-        background: #1e1e1e !important;
-        border: 1px solid #333 !important;
-    }
-
-    /* Modals / Overlays */
-    .modal-backdrop,
-    .overlay {
-        background: rgba(0, 0, 0, 0.8) !important;
-    }
-
-    /* Navigation / Tabs */
-    .nav-tabs,
-    .tab-container {
-        border-bottom-color: #333 !important;
-    }
-    
-    .nav-tab,
-    .tab {
-        color: #a0a0a0 !important;
-    }
-    
-    .nav-tab.active,
-    .tab.active {
-        color: #c99b48 !important;
-        border-bottom-color: #c99b48 !important;
-        background: #2a2a2a !important;
-    }
-
-    /* Footer / small text */
-    footer,
-    .small-text,
-    .helper-text {
-        color: #a0a0a0 !important;
-        border-top-color: #333 !important;
-  }
-/* Fixes for VespaTimer specific white boxes */
-@media (prefers-color-scheme: dark) {
-    /* The white box containing "Chronomètre actif" and "Frelon 1" */
-    #hornetList > div,
-    .hornet-card,
-    .timer-box {
-        background-color: #1e1e1e !important;
-        border-color: #444 !important;
-        color: #f0f0f0 !important;
-    }
-    
-    /* Fix the inputs inside the timer box */
-    .timer-box input {
-        background: #121212 !important;
-    }
-
-    /* Fix the warning banner at the bottom of the map */
-    .warning-box, 
-    .alert-box, 
-    div[style*="background: #fff3cd"], 
-    div[style*="background: #f8d7da"] {
-        background-color: #3d3326 !important;
-        color: #ffd54f !important;
-        border-color: #c99b48 !important;
-    }
-    
-    /* Ensure the map container background is dark */
-    #map {
-        background: #121212 !important;
-    }
-}
-@media (prefers-color-scheme: dark) {
-    /* Force the timer cards (Frelon 1, etc.) to be dark */
-    #hornetList > div, 
-    .hornet-card,
-    .timer-card {
-        background: #1e1e1e !important;
-        background-color: #1e1e1e !important;
-        color: #f0f0f0 !important;
-        border-color: #444 !important;
-    }
-
-    /* Ensure inputs inside the timer cards are dark */
-    #hornetList > div input, 
-    .hornet-card input {
-        background: #121212 !important;
-        color: #f0f0f0 !important;
-        border-color: #444 !important;
-    }
-
-    /* Fix the "Chronomètre actif" banner at the top */
-    div[style*="background: #f8d7da"],
-    div[style*="background: #fff3cd"],
-    .alert {
-        background: #3d3326 !important;
-        color: #ffd54f !important;
-        border-color: #c99b48 !important;
-    }
-
-    /* Fix any inline white backgrounds inside the app container */
-    .app-container div[style*="background: white"],
-    .app-container div[style*="background: #fff"] {
-        background: #1e1e1e !important;
-    }
-        }
-@media (prefers-color-scheme: dark) {
-    /* Target the timer cards with inline styles or specific classes */
-    #hornetList > div,
-    div[style*="background: #fdf8e8"],
-    div[style*="background: #fcf8f0"],
-    div[style*="background: #faf4ea"] {
-        background: #1e1e1e !important;
-        border-color: #444 !important;
-        color: #f0f0f0 !important;
-    }
-
-    /* Fix the yellow warning box at the bottom of the map */
-    div[style*="background: #fff3cd"],
-    div[style*="background: #f8d7da"],
-    .warning-box {
-        background: #3d3326 !important;
-        color: #ffd54f !important;
-        border: 1px solid #c99b48 !important;
-    }
-
-    /* Fix the "En cours" badge text so it's readable on dark mode */
-    .badge,
-    span[style*="background: #f5d9b0"] {
-        background: #4a1c1c !important;
-        color: #ff8a80 !important;
-    }
-}
-}
-        .bottom-bar { position:fixed; bottom:0; left:0; right:0; background:white; padding:10px 8px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-around; gap:4px; }
-        .compass-btn { background:#f0ede5; border:2px solid var(--gold); border-radius:50%; width:44px; height:44px; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .bottom-bar { position:fixed; bottom:0; left:0; right:0; background:var(--card); padding:10px 8px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-around; gap:4px; border-top:1px solid var(--border); }
+        .compass-btn { background:var(--bg); border:2px solid var(--gold); border-radius:50%; width:44px; height:44px; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text); }
         .history-actions { display:flex; gap:4px; margin-top:6px; }
-        .color-dot { width:35px; height:35px; border-radius:50%; cursor:pointer; border:3px solid #fff; transition:transform 0.2s; }
+        .color-dot { width:35px; height:35px; border-radius:50%; cursor:pointer; border:3px solid var(--card); transition:transform 0.2s; }
         .color-dot:hover { transform:scale(1.2); }
-        .color-dot.selected { border-color:#000; }
+        .color-dot.selected { border-color:var(--text); }
         .header a:active { transform:scale(0.9); opacity:0.7; }
         button,a,[onclick] { -webkit-tap-highlight-color:transparent; }
         .custom-alert-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:100002; justify-content:center; align-items:center; }      
-        .custom-alert { background:white; border-radius:20px; padding:24px; max-width:400px; width:90%; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); animation:slideIn 0.3s ease-out; }
+        .custom-alert { background:var(--card); border-radius:20px; padding:24px; max-width:400px; width:90%; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); animation:slideIn 0.3s ease-out; }
         .custom-alert-icon { font-size:3rem; margin-bottom:12px; }
         .custom-alert-message { font-size:1rem; margin-bottom:20px; line-height:1.5; color:var(--text); }
         .custom-alert-button { background:var(--gold); color:white; border:none; border-radius:25px; padding:12px 30px; font-size:1rem; font-weight:600; cursor:pointer; min-width:120px; }
         @keyframes slideIn { from { transform:translateY(-20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-        #undoDelete { position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:100001; box-shadow:0 2px 10px rgba(0,0,0,0.3); animation:slideUp 0.3s ease-out; }       
+        #undoDelete { position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:100001; box-shadow:0 2px 10px rgba(0,0,0,0.3); animation:slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform:translateX(-50%) translateY(20px); opacity:0; } to { transform:translateX(-50%) translateY(0); opacity:1; } }
         .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:12px 20px; border-radius:25px; z-index:100003; font-size:0.9rem; box-shadow:0 2px 10px rgba(0,0,0,0.3); animation:fadeInOut 3s ease-in-out; }
         @keyframes fadeInOut { 0% { opacity:0; transform:translateX(-50%) translateY(-20px); } 10% { opacity:1; transform:translateX(-50%) translateY(0); } 90% { opacity:1; transform:translateX(-50%) translateY(0); } 100% { opacity:0; transform:translateX(-50%) translateY(-20px); } }
@@ -345,13 +118,38 @@
         .coord-input-group { margin:10px 0; text-align:left; }
         .coord-input-group label { display:block; margin-bottom:4px; font-weight:600; font-size:0.9rem; }
         .coord-input-group input { width:100%; text-align:center; }
-        .lang-option { display:flex; align-items:center; gap:10px; padding:12px; border-radius:12px; cursor:pointer; margin:4px 0; background:#f9f4e8; border:2px solid transparent; }
+        .lang-option { display:flex; align-items:center; gap:10px; padding:12px; border-radius:12px; cursor:pointer; margin:4px 0; background:var(--bg); border:2px solid transparent; }
         .lang-option:active { transform:scale(0.98); border-color:var(--gold); }
-        .lang-option.selected { border-color:var(--gold); background:#fefaf2; }
+        .lang-option.selected { border-color:var(--gold); background:var(--card); }
         .lang-flag { font-size:1.5rem; }
         .lang-name { font-weight:600; }
-        .site-tab.active { color:var(--gold) !important; border-bottom:3px solid var(--gold) !important; background:#fefaf2 !important; }
-        .site-tab:hover { background:#fefaf2; }
+        .site-tab.active { color:var(--gold) !important; border-bottom:3px solid var(--gold) !important; background:var(--bg) !important; }
+        .site-tab:hover { background:var(--bg); }
+        
+        /* Dark Mode overrides for inline JS styles */
+        @media (prefers-color-scheme: dark) {
+            div[style*="background: white"],
+            div[style*="background: #fff"],
+            div[style*="background: #fdf8e8"],
+            div[style*="background: #fcf8f0"],
+            div[style*="background: #faf4ea"],
+            div[style*="background: #f9f4e8"],
+            div[style*="background: #fefaf2"] {
+                background-color: var(--card) !important;
+                border-color: var(--border) !important;
+                color: var(--text) !important;
+            }
+            div[style*="background: #fff3cd"],
+            div[style*="background: #fef9e7"] {
+                background-color: #3d3326 !important;
+                color: #ffd54f !important;
+                border: 1px solid var(--gold) !important;
+            }
+            button { background-color: var(--card); border: 1px solid var(--border); color: var(--text); }
+            .btn-gold { background-color: var(--gold) !important; color: #121212 !important; border: none; }
+            .btn-sm { background-color: var(--bg) !important; color: var(--text) !important; }
+        }
+
         @media print {
             .bottom-bar, .header, button, .compass-btn, .delete-hornet-btn, .flight-delete-btn, #updateBanner, .modal-overlay, .custom-alert-overlay, #undoDelete, .toast, .banner-live { display:none !important; }
             body { padding:10px; max-width:100%; background:white; font-size:12px; }
@@ -366,104 +164,6 @@
             .badge { font-size:0.65rem; padding:2px 8px; }
             .flight-item { font-size:0.75rem; padding:2px 6px; }
             hr { margin:6px 0 !important; }
-       @media (prefers-color-scheme: dark) {
-    /* 1. Force the white container holding the inputs to be dark */
-    #hornetList > div > div[style*="background"],
-    .hornet-timer-card,
-    #hornetList > div > div > div[style*="background: #fdf8e8"] {
-        background: #1e1e1e !important;
-        background-color: #1e1e1e !important;
-        border-color: #444 !important;
-    }
-
-    /* 2. Force the inner white box (where "ex: 45" is) to be dark */
-    #hornetList div[style*="background: white"],
-    #hornetList div[style*="background: #fff"],
-    #hornetList div[style*="background: #faf4ea"] {
-        background: #2a2a2a !important;
-        background-color: #2a2a2a !important;
-        border-color: #444 !important;
-    }
-
-    /* 3. Fix the input field */
-    #hornetList input {
-        background: #121212 !important;
-        color: #f0f0f0 !important;
-        border-color: #444 !important;
-    }
-
-    /* 4. Fix the yellow warning box at the bottom of the map */
-    div[style*="background: #fff3cd"],
-    div[style*="background: #fef9e7"],
-    div[style*="background: #fff"],
-    .warning-box {
-        background: #3d3326 !important;
-        background-color: #3d3326 !important;
-        color: #ffd54f !important;
-        border: 1px solid #c99b48 !important;
-    }
-       }
-        }
-   @media (prefers-color-scheme: dark) {
-    /* 1. Make the whole page dark */
-    body, html {
-        background: #121212 !important;
-    }
-
-    /* 2. Nuclear Option: Target ALL divs, inputs, and text areas inside the main containers */
-    #app, 
-    .app-container, 
-    main,
-    #hornetList, 
-    #hornetList div,
-    #hornetList span {
-        background-color: transparent !important;
-        color: #f0f0f0 !important;
-    }
-
-    /* 3. Force the timer box background to be dark */
-    #hornetList > div, 
-    .timer-card,
-    div[style*="background"] {
-        background-color: #1e1e1e !important;
-        border-color: #444 !important;
-    }
-
-    /* 4. Target the specific white box (the input group) */
-    #hornetList div[style*="background: white"],
-    #hornetList div[style*="background: #fff"],
-    #hornetList div[style*="background: rgb(255"] {
-        background-color: #2a2a2a !important;
-        border-color: #444 !important;
-    }
-
-    /* 5. Fix the inputs inside the timer */
-    input, select, textarea {
-        background-color: #121212 !important;
-        color: #f0f0f0 !important;
-        border: 1px solid #444 !important;
-    }
-
-    /* 6. Fix the yellow warning banner under the map */
-    div[style*="background: #fff3cd"],
-    div[style*="background: #fef9e7"],
-    div[style*="background: #f8d7da"] {
-        background-color: #3d3326 !important;
-        color: #ffd54f !important;
-        border: 1px solid #c99b48 !important;
-    }
-
-    /* 7. Keep your gold buttons gold */
-    button {
-        background-color: #c99b48 !important;
-        color: #121212 !important;
-        border-color: #c99b48 !important;
-    }
-    
-    /* 8. Make sure text in the timer is white, not black */
-    #hornetList {
-        color: #f0f0f0 !important;
-    }
         }
     </style>
 </head>
@@ -475,7 +175,7 @@
         <div style="background:var(--gold);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;color:white;">
     <div style="font-size:1.3rem;font-weight:700;">🐝 VespaTimer</div>
             </div>
-        <div style="display:flex;background:#fefaf2;border-bottom:2px solid var(--border);overflow-x:auto;">
+        <div style="display:flex;background:var(--card);border-bottom:2px solid var(--border);overflow-x:auto;">
             <button class="site-tab active" data-tab="home" onclick="showSiteTab('home')" style="flex:1;min-width:70px;padding:12px 8px;border:none;background:none;color:var(--text);font-weight:600;cursor:pointer;font-size:0.85rem;border-bottom:3px solid transparent;">Accueil</button>
             <button class="site-tab" data-tab="versions" onclick="showSiteTab('versions')" style="flex:1;min-width:70px;padding:12px 8px;border:none;background:none;color:var(--text);font-weight:600;cursor:pointer;font-size:0.85rem;border-bottom:3px solid transparent;">Versions</button>
             <button class="site-tab" data-tab="soutenir" onclick="showSiteTab('soutenir')" style="flex:1;min-width:70px;padding:12px 8px;border:none;background:none;color:var(--text);font-weight:600;cursor:pointer;font-size:0.85rem;border-bottom:3px solid transparent;">Soutenir</button>
@@ -494,7 +194,7 @@
                 </div>
             </div>
             <p style="font-size:1rem;line-height:1.7;color:var(--text);text-align:center;margin-bottom:24px;" data-lang="site_welcome">Bienvenue sur le site de VespaTimer qui est un outil pour faciliter le travail du pot-à-mèche.</p>
-            <div style="background:#f9f4e8;border-radius:16px;padding:20px;text-align:center;margin-bottom:24px;">
+            <div style="background:var(--bg);border-radius:16px;padding:20px;text-align:center;margin-bottom:24px;">
                 <div style="font-size:3rem;margin-bottom:8px;">📺</div>
                 <p style="font-size:0.9rem;color:var(--text);margin-bottom:14px;" data-lang="site_video_text">Une vidéo YouTube présente cet outil.</p>
                 <a href="https://youtube.com/@hornetjunkie" target="_blank" class="btn-gold" style="display:inline-block;text-decoration:none;padding:12px 24px;font-size:0.95rem;border-radius:25px;">▶️ <span data-lang="site_watch_video">Voir la vidéo</span></a>
@@ -502,7 +202,7 @@
             <div style="text-align:center;margin-bottom:24px;">
               <button onclick="exitSiteToApp()" class="btn-gold" style="padding:16px 40px;font-size:1.1rem;border-radius:30px;" data-lang="site_open_app">Ouvrir VespaTimer</button>  
             </div>
-            <div style="background:#f9f4e8;border-radius:16px;padding:20px;margin-bottom:24px;">
+            <div style="background:var(--bg);border-radius:16px;padding:20px;margin-bottom:24px;">
                 <h3 style="color:var(--gold);font-size:1.05rem;margin-bottom:12px;text-align:center;" data-lang="site_features_title">Fonctionnalités</h3>
                 <ul style="list-style:none;padding:0;font-size:0.9rem;line-height:2;color:var(--text);text-align:center;">
                     <li>🐝 <span data-lang="site_feat_multi">Multichrono frelons</span></li>
@@ -513,7 +213,7 @@
                     <li>📤 <span data-lang="site_feat_export">Export/Import multi-format (PDF, JSON, Historique, GPX, KML, Vespafinder)</span></li>
                 </ul>
             </div>
-            <div style="background:#fef5e7;border:2px dashed var(--gold);border-radius:16px;padding:20px;text-align:center;">
+            <div style="background:var(--bg);border:2px dashed var(--gold);border-radius:16px;padding:20px;text-align:center;">
                 <div style="font-size:2.5rem;margin-bottom:8px;">🚫🐝</div>
                 <p style="font-size:0.95rem;font-weight:600;color:var(--text);" data-lang="site_callout">Travail de triangulation avec pot-à-mèche pour trouver des nids en cours</p>
             </div>
@@ -541,16 +241,16 @@
                          <div style="font-size:2.5rem;margin-bottom:8px;">ℹ️</div>
                 <h2 style="color:var(--gold);font-size:1.1rem;">Informations utiles</h2>
             </div>
-            <div style="background:#f9f4e8;border-radius:16px;padding:20px;margin-bottom:16px;line-height:2;font-size:0.92rem;">
+            <div style="background:var(--bg);border-radius:16px;padding:20px;margin-bottom:16px;line-height:2;font-size:0.92rem;">
                 <p style="margin-bottom:8px;">🔗 <strong data-lang="site_info_more">D'avantage sur le frelon asiatique :</strong> <a href="https://stopfrelons.ch" target="_blank" style="color:#0d6b35;text-decoration:underline;">stopfrelons.ch</a></p>
                 <p style="margin-bottom:8px;">📢 <strong data-lang="site_info_announce">Pour faire une annonce :</strong> <a href="https://frelonasiatique.ch" target="_blank" style="color:#0d6b35;text-decoration:underline;">frelonasiatique.ch</a></p>
                 <p>🎥 <strong data-lang="site_info_technique">Plus d'informations sur la technique :</strong> <a href="https://youtube.com/@hornetjunkie" target="_blank" style="color:#0d6b35;text-decoration:underline;">youtube.com/@hornetjunkie</a></p>
             </div>
-            <details style="background:#f9f4e8;border-radius:16px;padding:14px;margin-bottom:16px;">
+            <details style="background:var(--bg);border-radius:16px;padding:14px;margin-bottom:16px;">
                 <summary style="cursor:pointer;font-weight:600;color:var(--gold);" data-lang="site_privacy_title">Politique de confidentialité</summary>
                 <p style="margin-top:10px;font-size:0.85rem;line-height:1.7;color:var(--text);" data-lang="site_privacy_text">VespaTimer ne collecte, ne transmet et ne stocke aucune donnée sur des serveurs externes.</p>
             </details>
-            <details style="background:#f9f4e8;border-radius:16px;padding:14px;">
+            <details style="background:var(--bg);border-radius:16px;padding:14px;">
                 <summary style="cursor:pointer;font-weight:600;color:var(--gold);" data-lang="site_credits_title">Crédits</summary>
                 <div style="margin-top:10px;font-size:0.85rem;line-height:1.8;color:var(--text);">
                     <p>👤 <strong data-lang="site_credit_creator">Créateur :</strong> Ben Hupka</p>
@@ -573,45 +273,45 @@
             <div id="contactStep1">
                 <p style="font-weight:600;margin-bottom:12px;" data-lang="contact_reason_q">Pour quelle raison ?</p>
                 <div style="display:flex;flex-direction:column;gap:10px;">
-                <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="reason" value="VespaTimer" onclick="contactNext('subject')"><span>VespaTimer</span></label>
-                <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="reason" value="Autre" onclick="contactAutreFrom='reason';contactNext('autre')"><span>Autre</span></label>  
+                <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="reason" value="VespaTimer" onclick="contactNext('subject')"><span>VespaTimer</span></label>
+                <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="reason" value="Autre" onclick="contactAutreFrom='reason';contactNext('autre')"><span>Autre</span></label>  
                 </div>
             </div>
             
             <div id="contactStepSubject" style="display:none;">
     <p style="font-weight:600;margin-bottom:12px;" data-lang="contact_subject_q">Quel sujet ?</p>
     <div style="display:flex;flex-direction:column;gap:10px;">
-        <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="bug" onclick="contactNext('bug')"><span data-lang="contact_s_bug">Signaler un bug</span></label>
-        <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="question" onclick="contactNext('question')"><span data-lang="contact_s_question">Poser une question</span></label>
-        <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="beta" onclick="contactNext('beta')"><span data-lang="contact_s_beta">Demander accès à la version BÊTA</span></label>
-        <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="feedback" onclick="contactNext('feedback')"><span data-lang="contact_s_feedback">Faire un retour</span></label>
-        <label style="display:flex;align-items:center;gap:10px;background:#f9f4e8;padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="autre" onclick="contactAutreFrom='subject';contactNext('autre')"><span data-lang="contact_s_autre">Autre</span></label>
+        <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="bug" onclick="contactNext('bug')"><span data-lang="contact_s_bug">Signaler un bug</span></label>
+        <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="question" onclick="contactNext('question')"><span data-lang="contact_s_question">Poser une question</span></label>
+        <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="beta" onclick="contactNext('beta')"><span data-lang="contact_s_beta">Demander accès à la version BÊTA</span></label>
+        <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="feedback" onclick="contactNext('feedback')"><span data-lang="contact_s_feedback">Faire un retour</span></label>
+        <label style="display:flex;align-items:center;gap:10px;background:var(--bg);padding:14px;border-radius:12px;cursor:pointer;"><input type="radio" name="subject" value="autre" onclick="contactAutreFrom='subject';contactNext('autre')"><span data-lang="contact_s_autre">Autre</span></label>
     </div>
     <button onclick="contactBack('reason')" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;color:var(--text);cursor:pointer;" data-lang="contact_back">← Retour</button>
             </div>
             
             <div id="contactStepBug" style="display:none;">
                 <p style="font-weight:600;margin-bottom:8px;" data-lang="contact_bug_q">Décrivez le bug que vous avez rencontré :</p>
-                <textarea id="bugText" rows="4" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;"></textarea>
-                <input type="email" id="bugEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:10px;">
+                <textarea id="bugText" rows="4" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);"></textarea>
+                <input type="email" id="bugEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);margin-top:10px;">
                 <button onclick="contactSubmit('bug')" class="btn-gold" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="contact_send">Envoyer</button>
                 <button onclick="contactBack('subject')" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;color:var(--text);cursor:pointer;" data-lang="contact_back">← Retour</button>
             </div>
             
             <div id="contactStepQuestion" style="display:none;">
                 <p style="font-weight:600;margin-bottom:8px;" data-lang="contact_question_q">Quelle est votre question ?</p>
-                <textarea id="questionText" rows="4" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;"></textarea>
-                <input type="email" id="questionEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:10px;">
+                <textarea id="questionText" rows="4" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);"></textarea>
+                <input type="email" id="questionEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);margin-top:10px;">
                 <button onclick="contactSubmit('question')" class="btn-gold" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="contact_send">Envoyer</button>
                 <button onclick="contactBack('subject')" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;color:var(--text);cursor:pointer;" data-lang="contact_back">← Retour</button>
             </div>
             
             <div id="contactStepBeta" style="display:none;">
                 <p style="font-weight:600;margin-bottom:8px;" data-lang="contact_beta_want">Souhaitez-vous un accès à la version BÊTA ?</p>
-                <label style="display:flex;align-items:center;gap:8px;background:#f9f4e8;padding:12px;border-radius:12px;cursor:pointer;margin-bottom:14px;"><input type="checkbox" id="betaWant"><span data-lang="contact_yes">Oui</span></label>
-                <input type="email" id="betaEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;">
+                <label style="display:flex;align-items:center;gap:8px;background:var(--bg);padding:12px;border-radius:12px;cursor:pointer;margin-bottom:14px;"><input type="checkbox" id="betaWant"><span data-lang="contact_yes">Oui</span></label>
+                <input type="email" id="betaEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);">
                 <p style="font-weight:600;margin:14px 0 8px;" data-lang="contact_beta_notify">Me notifier lors de nouvelles versions BÊTA :</p>
-                <label style="display:flex;align-items:center;gap:8px;background:#f9f4e8;padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" id="betaNotify"><span data-lang="contact_yes">Oui</span></label>
+                <label style="display:flex;align-items:center;gap:8px;background:var(--bg);padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" id="betaNotify"><span data-lang="contact_yes">Oui</span></label>
                 <button onclick="contactSubmit('beta')" class="btn-gold" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="contact_send">Envoyer</button>
                 <button onclick="contactBack('subject')" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;color:var(--text);cursor:pointer;" data-lang="contact_back">← Retour</button>
             </div>
@@ -619,22 +319,22 @@
             <div id="contactStepFeedback" style="display:none;">
                 <p style="font-weight:600;margin-bottom:8px;" data-lang="contact_feedback_q">Sur quoi faites-vous un retour ?</p>
                 <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
-                    <label style="display:flex;align-items:center;gap:8px;background:#f9f4e8;padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" class="feedbackTarget" value="version_principale"><span data-lang="contact_feedback_main">La version principale</span></label>
-                    <label style="display:flex;align-items:center;gap:8px;background:#f9f4e8;padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" class="feedbackTarget" value="version_beta"><span data-lang="contact_feedback_beta">La version BÊTA</span></label>
-                    <label style="display:flex;align-items:center;gap:8px;background:#f9f4e8;padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" class="feedbackTarget" value="site_officiel"><span data-lang="contact_feedback_site">Le site officiel</span></label>
+                    <label style="display:flex;align-items:center;gap:8px;background:var(--bg);padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" class="feedbackTarget" value="version_principale"><span data-lang="contact_feedback_main">La version principale</span></label>
+                    <label style="display:flex;align-items:center;gap:8px;background:var(--bg);padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" class="feedbackTarget" value="version_beta"><span data-lang="contact_feedback_beta">La version BÊTA</span></label>
+                    <label style="display:flex;align-items:center;gap:8px;background:var(--bg);padding:12px;border-radius:12px;cursor:pointer;"><input type="checkbox" class="feedbackTarget" value="site_officiel"><span data-lang="contact_feedback_site">Le site officiel</span></label>
                 </div>
-                <textarea id="feedbackText" rows="4" data-lang-placeholder="contact_autre_text" placeholder="Retour" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;"></textarea>
-                <input type="email" id="feedbackEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:10px;">
+                <textarea id="feedbackText" rows="4" data-lang-placeholder="contact_autre_text" placeholder="Retour" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);"></textarea>
+                <input type="email" id="feedbackEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);margin-top:10px;">
                 <button onclick="contactSubmit('feedback')" class="btn-gold" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="contact_send">Envoyer</button>
                 <button onclick="contactBack('subject')" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;color:var(--text);cursor:pointer;" data-lang="contact_back">← Retour</button>
             </div>
             
             <div id="contactStepAutre" style="display:none;">
                 <p style="font-weight:600;margin-bottom:8px;" data-lang="contact_autre_reason">Raison de contact :</p>
-                <input type="text" id="autreReason" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;">
+                <input type="text" id="autreReason" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);">
                 <p style="font-weight:600;margin:14px 0 8px;" data-lang="contact_autre_text">Texte :</p>
-                <textarea id="autreText" rows="4" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;"></textarea>
-                <input type="email" id="autreEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:10px;">
+                <textarea id="autreText" rows="4" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);"></textarea>
+                <input type="email" id="autreEmail" data-lang-placeholder="contact_email_ph" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--card);color:var(--text);margin-top:10px;">
                 <button onclick="contactSubmit('autre')" class="btn-gold" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="contact_send">Envoyer</button>
                 <button onclick="contactBack(contactAutreFrom)" style="width:100%;padding:10px;margin-top:8px;background:none;border:none;color:var(--text);cursor:pointer;" data-lang="contact_back">← Retour</button>
             </div>
@@ -644,13 +344,13 @@
 </div>
 
 <div class="header" style="justify-content:space-between;align-items:center;">
-    <h1><a onclick="openSubPage('siteScreen')" style="cursor:pointer;">🐝 VespaTimer</a> <span style="font-size:0.8rem;color:#888;">v2.0</span></h1>
+    <h1><a onclick="openSubPage('siteScreen')" style="cursor:pointer;">🐝 VespaTimer</a> <span style="font-size:0.8rem;color:var(--text-muted);">v2.0</span></h1>
     <div class="flex-row" style="gap:12px;">
         <a href="https://youtube.com/@hornetjunkie" target="_blank" style="text-decoration:none;color:#FF0000;font-size:1.6rem;padding:4px;" title="YouTube"><i class="fab fa-youtube"></i></a>
         <a href="https://whatsapp.com/channel/0029VbDichqDuMRfA1Yitr2b" target="_blank" style="text-decoration:none;color:#25D366;font-size:1.6rem;padding:4px;" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
-                    </div>
-    <div class="card">
+</div>
+<div class="card">
     <h2>👤 <span data-lang="personal_info">Infos personnelles</span></h2>
     <div class="grid-2">
         <input type="text" id="firstName" data-lang-placeholder="first_name_placeholder" placeholder="Prénom" oninput="personalInfo.firstName=this.value;debouncedSave()">
@@ -658,7 +358,7 @@
     </div>
     <input type="tel" id="phone" data-lang-placeholder="phone_placeholder" placeholder="📞 Téléphone" oninput="personalInfo.phone=this.value;debouncedSave()" style="margin-top:6px;">
     <div style="margin-top:6px;">🕐 <span id="datetime"></span></div>
-    <hr style="border:1px dashed #e0cfaa;margin:12px 0;">
+    <hr style="border:1px dashed var(--border);margin:12px 0;">
     <h2>📍 <span data-lang="pot_label">Pot-à-Mèche</span></h2>
     <div class="flex-row">
         <input type="text" id="locationInput" data-lang-placeholder="location_placeholder" placeholder="Nom du lieu ou lat,lng" oninput="surveyLocation.name=this.value;debouncedSave()" style="flex:1;">
@@ -687,7 +387,7 @@
         <button class="btn-sm" onclick="manualCoords()">✍️ Coord.</button>
         <button class="btn-gold btn-sm" onclick="showHistory()">📋 <span data-lang="history_btn">Historique 90j</span></button>
     </div>
-    <div id="predictionPanel" style="margin-top:8px;padding:8px;background:#f9f4e8;border-radius:12px;font-size:0.85rem;">⚠️ <span data-lang="no_flights">Ajoutez des vols pour voir les estimations</span></div>
+    <div id="predictionPanel" style="margin-top:8px;padding:8px;background:var(--bg);border-radius:12px;font-size:0.85rem;">⚠️ <span data-lang="no_flights">Ajoutez des vols pour voir les estimations</span></div>
     <div id="historyPanel"></div>
 </div>
 
@@ -706,7 +406,7 @@
 
 <div class="modal-overlay" id="exportModal"><div class="modal" style="max-width:550px;padding-top:10px;"><div style="display:flex;align-items:center;justify-content:space-between;"><h2 style="margin:0;">📤 <span data-lang="export_import">Export / Import</span></h2><button class="modal-close" onclick="closeModal('exportModal')" style="position:static;">✕</button></div><div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"><button onclick="exportPDF()">📄 PDF</button><button onclick="exportHistory()">📋 <span data-lang="export_history">Exporter historique</span></button><button onclick="exportJSON()">📤 JSON</button><button onclick="exportGPX()">📍 GPX</button><button onclick="exportKML()">🌍 KML</button><hr><button class="btn-gold" onclick="document.getElementById('importFile').click()">📥 <span data-lang="import_btn">Importer</span> (JSON)</button><button class="btn-gold" onclick="document.getElementById('importHistFile').click()">📋 <span data-lang="import_history">Importer historique</span></button><button class="btn-gold" onclick="openVespafinderModal()">🔗 <span data-lang="import_vespafinder">Importer Vespafinder</span></button><input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)"><input type="file" id="importHistFile" accept=".json" style="display:none;" onchange="importHistory(event)"><hr><button class="btn-red" onclick="resetAll()">🔄 <span data-lang="reset_btn">Nouveau / Sauvegarder</span></button></div></div></div>
 
-<div class="modal-overlay" id="aboutModal"><div class="modal" style="max-width:550px;padding-top:10px;"><div style="display:flex;align-items:center;justify-content:space-between;"><h2 style="margin:0;">ℹ️ <span data-lang="about_title_full">À propos de VespaTimer</span></h2><button class="modal-close" onclick="closeAbout()" style="position:static;">✕</button></div><div style="font-size:0.9rem;line-height:1.7;margin-top:10px;"><p data-lang="about_text">Bienvenue sur VespaTimer</p><p>⚠️ <span data-lang="about_report">N'oubliez pas de signaler vos observations sur :</span> <a href="https://frelonasiatique.ch" target="_blank">frelonasiatique.ch</a></p><p>📧 <a onclick="closeModal('aboutModal');openSubPage('siteScreen');setTimeout(function(){showSiteTab('contact');},100)" style="color:var(--gold);cursor:pointer;text-decoration:underline;">Contact</a></p><p data-lang="about_instructions_detail">Instructions</p><hr style="border:1px dashed #e0cfaa;margin:10px 0;"><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">🧭 <span data-lang="compass_calibration_title">Calibration de la boussole</span></summary><p style="margin-top:8px;"><strong data-lang="compass_calibration_when">QUAND :</strong><br><span data-lang="compass_calibration_when_text"></span></p><p style="margin-top:8px;"><strong data-lang="compass_calibration_how">COMMENT :</strong><br><span data-lang="compass_calibration_how_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">🎨 <span data-lang="color_change_title">Changer la couleur d'un frelon</span></summary><p style="margin-top:8px;"><strong data-lang="color_change_method">Méthode :</strong><br><span data-lang="color_change_method_text"></span></p><p style="margin-top:8px;"><strong data-lang="color_change_tip">Astuce :</strong><br><span data-lang="color_change_tip_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">📄 <span data-lang="format_explanation_title">Formats d'export</span></summary><p style="margin-top:8px;"><span data-lang="format_explanation_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">📥 <span data-lang="import_explanation_title">Formats d'import</span></summary><p style="margin-top:8px;"><span data-lang="import_explanation_text"></span></p></details><hr style="border:1px dashed #e0cfaa;margin:10px 0;"><p data-lang="about_happy">🐝 Bonne chasse ! 🙂</p><p style="font-size:0.78rem;color:#888;margin-top:10px;"><span data-lang="about_footer1">Requiert une connexion Internet</span><br><span data-lang="about_footer2">Trouvez de plus amples informations sur : <a href="https://stopfrelons.ch" target="_blank">stopfrelons.ch</a></span></p></div></div></div>
+<div class="modal-overlay" id="aboutModal"><div class="modal" style="max-width:550px;padding-top:10px;"><div style="display:flex;align-items:center;justify-content:space-between;"><h2 style="margin:0;">ℹ️ <span data-lang="about_title_full">À propos de VespaTimer</span></h2><button class="modal-close" onclick="closeAbout()" style="position:static;">✕</button></div><div style="font-size:0.9rem;line-height:1.7;margin-top:10px;"><p data-lang="about_text">Bienvenue sur VespaTimer</p><p>⚠️ <span data-lang="about_report">N'oubliez pas de signaler vos observations sur :</span> <a href="https://frelonasiatique.ch" target="_blank">frelonasiatique.ch</a></p><p>📧 <a onclick="closeModal('aboutModal');openSubPage('siteScreen');setTimeout(function(){showSiteTab('contact');},100)" style="color:var(--gold);cursor:pointer;text-decoration:underline;">Contact</a></p><p data-lang="about_instructions_detail">Instructions</p><hr style="border:1px dashed var(--border);margin:10px 0;"><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">🧭 <span data-lang="compass_calibration_title">Calibration de la boussole</span></summary><p style="margin-top:8px;"><strong data-lang="compass_calibration_when">QUAND :</strong><br><span data-lang="compass_calibration_when_text"></span></p><p style="margin-top:8px;"><strong data-lang="compass_calibration_how">COMMENT :</strong><br><span data-lang="compass_calibration_how_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">🎨 <span data-lang="color_change_title">Changer la couleur d'un frelon</span></summary><p style="margin-top:8px;"><strong data-lang="color_change_method">Méthode :</strong><br><span data-lang="color_change_method_text"></span></p><p style="margin-top:8px;"><strong data-lang="color_change_tip">Astuce :</strong><br><span data-lang="color_change_tip_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">📄 <span data-lang="format_explanation_title">Formats d'export</span></summary><p style="margin-top:8px;"><span data-lang="format_explanation_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">📥 <span data-lang="import_explanation_title">Formats d'import</span></summary><p style="margin-top:8px;"><span data-lang="import_explanation_text"></span></p></details><hr style="border:1px dashed var(--border);margin:10px 0;"><p data-lang="about_happy">🐝 Bonne chasse ! 🙂</p><p style="font-size:0.78rem;color:var(--text-muted);margin-top:10px;"><span data-lang="about_footer1">Requiert une connexion Internet</span><br><span data-lang="about_footer2">Trouvez de plus amples informations sur : <a href="https://stopfrelons.ch" target="_blank">stopfrelons.ch</a></span></p></div></div></div>
 
 <div class="modal-overlay" id="compassModal"><div class="modal" style="text-align:center;background:#1a1a2e;color:white;border-radius:20px;width:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:20px;"><button class="modal-close" onclick="closeModal('compassModal');stopCompass()" style="color:white;position:absolute;top:10px;right:14px;z-index:10;">✕</button><h3 style="color:#d4a853;margin-bottom:10px;">🧭 Boussole</h3><div id="compassContainer" style="position:relative;width:300px;height:300px;"><svg viewBox="0 0 300 300" style="width:100%;height:100%;position:absolute;top:0;left:0;"><circle cx="150" cy="150" r="145" fill="#1a1a2e" stroke="#d4a853" stroke-width="3"/><circle cx="150" cy="150" r="125" fill="none" stroke="rgba(255,255,255,0.1)"/><circle cx="150" cy="150" r="105" fill="none" stroke="rgba(255,255,255,0.05)"/><g id="compassGraduations"></g><text x="150" y="22" fill="white" font-size="18" text-anchor="middle" font-weight="bold">N</text><text x="150" y="288" fill="white" font-size="14" text-anchor="middle">S</text><text x="278" y="155" fill="white" font-size="14" text-anchor="middle">E</text><text x="22" y="155" fill="white" font-size="14" text-anchor="middle">O</text></svg><div id="compassNeedle" style="position:absolute;top:5px;left:50%;width:4px;height:140px;margin-left:-2px;transform-origin:bottom center;transition:transform 0.3s;z-index:5;"><div style="width:4px;height:70px;background:linear-gradient(to top,#c47b6b,#d4a853);border-radius:2px 2px 0 0;"></div><div style="width:4px;height:70px;background:linear-gradient(to bottom,#666,#333);border-radius:0 0 2px 2px;"></div></div><div style="position:absolute;top:50%;left:50%;width:16px;height:16px;margin:-8px;background:#d4a853;border-radius:50%;border:3px solid white;z-index:10;"></div></div><div id="compassDirection" style="margin-top:15px;font-size:1.5rem;font-weight:bold;color:#d4a853;">--°</div></div></div>
 
