@@ -32,79 +32,43 @@
     --blue: #457b9d;
 }
 /* =========================================
-   DARK MODE (Automatic based on system)
+   DARK MODE - ADMIN PANEL
    ========================================= */
 @media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
-        
-        --bg-color: #121212;
-        --surface: #1e1e1e;
-        --text-main: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --border: #333333;
-        --primary-light: #3d3326;
-        --danger-bg: #4a1c1c;
-        
-        --primary: #c99b48;
-        --primary-hover: #d4aa5c;
+    :root { color-scheme: dark; }
+
+    body { background: #121212 !important; color: #f0f0f0 !important; }
+
+    .card, 
+    #foldersContainer > div > div,
+    .doc-item {
+        background: #1e1e1e !important; 
+        border-color: #333 !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
     }
 
-    /* Fix specific elements that use hardcoded light colors */
-    header {
-        background: rgba(30, 30, 30, 0.98);
+    h1, h2, h3 { color: #c99b48 !important; }
+
+    input, select, textarea {
+        background: #2a2a2a !important;
+        color: #f0f0f0 !important;
+        border-color: #444 !important;
     }
     
-    .dropdown-content {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    }
+    button { background: #c99b48 !important; color: #121212 !important; }
+    button:hover { background: #b5883b !important; }
     
-    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-
-    .accordion-header {
-        background: var(--surface);
-    }
-
-    .search-box, .pdf-header {
-        background: var(--surface);
-    }
-
-    .search-box input, 
-    .form-group input, 
-    .form-group textarea, 
-    .form-group select,
-    #searchInput {
-        background: #121212;
-        color: var(--text-main);
-        border-color: var(--border);
-    }
-
-    .search-result {
-        background: var(--surface);
-    }
-
-    .form-group select option {
-        background: var(--surface);
-        color: var(--text-main);
-    }
-
-    /* PDF Overlay fixes */
-    .pdf-overlay {
-        background: var(--bg-color);
-    }
+    table th { background: #333 !important; color: #f0f0f0 !important; border-color: #444 !important; }
+    table td { border-color: #444 !important; }
     
-    /* Footer fix for border */
-    footer {
-        border-top-color: var(--border);
-    }
+    .tab { color: #a0a0a0 !important; }
+    .tab.active { background: #3d3326 !important; color: #c99b48 !important; }
+    
+    p[style*="color:#888"], 
+    p[style*="color:#aaa"] { color: #888 !important; }
 
-    /* If your logo is dark, keep this to invert it in dark mode. 
-       If your logo is already light/colorful, remove or comment out these 3 lines. */
-    .logo-container img {
-        filter: brightness(0) invert(1);
-    }
+    #authSection { background: #1e1e1e !important; }
+    .sync-status { color: #a0a0a0 !important; }
 }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
