@@ -784,6 +784,17 @@
                 border: 1px solid var(--border); background: var(--surface);
             }
         }
+   @media (prefers-color-scheme: dark) {
+    /* Remove the box outline around the bottom navigation bar */
+    .bottom-bar, 
+    .site-tabs, 
+    .nav-bar, 
+    .footer-nav {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+   }
     </style>
 </head>
 <body>
