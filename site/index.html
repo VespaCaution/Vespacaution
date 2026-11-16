@@ -39,6 +39,10 @@
             --shadow: 0 4px 20px rgba(0,0,0,0.05);
             --shadow-hover: 0 10px 30px rgba(0,0,0,0.1);
         }
+        
+/* =========================================
+   COMPLETE DARK MODE - VESPACAUTION MAIN SITE
+   ========================================= */
 @media (prefers-color-scheme: dark) {
     :root {
         color-scheme: dark;
@@ -53,21 +57,183 @@
         --primary-hover: #d4aa5c;
     }
 
-    header { background: rgba(30, 30, 30, 0.98); }
-    .dropdown-content { box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-    .app-card, .app-content-box, .blog-card, .blog-item, .article-view { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-    .accordion-header { background: var(--surface); }
-    .search-box, .pdf-header { background: var(--surface); }
-    
-    .search-box input, .form-group input, .form-group textarea, .form-group select, #searchInput {
-        background: #121212 !important;
-        color: var(--text-main) !important;
+    /* --- HEADER & NAVIGATION --- */
+    header {
+        background: rgba(30, 30, 30, 0.98) !important;
+        border-bottom-color: var(--border) !important;
+    }
+    .logo-container {
+        background: transparent !important;
+    }
+    .lang-selector {
+        background: var(--bg-color) !important;
         border-color: var(--border) !important;
     }
-    .form-group select option { background: var(--surface); color: var(--text-main); }
-    .search-result { background: var(--surface); }
-    .pdf-overlay { background: var(--bg-color); }
-    footer { border-top-color: var(--border); }
+    .lang-btn {
+        color: var(--text-muted) !important;
+    }
+    .lang-btn.active {
+        background: var(--surface) !important;
+        color: var(--primary) !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
+    }
+    .burger-menu {
+        color: var(--primary) !important;
+    }
+    .dropdown-btn {
+        color: var(--text-muted) !important;
+    }
+    .dropdown-btn:hover {
+        color: var(--primary) !important;
+    }
+    .dropdown-content {
+        background-color: var(--surface) !important;
+        border-color: var(--border) !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6) !important;
+    }
+    .dropdown-content a, 
+    .dropdown-content button {
+        color: var(--text-main) !important;
+    }
+    .dropdown-content a:hover, 
+    .dropdown-content button:hover {
+        background-color: var(--primary-light) !important;
+        color: var(--primary) !important;
+    }
+    .dropdown-divider {
+        background-color: var(--border) !important;
+    }
+
+    /* --- CARDS & CONTENT --- */
+    .app-card, 
+    .app-content-box, 
+    .blog-card, 
+    .blog-item, 
+    .article-view,
+    .footer-content,
+    .search-box,
+    .pdf-header {
+        background: var(--surface) !important;
+        border-color: var(--border) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    }
+    .app-card:hover {
+        border-color: var(--primary) !important;
+    }
+    .article-content, 
+    .blog-body,
+    .app-content-box p,
+    .app-content-box ul,
+    .app-content-box li,
+    .hero p {
+        color: var(--text-main) !important;
+    }
+    .app-content-box h3, 
+    .blog-card-body h3,
+    .article-title {
+        color: var(--primary) !important;
+    }
+    
+    /* --- ACCORDIONS & SEPARATORS --- */
+    .accordion { 
+        background: var(--surface) !important; 
+        border-color: var(--border) !important; 
+    }
+    .accordion-header { 
+        background: var(--surface) !important; 
+        color: var(--text-main) !important; 
+    }
+    .accordion-content { 
+        background: var(--surface) !important; 
+    }
+    hr { 
+        border-color: var(--border) !important; 
+        background-color: var(--border) !important;
+    }
+
+    /* --- MEMBERS --- */
+    .member-circle { 
+        background: var(--primary-light) !important; 
+        color: var(--primary) !important; 
+    }
+    .member-line h2 {
+        color: var(--primary) !important;
+    }
+    .member-line hr {
+        border-top-color: var(--border) !important;
+    }
+
+    /* --- FORMS & INPUTS --- */
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select,
+    .search-box input,
+    #searchInput { 
+        background: #121212 !important; 
+        color: var(--text-main) !important; 
+        border-color: var(--border) !important;
+    }
+    .form-group select option { 
+        background: var(--surface) !important; 
+        color: var(--text-main) !important; 
+    }
+    .form-group label {
+        color: var(--text-main) !important;
+    }
+
+    /* --- SEARCH MODAL --- */
+    #searchModal { 
+        background: rgba(0,0,0,0.8) !important; 
+    }
+    .search-result { 
+        background: var(--surface) !important; 
+        border-color: var(--border) !important;
+    }
+    .search-result:hover { 
+        background: var(--primary-light) !important; 
+    }
+    .search-result .sr-title {
+        color: var(--text-main) !important;
+    }
+    .search-result .sr-desc {
+        color: var(--text-muted) !important;
+    }
+
+    /* --- PDF VIEWER --- */
+    .pdf-overlay { 
+        background: var(--bg-color) !important; 
+    }
+    .pdf-iframe { 
+        background: var(--bg-color) !important; 
+    }
+
+    /* --- FOOTER --- */
+    footer { 
+        background: var(--surface) !important;
+        border-top-color: var(--border) !important; 
+    }
+    .footer-bottom { 
+        border-top-color: var(--border) !important; 
+    }
+    .footer-content a {
+        color: var(--text-muted) !important;
+    }
+    .footer-content a:hover {
+        color: var(--primary) !important;
+    }
+    .footer-bottom p, 
+    .footer-bottom span {
+        color: var(--text-main) !important;
+    }
+
+    /* --- INLINE OVERRIDES --- */
+    div[style*="background: #fff"],
+    div[style*="background: white"],
+    div[style*="background: #fef9e7"],
+    div[style*="background: #f9f7f1"],
+    div[style*="background: #fdfaf3"] {
+        background-color: var(--surface) !important;
+    }
 }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
