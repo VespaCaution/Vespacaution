@@ -404,6 +404,67 @@
     }
        }
         }
+   @media (prefers-color-scheme: dark) {
+    /* 1. Make the whole page dark */
+    body, html {
+        background: #121212 !important;
+    }
+
+    /* 2. Nuclear Option: Target ALL divs, inputs, and text areas inside the main containers */
+    #app, 
+    .app-container, 
+    main,
+    #hornetList, 
+    #hornetList div,
+    #hornetList span {
+        background-color: transparent !important;
+        color: #f0f0f0 !important;
+    }
+
+    /* 3. Force the timer box background to be dark */
+    #hornetList > div, 
+    .timer-card,
+    div[style*="background"] {
+        background-color: #1e1e1e !important;
+        border-color: #444 !important;
+    }
+
+    /* 4. Target the specific white box (the input group) */
+    #hornetList div[style*="background: white"],
+    #hornetList div[style*="background: #fff"],
+    #hornetList div[style*="background: rgb(255"] {
+        background-color: #2a2a2a !important;
+        border-color: #444 !important;
+    }
+
+    /* 5. Fix the inputs inside the timer */
+    input, select, textarea {
+        background-color: #121212 !important;
+        color: #f0f0f0 !important;
+        border: 1px solid #444 !important;
+    }
+
+    /* 6. Fix the yellow warning banner under the map */
+    div[style*="background: #fff3cd"],
+    div[style*="background: #fef9e7"],
+    div[style*="background: #f8d7da"] {
+        background-color: #3d3326 !important;
+        color: #ffd54f !important;
+        border: 1px solid #c99b48 !important;
+    }
+
+    /* 7. Keep your gold buttons gold */
+    button {
+        background-color: #c99b48 !important;
+        color: #121212 !important;
+        border-color: #c99b48 !important;
+    }
+    
+    /* 8. Make sure text in the timer is white, not black */
+    #hornetList {
+        color: #f0f0f0 !important;
+    }
+        }
     </style>
 </head>
 <body>
