@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta name="color-scheme" content="light dark">
-    <meta name="color-scheme" content="light dark">
     <title>Vespacaution — Outils pour apiculteurs</title>
 
     <!-- PWA ET ICÔNES -->
@@ -12,7 +11,7 @@
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
     <meta name="theme-color" content="#c99b48">
-    <meta name="description" content="Outils numériques pour apiculteurs et chasseurs de frelons. VespaTimer, ApiGuide, AlvearCheck.">
+    <meta name="description" content="Version BETA des outils numériques pour apiculteurs et chasseurs de frelons.">
     
     <!-- UMAMI ANALYTICS -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="94107104-0725-41e7-a07b-45c73b417fe8"></script>
@@ -39,202 +38,7 @@
             --shadow: 0 4px 20px rgba(0,0,0,0.05);
             --shadow-hover: 0 10px 30px rgba(0,0,0,0.1);
         }
-        
-/* =========================================
-   COMPLETE DARK MODE - VESPACAUTION MAIN SITE
-   ========================================= */
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-        --bg-color: #121212;
-        --surface: #1e1e1e;
-        --text-main: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --border: #333333;
-        --primary-light: #3d3326;
-        --danger-bg: #4a1c1c;
-        --primary: #c99b48;
-        --primary-hover: #d4aa5c;
-    }
 
-    /* --- HEADER & NAVIGATION --- */
-    header {
-        background: rgba(30, 30, 30, 0.98) !important;
-        border-bottom-color: var(--border) !important;
-    }
-    .logo-container {
-        background: transparent !important;
-    }
-    .lang-selector {
-        background: var(--bg-color) !important;
-        border-color: var(--border) !important;
-    }
-    .lang-btn {
-        color: var(--text-muted) !important;
-    }
-    .lang-btn.active {
-        background: var(--surface) !important;
-        color: var(--primary) !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
-    }
-    .burger-menu {
-        color: var(--primary) !important;
-    }
-    .dropdown-btn {
-        color: var(--text-muted) !important;
-    }
-    .dropdown-btn:hover {
-        color: var(--primary) !important;
-    }
-    .dropdown-content {
-        background-color: var(--surface) !important;
-        border-color: var(--border) !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6) !important;
-    }
-    .dropdown-content a, 
-    .dropdown-content button {
-        color: var(--text-main) !important;
-    }
-    .dropdown-content a:hover, 
-    .dropdown-content button:hover {
-        background-color: var(--primary-light) !important;
-        color: var(--primary) !important;
-    }
-    .dropdown-divider {
-        background-color: var(--border) !important;
-    }
-
-    /* --- CARDS & CONTENT --- */
-    .app-card, 
-    .app-content-box, 
-    .blog-card, 
-    .blog-item, 
-    .article-view,
-    .footer-content,
-    .search-box,
-    .pdf-header {
-        background: var(--surface) !important;
-        border-color: var(--border) !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-    }
-    .app-card:hover {
-        border-color: var(--primary) !important;
-    }
-    .article-content, 
-    .blog-body,
-    .app-content-box p,
-    .app-content-box ul,
-    .app-content-box li,
-    .hero p {
-        color: var(--text-main) !important;
-    }
-    .app-content-box h3, 
-    .blog-card-body h3,
-    .article-title {
-        color: var(--primary) !important;
-    }
-    
-    /* --- ACCORDIONS & SEPARATORS --- */
-    .accordion { 
-        background: var(--surface) !important; 
-        border-color: var(--border) !important; 
-    }
-    .accordion-header { 
-        background: var(--surface) !important; 
-        color: var(--text-main) !important; 
-    }
-    .accordion-content { 
-        background: var(--surface) !important; 
-    }
-    hr { 
-        border-color: var(--border) !important; 
-        background-color: var(--border) !important;
-    }
-
-    /* --- MEMBERS --- */
-    .member-circle { 
-        background: var(--primary-light) !important; 
-        color: var(--primary) !important; 
-    }
-    .member-line h2 {
-        color: var(--primary) !important;
-    }
-    .member-line hr {
-        border-top-color: var(--border) !important;
-    }
-
-    /* --- FORMS & INPUTS --- */
-    .form-group input, 
-    .form-group textarea, 
-    .form-group select,
-    .search-box input,
-    #searchInput { 
-        background: #121212 !important; 
-        color: var(--text-main) !important; 
-        border-color: var(--border) !important;
-    }
-    .form-group select option { 
-        background: var(--surface) !important; 
-        color: var(--text-main) !important; 
-    }
-    .form-group label {
-        color: var(--text-main) !important;
-    }
-
-    /* --- SEARCH MODAL --- */
-    #searchModal { 
-        background: rgba(0,0,0,0.8) !important; 
-    }
-    .search-result { 
-        background: var(--surface) !important; 
-        border-color: var(--border) !important;
-    }
-    .search-result:hover { 
-        background: var(--primary-light) !important; 
-    }
-    .search-result .sr-title {
-        color: var(--text-main) !important;
-    }
-    .search-result .sr-desc {
-        color: var(--text-muted) !important;
-    }
-
-    /* --- PDF VIEWER --- */
-    .pdf-overlay { 
-        background: var(--bg-color) !important; 
-    }
-    .pdf-iframe { 
-        background: var(--bg-color) !important; 
-    }
-
-    /* --- FOOTER --- */
-    footer { 
-        background: var(--surface) !important;
-        border-top-color: var(--border) !important; 
-    }
-    .footer-bottom { 
-        border-top-color: var(--border) !important; 
-    }
-    .footer-content a {
-        color: var(--text-muted) !important;
-    }
-    .footer-content a:hover {
-        color: var(--primary) !important;
-    }
-    .footer-bottom p, 
-    .footer-bottom span {
-        color: var(--text-main) !important;
-    }
-
-    /* --- INLINE OVERRIDES --- */
-    div[style*="background: #fff"],
-    div[style*="background: white"],
-    div[style*="background: #fef9e7"],
-    div[style*="background: #f9f7f1"],
-    div[style*="background: #fdfaf3"] {
-        background-color: var(--surface) !important;
-    }
-}
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
@@ -269,21 +73,35 @@
 
         .header-left { display: flex; align-items: center; gap: 15px; }
         
-            .logo-container img {
-            height: 55px; /* Modifié de 40px à 55px */
+        .logo-container img {
+            height: 55px;
             width: auto;
             max-width: 250px;
             object-fit: contain;
             transition: transform 0.3s ease;
-                /* DÉSACTIVER LE MENU D'IMAGE SUR MOBILE */
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
         }
-        }
         .logo-container:hover img { transform: scale(1.03); }
 .blog-thumbnail img { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
 .blog-body img { box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .beta-badge {
+            display: inline-block;
+            background: #ff6b35;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         .lang-selector {
             display: flex;
             gap: 2px;
@@ -342,12 +160,12 @@
         nav a { position: relative; padding: 5px 0; color: var(--text-muted); transition: color 0.2s; }
         nav a:hover { color: var(--primary); }
         
-               .social-icons { display: flex; gap: 15px; margin-left: 15px; align-items: center; justify-content: center; }
+        .social-icons { display: flex; gap: 15px; margin-left: 15px; align-items: center; justify-content: center; }
         .social-icons img { height: 24px; width: 24px; transition: transform 0.2s; filter: grayscale(100%) opacity(0.7); }
         .social-icons img:hover { transform: translateY(-2px); filter: grayscale(0%) opacity(1); }
-.social-icons a { width: auto !important; display: inline-block; } 
+        .social-icons a { width: auto !important; display: inline-block; } 
 
-        /* NEW: Search button */
+        /* Search button */
         .search-btn { background: none; border: none; color: var(--primary); font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 50%; transition: background 0.2s; line-height: 1; }
         .search-btn:hover { background: var(--primary-light); }
         
@@ -457,24 +275,97 @@
             font-size: 1.5rem; font-weight: bold; flex-shrink: 0; overflow: hidden;
         }
         .member-circle img { width: 100%; height: 100%; object-fit: cover; }
+/* =========================================
+   DARK MODE (Automatic based on system)
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
+        
+        --bg-color: #121212;
+        --surface: #1e1e1e;
+        --text-main: #f0f0f0;
+        --text-muted: #a0a0a0;
+        --border: #333333;
+        --primary-light: #3d3326;
+        --danger-bg: #4a1c1c;
+        
+        --primary: #c99b48;
+        --primary-hover: #d4aa5c;
+    }
 
-        /* NEW: Blog CSS */
-        /* Blog accordion */
-.blog-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--bg-color); transition: border-color 0.2s, box-shadow 0.2s; }
-.blog-item:hover { border-color: var(--primary-light); }
-.blog-item.open { border-color: var(--primary); box-shadow: 0 4px 15px rgba(201, 155, 72, 0.1); }
-.blog-item-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; background: var(--surface); border: none; cursor: pointer; text-align: left; font-family: inherit; transition: background 0.2s; }
-.blog-item-header:hover { background: var(--primary-light); }
-.blog-item.open .blog-item-header { background: var(--primary-light); border-bottom: 1px solid var(--border); }
-.blog-item-summary { flex: 1; min-width: 0; }
-.blog-item-summary h3 { font-size: 1.15rem; color: var(--primary); margin: 0 0 4px 0; line-height: 1.3; }
-.blog-item-date { font-size: 0.85rem; color: var(--text-muted); }
-.blog-item-icon { font-size: 1.6rem; font-weight: 300; color: var(--primary); margin-left: 16px; transition: transform 0.2s; flex-shrink: 0; line-height: 1; }
-.blog-item-content { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); background: var(--surface); }
-.blog-body { padding: 20px; font-size: 0.95rem; color: var(--text-main); line-height: 1.7; }
-.blog-body p { margin-bottom: 12px; }
-.blog-body p:last-child { margin-bottom: 0; }
-       /* ═══ BLOG CARDS (list view) ═══ */
+    /* Fix specific elements that use hardcoded light colors */
+    header {
+        background: rgba(30, 30, 30, 0.98);
+    }
+    
+    .dropdown-content {
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+    
+    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .accordion-header {
+        background: var(--surface);
+    }
+
+    .search-box, .pdf-header {
+        background: var(--surface);
+    }
+
+    .search-box input, 
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select,
+    #searchInput {
+        background: #121212;
+        color: var(--text-main);
+        border-color: var(--border);
+    }
+
+    .search-result {
+        background: var(--surface);
+    }
+
+    .form-group select option {
+        background: var(--surface);
+        color: var(--text-main);
+    }
+
+    /* PDF Overlay fixes */
+    .pdf-overlay {
+        background: var(--bg-color);
+    }
+    
+    /* Footer fix for border */
+    footer {
+        border-top-color: var(--border);
+    }
+
+    /* If your logo is dark, keep this to invert it in dark mode. 
+       If your logo is already light/colorful, remove or comment out these 3 lines. */
+    .logo-container img {
+        
+    }
+}
+        /* --- BLOG ACCORDION --- */
+        .blog-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--bg-color); transition: border-color 0.2s, box-shadow 0.2s; }
+        .blog-item:hover { border-color: var(--primary-light); }
+        .blog-item.open { border-color: var(--primary); box-shadow: 0 4px 15px rgba(201, 155, 72, 0.1); }
+        .blog-item-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 18px 20px; background: var(--surface); border: none; cursor: pointer; text-align: left; font-family: inherit; transition: background 0.2s; }
+        .blog-item-header:hover { background: var(--primary-light); }
+        .blog-item.open .blog-item-header { background: var(--primary-light); border-bottom: 1px solid var(--border); }
+        .blog-item-summary { flex: 1; min-width: 0; }
+        .blog-item-summary h3 { font-size: 1.15rem; color: var(--primary); margin: 0 0 4px 0; line-height: 1.3; }
+        .blog-item-date { font-size: 0.85rem; color: var(--text-muted); }
+        .blog-item-icon { font-size: 1.6rem; font-weight: 300; color: var(--primary); margin-left: 16px; transition: transform 0.2s; flex-shrink: 0; line-height: 1; }
+        .blog-item-content { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); background: var(--surface); }
+        .blog-body { padding: 20px; font-size: 0.95rem; color: var(--text-main); line-height: 1.7; }
+        .blog-body p { margin-bottom: 12px; }
+        .blog-body p:last-child { margin-bottom: 0; }
+/* ═══ BLOG CARDS (list view) ═══ */
 .blog-card {
     display: flex;
     align-items: flex-start;
@@ -651,7 +542,7 @@
             color: var(--primary); background: none; border: none; z-index: 1002;
         }
 
-        /* NEW: Search modal */
+        /* --- SEARCH MODAL --- */
         #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; padding: 20px; }
         #searchModal.active { display: flex; align-items: flex-start; justify-content: center; }
         .search-box { background: var(--surface); max-width: 640px; width: 100%; margin-top: 60px; padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow-hover); }
@@ -678,87 +569,10 @@
             }
             nav.active { display: flex; }
             nav a { font-size: 1.1rem; width: 100%; text-align: center; }
-/* AJOUTER CES LIGNES POUR LE BOUTON RESSOURCES SUR MOBILE */
-.dropdown { width: 100%; text-align: center; }
-.dropdown-btn { width: 100%; justify-content: center; font-size: 1.1rem; margin: 0; padding: 0; }
-/* FIN DE L'AJOUT */
+            .dropdown { width: 100%; text-align: center; }
+            .dropdown-btn { width: 100%; justify-content: center; font-size: 1.1rem; margin: 0; padding: 0; }
             .social-icons { justify-content: center; width: 100%; margin-top: 10px; }
-/* =========================================
-   DARK MODE (Automatic based on system)
-   ========================================= */
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
-        
-        --bg-color: #121212;
-        --surface: #1e1e1e;
-        --text-main: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --border: #333333;
-        --primary-light: #3d3326;
-        --danger-bg: #4a1c1c;
-        
-        --primary: #c99b48;
-        --primary-hover: #d4aa5c;
-    }
-
-    /* Fix specific elements that use hardcoded light colors */
-    header {
-        background: rgba(30, 30, 30, 0.98);
-    }
-    
-    .dropdown-content {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    }
-    
-    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-
-    .accordion-header {
-        background: var(--surface);
-    }
-
-    .search-box, .pdf-header {
-        background: var(--surface);
-    }
-
-    .search-box input, 
-    .form-group input, 
-    .form-group textarea, 
-    .form-group select,
-    #searchInput {
-        background: #121212;
-        color: var(--text-main);
-        border-color: var(--border);
-    }
-
-    .search-result {
-        background: var(--surface);
-    }
-
-    .form-group select option {
-        background: var(--surface);
-        color: var(--text-main);
-    }
-
-    /* PDF Overlay fixes */
-    .pdf-overlay {
-        background: var(--bg-color);
-    }
-    
-    /* Footer fix for border */
-    footer {
-        border-top-color: var(--border);
-    }
-
-    /* If your logo is dark, keep this to invert it in dark mode. 
-       If your logo is already light/colorful, remove or comment out these 3 lines. */
-    .logo-container img {
-       
-    }
-}
-            /* --- API GUIDE WARNING BADGE --- */
+/* --- API GUIDE WARNING BADGE --- */
 .apiguide-warning {
     display: inline-block;
     background: linear-gradient(135deg, #fee2e2, #ffedd5, #fce7f3);
@@ -784,31 +598,6 @@
                 border: 1px solid var(--border); background: var(--surface);
             }
         }
-   @media (prefers-color-scheme: dark) {
-    /* Remove the box outline around the bottom navigation bar */
-    .bottom-bar, 
-    .site-tabs, 
-    .nav-bar, 
-    .footer-nav {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-   }
-   @media (prefers-color-scheme: dark) {
-    /* Remove the outline and box shadow from the mobile navigation menu */
-    nav.active {
-        background: var(--bg-color) !important; /* Matches the page background */
-        border-top: none !important; /* Removes the hollow line */
-        border-bottom: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Specifically targets the Resources dropdown button if it had a border */
-    .dropdown-btn {
-        border: none !important;
-    }
-   }
     </style>
 </head>
 <body>
