@@ -795,6 +795,20 @@
         box-shadow: none !important;
     }
    }
+   @media (prefers-color-scheme: dark) {
+    /* Remove the outline and box shadow from the mobile navigation menu */
+    nav.active {
+        background: var(--bg-color) !important; /* Matches the page background */
+        border-top: none !important; /* Removes the hollow line */
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Specifically targets the Resources dropdown button if it had a border */
+    .dropdown-btn {
+        border: none !important;
+    }
+   }
     </style>
 </head>
 <body>
