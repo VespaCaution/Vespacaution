@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -72,6 +73,81 @@
         .modal { background:white; border-radius:20px; padding:20px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative; }
         .modal-close { position:absolute; top:10px; right:14px; font-size:1.5rem; cursor:pointer; background:none; border:none; z-index:10001; }
         .delete-hornet-btn { background:none; border:none; color:#c47b6b; cursor:pointer; font-size:1.2rem; padding:2px 6px; opacity:0.6; }
+       /* =========================================
+   DARK MODE (Automatic based on system)
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
+        
+        --bg-color: #121212;
+        --surface: #1e1e1e;
+        --text-main: #f0f0f0;
+        --text-muted: #a0a0a0;
+        --border: #333333;
+        --primary-light: #3d3326;
+        --danger-bg: #4a1c1c;
+        
+        --primary: #c99b48;
+        --primary-hover: #d4aa5c;
+    }
+
+    /* Fix specific elements that use hardcoded light colors */
+    header {
+        background: rgba(30, 30, 30, 0.98);
+    }
+    
+    .dropdown-content {
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+    
+    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .accordion-header {
+        background: var(--surface);
+    }
+
+    .search-box, .pdf-header {
+        background: var(--surface);
+    }
+
+    .search-box input, 
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select,
+    #searchInput {
+        background: #121212;
+        color: var(--text-main);
+        border-color: var(--border);
+    }
+
+    .search-result {
+        background: var(--surface);
+    }
+
+    .form-group select option {
+        background: var(--surface);
+        color: var(--text-main);
+    }
+
+    /* PDF Overlay fixes */
+    .pdf-overlay {
+        background: var(--bg-color);
+    }
+    
+    /* Footer fix for border */
+    footer {
+        border-top-color: var(--border);
+    }
+
+    /* If your logo is dark, keep this to invert it in dark mode. 
+       If your logo is already light/colorful, remove or comment out these 3 lines. */
+    .logo-container img {
+        filter: brightness(0) invert(1);
+    }
+}
         .bottom-bar { position:fixed; bottom:0; left:0; right:0; background:white; padding:10px 8px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-around; gap:4px; }
         .compass-btn { background:#f0ede5; border:2px solid var(--gold); border-radius:50%; width:44px; height:44px; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
         .history-actions { display:flex; gap:4px; margin-top:6px; }
