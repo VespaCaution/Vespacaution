@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+ <meta name="color-scheme" content="light dark">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AlvearCheck v1.3</title>
   <link rel="manifest" href="manifest.json">
@@ -71,6 +72,51 @@
     #authScreen input, #resetScreen input { margin-bottom: 1rem; }
     #errorBox { display: none; background: #ffcccc; color: red; padding: 15px; border: 2px solid red; margin-bottom: 20px; font-weight: bold; white-space: pre-wrap; }
     .account-btn { position: absolute; top: 1rem; right: 1rem; background: transparent; color: #7a6a58; font-size: 0.8rem; border: 1px solid #7a6a58; padding: 0.3rem 0.8rem; border-radius: 20px; }
+ @media (prefers-color-scheme: dark) {
+    :root { color-scheme: dark; }
+    
+    body { background: #121212 !important; color: #f0f0f0 !important; }
+    .app { background: #1e1e1e !important; border-color: #333 !important; box-shadow: 0 12px 30px rgba(0,0,0,0.5) !important; }
+    h1 { color: #c47b2e !important; }
+    h1 small { background: #2a2a2a !important; color: #a0a0a0 !important; }
+    
+    .lang-btn { background: transparent !important; border-color: #444 !important; color: #a0a0a0 !important; }
+    .lang-btn.active { background: #c47b2e !important; color: #ffffff !important; border-color: #c47b2e !important; }
+    .subhead { color: #a0a0a0 !important; border-left-color: #c47b2e !important; }
+    
+    button { background: #2a2a2a !important; color: #f0f0f0 !important; border-color: #444 !important; }
+    button.primary { background: #c47b2e !important; color: #ffffff !important; }
+    button.danger { background: #4a1c1c !important; color: #ff8a80 !important; }
+    button.outline { background: transparent !important; border-color: #444 !important; color: #f0f0f0 !important; }
+    
+    .apiary-card, .hive-card { background: #2a2a2a !important; border-color: #444 !important; }
+    .apiary-card.has-swarm-risk, .hive-card.swarm-warning { background: #3d3326 !important; border-left-color: #e6a017 !important; }
+    .apiary-name, .hive-name { color: #f0f0f0 !important; }
+    .apiary-meta { color: #a0a0a0 !important; }
+    
+    .queen-badge, .badge { background: #444 !important; color: #f0f0f0 !important; }
+    .swarm-alert-badge { background: #5a3a00 !important; color: #ffd54f !important; }
+    
+    .form-panel { background: #2a2a2a !important; border-color: #444 !important; }
+    .field label { color: #a0a0a0 !important; }
+    input, select, textarea { background: #121212 !important; color: #f0f0f0 !important; border-color: #444 !important; }
+    
+    .visit-history-wrapper { border-color: #444 !important; }
+    .visit-history-header { background: #2a2a2a !important; color: #f0f0f0 !important; }
+    .visit-table th { background: #1e1e1e !important; color: #f0f0f0 !important; border-bottom-color: #444 !important; }
+    .visit-table td { border-bottom-color: #333 !important; color: #f0f0f0 !important; }
+    
+    .empty-state { background: #1e1e1e !important; color: #a0a0a0 !important; }
+    .modal { background: #1e1e1e !important; color: #f0f0f0 !important; }
+    .modal-title { color: #c47b2e !important; }
+    
+    #authScreen, #resetScreen { background: #1e1e1e !important; border-color: #333 !important; }
+    #authScreen h2, #resetScreen h2 { color: #c47b2e !important; }
+    
+    .account-btn { color: #a0a0a0 !important; border-color: #444 !important; }
+    .voice-btn { background: #2a2a2a !important; color: #f0f0f0 !important; }
+    .voice-btn.active { background: #c47b2e !important; color: #ffffff !important; }
+}
   </style>
 </head>
 <body>
