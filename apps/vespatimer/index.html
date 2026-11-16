@@ -74,78 +74,156 @@
         .modal-close { position:absolute; top:10px; right:14px; font-size:1.5rem; cursor:pointer; background:none; border:none; z-index:10001; }
         .delete-hornet-btn { background:none; border:none; color:#c47b6b; cursor:pointer; font-size:1.2rem; padding:2px 6px; opacity:0.6; }
        /* =========================================
-   DARK MODE (Automatic based on system)
+   DARK MODE - VESPATIMER
    ========================================= */
 @media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
-        
-        --bg-color: #121212;
-        --surface: #1e1e1e;
-        --text-main: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --border: #333333;
-        --primary-light: #3d3326;
-        --danger-bg: #4a1c1c;
-        
-        --primary: #c99b48;
-        --primary-hover: #d4aa5c;
+    :root { color-scheme: dark; }
+
+    body { 
+        background: #121212 !important; 
+        color: #f0f0f0 !important; 
     }
 
-    /* Fix specific elements that use hardcoded light colors */
-    header {
-        background: rgba(30, 30, 30, 0.98);
+    /* Main containers and cards */
+    .card, 
+    .app, 
+    .container, 
+    .timer-card, 
+    .results-card, 
+    .map-card,
+    .modal {
+        background: #1e1e1e !important; 
+        border-color: #333 !important;
+        color: #f0f0f0 !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+    }
+
+    /* Headings and text */
+    h1, h2, h3, h4 { 
+        color: #c99b48 !important; 
     }
     
-    .dropdown-content {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    .subtitle, 
+    .description, 
+    p, 
+    label, 
+    span {
+        color: #f0f0f0 !important;
+    }
+
+    /* Inputs and Form Elements */
+    input, select, textarea { 
+        background: #121212 !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
     }
     
-    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    input:focus, select:focus, textarea:focus {
+        border-color: #c99b48 !important;
+        outline: none !important;
     }
 
-    .accordion-header {
-        background: var(--surface);
-    }
-
-    .search-box, .pdf-header {
-        background: var(--surface);
-    }
-
-    .search-box input, 
-    .form-group input, 
-    .form-group textarea, 
-    .form-group select,
-    #searchInput {
-        background: #121212;
-        color: var(--text-main);
-        border-color: var(--border);
-    }
-
-    .search-result {
-        background: var(--surface);
-    }
-
-    .form-group select option {
-        background: var(--surface);
-        color: var(--text-main);
-    }
-
-    /* PDF Overlay fixes */
-    .pdf-overlay {
-        background: var(--bg-color);
+    /* Buttons */
+    button { 
+        background: #2a2a2a !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
     }
     
-    /* Footer fix for border */
-    footer {
-        border-top-color: var(--border);
+    button.primary, 
+    button.primary-btn,
+    .btn-primary { 
+        background: #c99b48 !important; 
+        color: #121212 !important; 
+    }
+    
+    button.danger, 
+    button.danger-btn,
+    .btn-danger { 
+        background: #4a1c1c !important; 
+        color: #ff8a80 !important; 
+        border-color: #4a1c1c !important;
+    }
+    
+    button.outline, 
+    button.secondary,
+    .btn-outline { 
+        background: transparent !important; 
+        border-color: #444 !important; 
+        color: #f0f0f0 !important; 
     }
 
-    /* If your logo is dark, keep this to invert it in dark mode. 
-       If your logo is already light/colorful, remove or comment out these 3 lines. */
-    .logo-container img {
-        filter: brightness(0) invert(1);
+    /* Timer specific overrides (if they use specific hardcoded classes) */
+    .timer-display,
+    .timer-value,
+    .stopwatch-time {
+        color: #c99b48 !important;
+        background: #121212 !important;
+        border-color: #444 !important;
+    }
+
+    .timer-running {
+        background: #1e1e1e !important;
+        border-color: #c99b48 !important;
+    }
+
+    /* History / Tables */
+    table { 
+        border-color: #444 !important; 
+    }
+    
+    table th { 
+        background: #2a2a2a !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
+    }
+    
+    table td { 
+        border-color: #333 !important; 
+        color: #f0f0f0 !important; 
+    }
+    
+    tr:nth-child(even) {
+        background: #1a1a1a !important;
+    }
+
+    /* Map & Triangulation specific overrides */
+    #map, 
+    .map-container {
+        background: #1e1e1e !important;
+        border: 1px solid #333 !important;
+    }
+
+    /* Modals / Overlays */
+    .modal-backdrop,
+    .overlay {
+        background: rgba(0, 0, 0, 0.8) !important;
+    }
+
+    /* Navigation / Tabs */
+    .nav-tabs,
+    .tab-container {
+        border-bottom-color: #333 !important;
+    }
+    
+    .nav-tab,
+    .tab {
+        color: #a0a0a0 !important;
+    }
+    
+    .nav-tab.active,
+    .tab.active {
+        color: #c99b48 !important;
+        border-bottom-color: #c99b48 !important;
+        background: #2a2a2a !important;
+    }
+
+    /* Footer / small text */
+    footer,
+    .small-text,
+    .helper-text {
+        color: #a0a0a0 !important;
+        border-top-color: #333 !important;
     }
 }
         .bottom-bar { position:fixed; bottom:0; left:0; right:0; background:white; padding:10px 8px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-around; gap:4px; }
