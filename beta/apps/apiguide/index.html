@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#c99b48">
 <title>ApiGuide v1.0</title>
 <link rel="manifest" href="manifest.json">
@@ -24,7 +25,35 @@ body {
     display: flex;
     flex-direction: column;
 }
-.app-header {
+@media (prefers-color-scheme: dark) {
+    :root { color-scheme: dark; }
+    
+    body { background: #121212 !important; color: #f0f0f0 !important; }
+    
+    .app-header { border-bottom-color: #333 !important; }
+    .app-title { color: #c99b48 !important; }
+    .app-title small { color: #a0a0a0 !important; }
+    .lang-select { background: #2a2a2a !important; color: #c99b48 !important; border-color: #444 !important; }
+    
+    .back-btn, .btn { background: #c99b48 !important; color: #121212 !important; }
+    .btn-ghost { background: transparent !important; border-color: #c99b48 !important; color: #c99b48 !important; }
+    
+    .grid-btn { background: #1e1e1e !important; color: #f0f0f0 !important; border-color: #444 !important; box-shadow: 0 3px 0 #c99b48 !important; }
+    .textbox-container { background: #1e1e1e !important; border-color: #333 !important; box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important; }
+    .textbox-container h2, .breadcrumb { color: #c99b48 !important; }
+    .text-content { color: #f0f0f0 !important; }
+    
+    textarea { background: #121212 !important; color: #f0f0f0 !important; border-color: #444 !important; }
+    .empty-note { color: #a0a0a0 !important; }
+    
+    footer { color: #a0a0a0 !important; border-top-color: #333 !important; }
+    .install-btn { background: #4a7c2e !important; color: #ffffff !important; }
+    .editor-hint { background: #3d3326 !important; color: #c99b48 !important; border-left-color: #c99b48 !important; }
+    
+    #iosModal > div { background: #1e1e1e !important; border-color: #444 !important; }
+    #iosModal h2, #iosModal p, #iosModal li { color: #f0f0f0 !important; }
+}
+    .app-header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
