@@ -138,7 +138,23 @@ button {
         background: #1e1e1e !important;
         border-bottom-color: #333 !important;
     }
-          }
+    @media (prefers-color-scheme: dark) {
+    /* Fix the language selector */
+    .lang-selector { background: #2a2a2a !important; border-color: #444 !important; }
+    .lang-btn.active { background: #c99b48 !important; color: #121212 !important; }
+    .lang-btn { color: #a0a0a0 !important; }
+
+    /* Fix the Side Menu (Drawer) */
+    .drawer { background: #1e1e1e !important; border-right-color: #333 !important; }
+    .drawer-header { border-bottom-color: #333 !important; }
+    .drawer-item { color: #f0f0f0 !important; }
+    .drawer-item:hover, .drawer-item.active { background: #2a2a2a !important; color: #c99b48 !important; }
+    .drawer-close { color: #f0f0f0 !important; }
+
+    /* Fix table headers */
+    table th { background: #2a2a2a !important; color: #ffffff !important; border-color: #444 !important; }
+        }     
+}
 button:hover { background: var(--primary-hover); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 .hidden { display: none !important; }
