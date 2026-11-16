@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="color-scheme" content="light dark">
     <title>Vespacaution BETA — Outils pour apiculteurs</title>
 
     <!-- PWA ET ICÔNES -->
@@ -274,7 +275,81 @@
             font-size: 1.5rem; font-weight: bold; flex-shrink: 0; overflow: hidden;
         }
         .member-circle img { width: 100%; height: 100%; object-fit: cover; }
+/* =========================================
+   DARK MODE (Automatic based on system)
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark; /* Forces iOS Safari to use dark UI elements */
+        
+        --bg-color: #121212;
+        --surface: #1e1e1e;
+        --text-main: #f0f0f0;
+        --text-muted: #a0a0a0;
+        --border: #333333;
+        --primary-light: #3d3326;
+        --danger-bg: #4a1c1c;
+        
+        --primary: #c99b48;
+        --primary-hover: #d4aa5c;
+    }
 
+    /* Fix specific elements that use hardcoded light colors */
+    header {
+        background: rgba(30, 30, 30, 0.98);
+    }
+    
+    .dropdown-content {
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+    
+    .app-card, .app-content-box, .blog-card, .blog-item, .article-view {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .accordion-header {
+        background: var(--surface);
+    }
+
+    .search-box, .pdf-header {
+        background: var(--surface);
+    }
+
+    .search-box input, 
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select,
+    #searchInput {
+        background: #121212;
+        color: var(--text-main);
+        border-color: var(--border);
+    }
+
+    .search-result {
+        background: var(--surface);
+    }
+
+    .form-group select option {
+        background: var(--surface);
+        color: var(--text-main);
+    }
+
+    /* PDF Overlay fixes */
+    .pdf-overlay {
+        background: var(--bg-color);
+    }
+    
+    /* Footer fix for border */
+    footer {
+        border-top-color: var(--border);
+    }
+
+    /* If your logo is dark, keep this to invert it in dark mode. 
+       If your logo is already light/colorful, remove or comment out these 3 lines. */
+    .logo-container img {
+        
+    }
+}
         /* --- BLOG ACCORDION --- */
         .blog-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--bg-color); transition: border-color 0.2s, box-shadow 0.2s; }
         .blog-item:hover { border-color: var(--primary-light); }
@@ -556,8 +631,8 @@
                     <span id="dropdownTriangle" style="font-size:0.7rem; transition: transform 0.3s; display: inline-block; margin-left:5px;">▼</span>
                 </button>
                 <div class="dropdown-content" id="resourcesDropdown">
-                    <button onclick="renderStaticPage('links'); closeDropdown(); closeMobileMenu();" data-i18n="nav_links">🔗 Liens utiles</button>
-                    <button onclick="renderStaticPage('credits'); closeDropdown(); closeMobileMenu();" data-i18n="nav_credits">🏆 Crédits</button>
+                   <button onclick="renderStaticPage('links'); closeDropdown(); closeMobileMenu(); event.stopPropagation();" data-i18n="nav_links">🔗 Liens utiles</button>
+<button onclick="renderStaticPage('credits'); closeDropdown(); closeMobileMenu(); event.stopPropagation();" data-i18n="nav_credits">🏆 Crédits</button>
                     <div class="dropdown-divider"></div>
                     <button onclick="openPdf('status.pdf'); closeDropdown(); closeMobileMenu();">📄 <span data-i18n="file_status">Fichier Status (PDF)</span></button>
                     <button onclick="openPdf('imprimable.pdf'); closeDropdown(); closeMobileMenu();">🖨️ <span data-i18n="file_printables">Imprimables (PDF)</span></button>
