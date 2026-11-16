@@ -104,6 +104,41 @@ button {
     border: none;
     transition: 0.2s;
 }
+    /* Fixes for Admin Panel Drawer and Tables */
+@media (prefers-color-scheme: dark) {
+    /* 1. Fix the Side Menu (Drawer) */
+    .drawer {
+        background: #1e1e1e !important;
+        border-right-color: #333 !important;
+    }
+    
+    .drawer-item {
+        color: #f0f0f0 !important;
+    }
+    
+    .drawer-item:hover, 
+    .drawer-item.active {
+        background: #2a2a2a !important;
+        color: #c99b48 !important;
+    }
+    
+    .drawer-close {
+        color: #f0f0f0 !important;
+    }
+
+    /* 2. Fix the Table Header text color */
+    table th {
+        background: #2a2a2a !important;
+        color: #ffffff !important; /* Forces white text */
+        border-color: #444 !important;
+    }
+
+    /* 3. Fix the Admin top bar if it's too bright */
+    .topbar {
+        background: #1e1e1e !important;
+        border-bottom-color: #333 !important;
+    }
+          }
 button:hover { background: var(--primary-hover); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 .hidden { display: none !important; }
