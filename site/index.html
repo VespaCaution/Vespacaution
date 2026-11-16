@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="light dark">
     <title>Vespacaution — Outils pour apiculteurs</title>
 
     <!-- PWA ET ICÔNES -->
@@ -38,7 +39,36 @@
             --shadow: 0 4px 20px rgba(0,0,0,0.05);
             --shadow-hover: 0 10px 30px rgba(0,0,0,0.1);
         }
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --bg-color: #121212;
+        --surface: #1e1e1e;
+        --text-main: #f0f0f0;
+        --text-muted: #a0a0a0;
+        --border: #333333;
+        --primary-light: #3d3326;
+        --danger-bg: #4a1c1c;
+        --primary: #c99b48;
+        --primary-hover: #d4aa5c;
+    }
 
+    header { background: rgba(30, 30, 30, 0.98); }
+    .dropdown-content { box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+    .app-card, .app-content-box, .blog-card, .blog-item, .article-view { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .accordion-header { background: var(--surface); }
+    .search-box, .pdf-header { background: var(--surface); }
+    
+    .search-box input, .form-group input, .form-group textarea, .form-group select, #searchInput {
+        background: #121212 !important;
+        color: var(--text-main) !important;
+        border-color: var(--border) !important;
+    }
+    .form-group select option { background: var(--surface); color: var(--text-main); }
+    .search-result { background: var(--surface); }
+    .pdf-overlay { background: var(--bg-color); }
+    footer { border-top-color: var(--border); }
+}
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
