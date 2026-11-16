@@ -12,6 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="VespaTimer">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="color-scheme" content="light dark">
     <meta property="og:title" content="VespaTimer">
     <meta property="og:description" content="Assistant digital pour relevés Pot-à-Mèche et triangulation de nids de frelons asiatiques">
     <meta property="og:type" content="website">
@@ -34,29 +35,49 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
     <style>
         html, body {
-  overscroll-behavior-y: contain; /* Bloque le pull-to-refresh sur Android/Chrome */
+            overscroll-behavior-y: contain;
         }
-        :root { --bg: #f5f2e6; --card: #ffffff; --text: #3b2e1e; --gold: #d4a853; --danger: #c47b6b; --border: #e7d7b8; }
+        
+        :root { 
+            --bg: #f5f2e6; 
+            --card: #ffffff; 
+            --text: #3b2e1e; 
+            --gold: #d4a853; 
+            --danger: #c47b6b; 
+            --border: #e7d7b8; 
+            color-scheme: light;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --card: #1e1e1e;
+                --text: #f0f0f0;
+                --border: #444444;
+                color-scheme: dark;
+            }
+        }
+
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background:var(--bg); font-family:Arial,sans-serif; padding:8px; color:var(--text); max-width:750px; margin:0 auto; padding-bottom:80px; }
         .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px; background:var(--card); padding:12px 16px; border-radius:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
         .header h1 { font-size:1.4rem; }
         .card { background:var(--card); border-radius:20px; padding:16px; margin-bottom:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
         h2 { font-size:1.2rem; margin-bottom:10px; }
-        button { padding:10px 16px; border-radius:25px; border:none; font-weight:600; cursor:pointer; font-size:0.85rem; margin:2px; background:#e8e0d0; color:var(--text); }
+        button { padding:10px 16px; border-radius:25px; border:none; font-weight:600; cursor:pointer; font-size:0.85rem; margin:2px; background:var(--bg); color:var(--text); border:1px solid var(--border); }
         button:active { transform:scale(0.95); }
         button:disabled { opacity:0.35; cursor:not-allowed; }
-        .btn-gold { background:var(--gold); color:white; }
-        .btn-red { background:var(--danger); color:white; }
+        .btn-gold { background:var(--gold); color:white; border:none; }
+        .btn-red { background:var(--danger); color:white; border:none; }
         .btn-sm { padding:6px 12px; font-size:0.78rem; }
-        input, textarea { font-size:16px; padding:10px; border-radius:14px; border:2px solid #e0d5c0; width:100%; background:#fefdf9; margin:4px 0; }
+        input, textarea { font-size:16px; padding:10px; border-radius:14px; border:2px solid var(--border); width:100%; background:var(--bg); color:var(--text); margin:4px 0; }
         textarea { resize:none; -webkit-appearance:none; }
-        .hornet-card { background:#fefaf2; border-radius:16px; margin-bottom:10px; overflow:hidden; display:flex; padding:0; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+        .hornet-card { background:var(--card); border-radius:16px; margin-bottom:10px; overflow:hidden; display:flex; padding:0; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; border:1px solid var(--border); }
         .hornet-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
-        .hornet-name-input { border:none!important; background:transparent!important; font-weight:700; font-size:1.05rem!important; width:130px!important; padding:2px!important; }
+        .hornet-name-input { border:none!important; background:transparent!important; font-weight:700; font-size:1.05rem!important; width:130px!important; padding:2px!important; color:var(--text)!important; }
         .dir-input { width:70px!important; text-align:center; display:inline-block; }
-        .timer-display { font-size:1.5rem; font-weight:700; background:#f0ede5; padding:6px 16px; border-radius:30px; display:inline-block; min-width:100px; text-align:center; }
-        .timer-display.running { background:var(--danger); color:white; }
+        .timer-display { font-size:1.5rem; font-weight:700; background:var(--bg); padding:6px 16px; border-radius:30px; display:inline-block; min-width:100px; text-align:center; color:var(--text); border:1px solid var(--border); }
+        .timer-display.running { background:var(--danger); color:white; border:none; }
         .badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:700; color:white; }
         .collapse-icon { font-size:1.2rem; transition:transform 0.3s; display:inline-block; }
         .collapse-icon.open { transform:rotate(90deg); }
@@ -65,31 +86,31 @@
         .collapsed-info { display:none; align-items:center; gap:12px; flex-wrap:wrap; }
         .hornet-card.collapsed-card .collapsed-info { display:flex; }
         .hornet-card.collapsed-card .hornet-body { max-height:0; opacity:0; }
-        .flight-item { display:inline-flex; align-items:center; gap:4px; background:#e8e0d0; padding:3px 10px; border-radius:15px; margin:2px; font-size:0.85rem; }
+        .flight-item { display:inline-flex; align-items:center; gap:4px; background:var(--bg); padding:3px 10px; border-radius:15px; margin:2px; font-size:0.85rem; border:1px solid var(--border); }
         .flight-delete-btn { background:none; border:none; color:#c47b6b; cursor:pointer; font-size:0.9rem; padding:0 2px; }
-        #map { height:350px; width:100%; border-radius:16px; background:#e8e0d0; }
+        #map { height:350px; width:100%; border-radius:16px; background:var(--bg); }
         .banner-live { background:var(--danger); color:white; padding:10px 16px; border-radius:20px; display:none; margin-top:8px; font-weight:bold; text-align:center; }
         .flex-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
         @media (max-width:400px) { .grid-2{grid-template-columns:1fr} }
-        #historyPanel { max-height:250px; overflow-y:auto; display:none; margin-top:10px; background:#f9f4e8; border-radius:14px; padding:8px; }
-        .history-item { background:white; padding:10px; border-radius:10px; margin:6px 0; font-size:0.85rem; border-left:4px solid var(--gold); }
+        #historyPanel { max-height:250px; overflow-y:auto; display:none; margin-top:10px; background:var(--bg); border-radius:14px; padding:8px; border:1px solid var(--border); }
+        .history-item { background:var(--card); padding:10px; border-radius:10px; margin:6px 0; font-size:0.85rem; border-left:4px solid var(--gold); border-top:1px solid var(--border); border-right:1px solid var(--border); border-bottom:1px solid var(--border); }
         .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center; }
-        .modal { background:white; border-radius:20px; padding:20px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative; }
-        .modal-close { position:absolute; top:10px; right:14px; font-size:1.5rem; cursor:pointer; background:none; border:none; z-index:10001; }
+        .modal { background:var(--card); border-radius:20px; padding:20px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative; color:var(--text); }
+        .modal-close { position:absolute; top:10px; right:14px; font-size:1.5rem; cursor:pointer; background:none; border:none; z-index:10001; color:var(--text); }
         .delete-hornet-btn { background:none; border:none; color:#c47b6b; cursor:pointer; font-size:1.2rem; padding:2px 6px; opacity:0.6; }
-        .bottom-bar { position:fixed; bottom:0; left:0; right:0; background:white; padding:10px 8px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-around; gap:4px; }
-        .compass-btn { background:#f0ede5; border:2px solid var(--gold); border-radius:50%; width:44px; height:44px; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .bottom-bar { position:fixed; bottom:0; left:0; right:0; background:var(--card); padding:10px 8px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); z-index:9999; display:flex; justify-content:space-around; gap:4px; border-top:1px solid var(--border); }
+        .compass-btn { background:var(--bg); border:2px solid var(--gold); border-radius:50%; width:44px; height:44px; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text); }
         .history-actions { display:flex; gap:4px; margin-top:6px; }
-        .color-dot { width:35px; height:35px; border-radius:50%; cursor:pointer; border:3px solid #fff; transition:transform 0.2s; }
+        .color-dot { width:35px; height:35px; border-radius:50%; cursor:pointer; border:3px solid var(--card); transition:transform 0.2s; }
         .color-dot:hover { transform:scale(1.2); }
-        .color-dot.selected { border-color:#000; }
+        .color-dot.selected { border-color:var(--text); }
         .header a:active { transform:scale(0.9); opacity:0.7; }
         button,a,[onclick] { -webkit-tap-highlight-color:transparent; }
         .custom-alert-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:100002; justify-content:center; align-items:center; }
-        .custom-alert { background:white; border-radius:20px; padding:24px; max-width:400px; width:90%; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); animation:slideIn 0.3s ease-out; }
+        .custom-alert { background:var(--card); border-radius:20px; padding:24px; max-width:400px; width:90%; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); animation:slideIn 0.3s ease-out; color:var(--text); }
         .custom-alert-icon { font-size:3rem; margin-bottom:12px; }
-        .custom-alert-message { font-size:1rem; margin-bottom:20px; line-height:1.5; color:var(--text); }
+        .custom-alert-message { font-size:1rem; margin-bottom:20px; line-height:1.5; }
         .custom-alert-button { background:var(--gold); color:white; border:none; border-radius:25px; padding:12px 30px; font-size:1rem; font-weight:600; cursor:pointer; min-width:120px; }
         @keyframes slideIn { from { transform:translateY(-20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
         #undoDelete { position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:100001; box-shadow:0 2px 10px rgba(0,0,0,0.3); animation:slideUp 0.3s ease-out; }
@@ -105,25 +126,50 @@
         .coord-input-group { margin:10px 0; text-align:left; }
         .coord-input-group label { display:block; margin-bottom:4px; font-weight:600; font-size:0.9rem; }
         .coord-input-group input { width:100%; text-align:center; }
-        .lang-option { display:flex; align-items:center; gap:10px; padding:12px; border-radius:12px; cursor:pointer; margin:4px 0; background:#f9f4e8; border:2px solid transparent; }
+        .lang-option { display:flex; align-items:center; gap:10px; padding:12px; border-radius:12px; cursor:pointer; margin:4px 0; background:var(--bg); border:2px solid transparent; }
         .lang-option:active { transform:scale(0.98); border-color:var(--gold); }
-        .lang-option.selected { border-color:var(--gold); background:#fefaf2; }
+        .lang-option.selected { border-color:var(--gold); background:var(--card); }
         .lang-flag { font-size:1.5rem; }
         .lang-name { font-weight:600; }
+        
         @media print {
             .bottom-bar, .header, button, .compass-btn, .delete-hornet-btn, .flight-delete-btn, #updateBanner, .modal-overlay, .custom-alert-overlay, #undoDelete, .toast, .banner-live { display:none !important; }
-            body { padding:10px; max-width:100%; background:white; font-size:12px; }
-            .card { box-shadow:none; border:1px solid #ddd; margin-bottom:6px; break-inside:avoid; page-break-inside:avoid; padding:10px; }
-            .hornet-card { break-inside:avoid; page-break-inside:avoid; border:1px solid #ddd; margin-bottom:5px; }
+            body { padding:10px; max-width:100%; background:white; font-size:12px; color:black; }
+            .card { box-shadow:none; border:1px solid #ddd; margin-bottom:6px; break-inside:avoid; page-break-inside:avoid; padding:10px; background:white; }
+            .hornet-card { break-inside:avoid; page-break-inside:avoid; border:1px solid #ddd; margin-bottom:5px; background:white; }
             .hornet-body { max-height:none !important; opacity:1 !important; }
             .hornet-body.collapsed { max-height:none !important; opacity:1 !important; }
             #map { height:250px !important; break-inside:avoid; page-break-inside:avoid; }
             .dir-input { border:1px solid #ccc !important; }
-            .timer-display { font-size:1rem; padding:3px 8px; min-width:60px; }
+            .timer-display { font-size:1rem; padding:3px 8px; min-width:60px; background:white; border:1px solid #ddd; }
             h2 { font-size:1rem; margin-bottom:5px; }
             .badge { font-size:0.65rem; padding:2px 8px; }
-            .flight-item { font-size:0.75rem; padding:2px 6px; }
+            .flight-item { font-size:0.75rem; padding:2px 6px; background:#eee; }
             hr { margin:6px 0 !important; }
+        }
+
+        /* Dark Mode Overrides for hardcoded inline styles (like those generated by JS) */
+        @media (prefers-color-scheme: dark) {
+            div[style*="background: white"],
+            div[style*="background: #fff"],
+            div[style*="background: #fdf8e8"],
+            div[style*="background: #fcf8f0"],
+            div[style*="background: #faf4ea"],
+            div[style*="background: #f9f4e8"],
+            div[style*="background: #fefaf2"] {
+                background-color: var(--card) !important;
+                border-color: var(--border) !important;
+                color: var(--text) !important;
+            }
+            div[style*="background: #fff3cd"],
+            div[style*="background: #fef9e7"] {
+                background-color: #3d3326 !important;
+                color: #ffd54f !important;
+                border: 1px solid var(--gold) !important;
+            }
+            .btn-gold { background-color: var(--gold) !important; color: #121212 !important; border: none; }
+            .btn-sm { background-color: var(--bg) !important; color: var(--text) !important; }
+            .custom-alert-button { color: #121212 !important; }
         }
     </style>
 </head>
@@ -144,7 +190,7 @@
     </div>
     <input type="tel" id="phone" data-lang-placeholder="phone_placeholder" placeholder="📞 Téléphone" oninput="personalInfo.phone=this.value;debouncedSave()" style="margin-top:6px;">
     <div style="margin-top:6px;">🕐 <span id="datetime"></span></div>
-    <hr style="border:1px dashed #e0cfaa;margin:12px 0;">
+    <hr style="border:1px dashed var(--border);margin:12px 0;">
     <h2>📍 <span data-lang="pot_label">Pot-à-Mèche</span></h2>
     <div class="flex-row">
         <input type="text" id="locationInput" data-lang-placeholder="location_placeholder" placeholder="Nom du lieu ou lat,lng" oninput="surveyLocation.name=this.value;debouncedSave()" style="flex:1;">
@@ -172,7 +218,7 @@
         <button class="btn-sm" onclick="manualCoords()">✍️ Coord.</button>
         <button class="btn-gold btn-sm" onclick="showHistory()">📋 <span data-lang="history_btn">Historique 90j</span></button>
     </div>
-    <div id="predictionPanel" style="margin-top:8px;padding:8px;background:#f9f4e8;border-radius:12px;font-size:0.85rem;">⚠️ <span data-lang="no_flights">Ajoutez des vols pour voir les estimations</span></div>
+    <div id="predictionPanel" style="margin-top:8px;padding:8px;background:var(--bg);border-radius:12px;font-size:0.85rem;border:1px solid var(--border);">⚠️ <span data-lang="no_flights">Ajoutez des vols pour voir les estimations</span></div>
     <div id="historyPanel"></div>
 </div>
 
@@ -197,7 +243,7 @@
   <button onclick="exportKML()">🌍 KML</button>
   <button onclick="closeModal('exportModal'); exportVCFLASH();">⚡ <span data-lang="export_vc">Exporter en VCFLASH</span></button>
 
-  <hr style="border:0;border-top:1px dashed #e0cfaa;margin:8px 0;">
+  <hr style="border:0;border-top:1px dashed var(--border);margin:8px 0;">
 
   <p style="font-size:0.75rem;color:#888;font-weight:bold;margin:4px 0 -4px 4px;">IMPORTER</p>
   
@@ -214,7 +260,7 @@
   <input type="file" id="importHistFile" accept=".json" style="display:none;" onchange="importHistory(event)">
 
 </div></div></div>
-<div class="modal-overlay" id="aboutModal"><div class="modal" style="max-width:550px;padding-top:10px;"><div style="display:flex;align-items:center;justify-content:space-between;"><h2 style="margin:0;">ℹ️ <span data-lang="about_title_full">À propos de VespaTimer</span></h2><button class="modal-close" onclick="closeAbout()" style="position:static;">✕</button></div><div style="font-size:0.9rem;line-height:1.7;margin-top:10px;"><p data-lang="about_text">Bienvenue sur VespaTimer</p><p>⚠️ <span data-lang="about_report">N'oubliez pas de signaler vos observations sur :</span> <a href="https://frelonasiatique.ch" target="_blank">frelonasiatique.ch</a></p><p data-lang="about_instructions_detail">Instructions</p><hr style="border:1px dashed #e0cfaa;margin:10px 0;"><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">🧭 <span data-lang="compass_calibration_title">Calibration de la boussole</span></summary><p style="margin-top:8px;"><strong data-lang="compass_calibration_when">QUAND :</strong><br><span data-lang="compass_calibration_when_text"></span></p><p style="margin-top:8px;"><strong data-lang="compass_calibration_how">COMMENT :</strong><br><span data-lang="compass_calibration_how_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">🎨 <span data-lang="color_change_title">Changer la couleur d'un frelon</span></summary><p style="margin-top:8px;"><strong data-lang="color_change_method">Méthode :</strong><br><span data-lang="color_change_method_text"></span></p><p style="margin-top:8px;"><strong data-lang="color_change_tip">Astuce :</strong><br><span data-lang="color_change_tip_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">📄 <span data-lang="format_explanation_title">Formats d'export</span></summary><p style="margin-top:8px;"><span data-lang="format_explanation_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:#d4a853;">📥 <span data-lang="import_explanation_title">Formats d'import</span></summary><p style="margin-top:8px;"><span data-lang="import_explanation_text"></span></p></details><hr style="border:1px dashed #e0cfaa;margin:10px 0;"><p data-lang="about_happy">🐝 Bonne chasse ! 🙂</p><p style="font-size:0.78rem;color:#888;margin-top:10px;"><span data-lang="about_footer1">Requiert une connexion Internet</span><br><span data-lang="about_footer2">Trouvez de plus amples informations sur : <a href="https://stopfrelons.ch" target="_blank">stopfrelons.ch</a></span></p></div></div></div>
+<div class="modal-overlay" id="aboutModal"><div class="modal" style="max-width:550px;padding-top:10px;"><div style="display:flex;align-items:center;justify-content:space-between;"><h2 style="margin:0;">ℹ️ <span data-lang="about_title_full">À propos de VespaTimer</span></h2><button class="modal-close" onclick="closeAbout()" style="position:static;">✕</button></div><div style="font-size:0.9rem;line-height:1.7;margin-top:10px;"><p data-lang="about_text">Bienvenue sur VespaTimer</p><p>⚠️ <span data-lang="about_report">N'oubliez pas de signaler vos observations sur :</span> <a href="https://frelonasiatique.ch" target="_blank">frelonasiatique.ch</a></p><p data-lang="about_instructions_detail">Instructions</p><hr style="border:1px dashed var(--border);margin:10px 0;"><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">🧭 <span data-lang="compass_calibration_title">Calibration de la boussole</span></summary><p style="margin-top:8px;"><strong data-lang="compass_calibration_when">QUAND :</strong><br><span data-lang="compass_calibration_when_text"></span></p><p style="margin-top:8px;"><strong data-lang="compass_calibration_how">COMMENT :</strong><br><span data-lang="compass_calibration_how_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">🎨 <span data-lang="color_change_title">Changer la couleur d'un frelon</span></summary><p style="margin-top:8px;"><strong data-lang="color_change_method">Méthode :</strong><br><span data-lang="color_change_method_text"></span></p><p style="margin-top:8px;"><strong data-lang="color_change_tip">Astuce :</strong><br><span data-lang="color_change_tip_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">📄 <span data-lang="format_explanation_title">Formats d'export</span></summary><p style="margin-top:8px;"><span data-lang="format_explanation_text"></span></p></details><details><summary style="cursor:pointer;font-weight:600;color:var(--gold);">📥 <span data-lang="import_explanation_title">Formats d'import</span></summary><p style="margin-top:8px;"><span data-lang="import_explanation_text"></span></p></details><hr style="border:1px dashed var(--border);margin:10px 0;"><p data-lang="about_happy">🐝 Bonne chasse ! 🙂</p><p style="font-size:0.78rem;color:#888;margin-top:10px;"><span data-lang="about_footer1">Requiert une connexion Internet</span><br><span data-lang="about_footer2">Trouvez de plus amples informations sur : <a href="https://stopfrelons.ch" target="_blank">stopfrelons.ch</a></span></p></div></div></div>
 
 <div class="modal-overlay" id="compassModal"><div class="modal" style="text-align:center;background:#1a1a2e;color:white;border-radius:20px;width:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:20px;"><button class="modal-close" onclick="closeModal('compassModal');stopCompass()" style="color:white;position:absolute;top:10px;right:14px;z-index:10;">✕</button><h3 style="color:#d4a853;margin-bottom:10px;">🧭 Boussole</h3><div id="compassContainer" style="position:relative;width:300px;height:300px;"><svg viewBox="0 0 300 300" style="width:100%;height:100%;position:absolute;top:0;left:0;"><circle cx="150" cy="150" r="145" fill="#1a1a2e" stroke="#d4a853" stroke-width="3"/><circle cx="150" cy="150" r="125" fill="none" stroke="rgba(255,255,255,0.1)"/><circle cx="150" cy="150" r="105" fill="none" stroke="rgba(255,255,255,0.05)"/><g id="compassGraduations"></g><text x="150" y="22" fill="white" font-size="18" text-anchor="middle" font-weight="bold">N</text><text x="150" y="288" fill="white" font-size="14" text-anchor="middle">S</text><text x="278" y="155" fill="white" font-size="14" text-anchor="middle">E</text><text x="22" y="155" fill="white" font-size="14" text-anchor="middle">O</text></svg><div id="compassNeedle" style="position:absolute;top:5px;left:50%;width:4px;height:140px;margin-left:-2px;transform-origin:bottom center;transition:transform 0.3s;z-index:5;"><div style="width:4px;height:70px;background:linear-gradient(to top,#c47b6b,#d4a853);border-radius:2px 2px 0 0;"></div><div style="width:4px;height:70px;background:linear-gradient(to bottom,#666,#333);border-radius:0 0 2px 2px;"></div></div><div style="position:absolute;top:50%;left:50%;width:16px;height:16px;margin:-8px;background:#d4a853;border-radius:50%;border:3px solid white;z-index:10;"></div></div><div id="compassDirection" style="margin-top:15px;font-size:1.5rem;font-weight:bold;color:#d4a853;">--°</div></div></div>
 
@@ -235,8 +281,8 @@
     <img src="logo.png" alt="VespaTimer" style="max-width:100px;max-height:100px;border-radius:16px;">
   </div>
   <p style="font-size:0.85rem;color:#888;margin-top:8px;" data-lang="account_subtitle">Optionnel — synchronisez vos données entre appareils</p>
-    <input type="email" id="loginEmail" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:12px;">
-    <input type="password" id="loginPassword" placeholder="Mot de passe" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:8px;">
+    <input type="email" id="loginEmail" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--bg);color:var(--text);margin-top:12px;">
+    <input type="password" id="loginPassword" placeholder="Mot de passe" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--bg);color:var(--text);margin-top:8px;">
     <button class="btn-gold" onclick="doSignIn()" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="account_sign_in">Se connecter</button>
     <button id="biometricLoginBtn" onclick="doBiometricSignIn()" style="width:100%;padding:12px;margin-top:8px;background:#5f7d6b;color:white;border-radius:25px;border:none;font-size:0.9rem;display:none;" data-lang="account_sign_in_bio">🔐 Se connecter avec biométrie</button>
     <button onclick="showAccountSignup()" style="width:100%;padding:10px;margin-top:12px;background:none;border:none;color:var(--gold);cursor:pointer;font-size:0.9rem;" data-lang="account_no_account">Pas encore de compte ? Créer un compte</button>
@@ -248,8 +294,8 @@
       <button class="modal-close" onclick="closeModal('accountModal')" style="position:static;">✕</button>
     </div>
     <p style="font-size:0.85rem;color:#888;margin-top:8px;" data-lang="account_create_note">Vos données locales actuelles seront envoyées au compte.</p>
-    <input type="email" id="signupEmail" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:12px;">
-    <input type="password" id="signupPassword" placeholder="Mot de passe (min. 6)" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e0d5c0;font-size:16px;background:#fefdf9;margin-top:8px;">
+    <input type="email" id="signupEmail" placeholder="E-mail" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--bg);color:var(--text);margin-top:12px;">
+    <input type="password" id="signupPassword" placeholder="Mot de passe (min. 6)" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--border);font-size:16px;background:var(--bg);color:var(--text);margin-top:8px;">
     <button class="btn-gold" onclick="doSignUp()" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="account_create_btn">Créer le compte</button>
     <button onclick="showAccountLogin()" style="width:100%;padding:10px;margin-top:12px;background:none;border:none;color:var(--text);cursor:pointer;font-size:0.9rem;">← Retour</button>
   </div>
@@ -259,14 +305,14 @@
       <button class="modal-close" onclick="closeModal('accountModal')" style="position:static;">✕</button>
     </div>
     <p style="margin-top:14px;font-size:1rem;"><strong id="accountEmail"></strong></p>
-    <div style="background:#f9f4e8;border-radius:12px;padding:12px;margin-top:12px;font-size:0.9rem;line-height:1.7;">
+    <div style="background:var(--bg);border-radius:12px;padding:12px;margin-top:12px;font-size:0.9rem;line-height:1.7;border:1px solid var(--border);">
       <div>✅ <span data-lang="account_synced">Synchronisé</span></div>
       <div>📅 <span data-lang="account_hist_limit">Historique : 180 jours</span></div>
       <div>♾️ <span data-lang="account_hist_unlim">Entrées max : illimité</span></div>
     </div>
-    <button onclick="doManualSync()" style="width:100%;padding:12px;margin-top:14px;background:#e8e0d0;border-radius:25px;border:none;font-size:0.9rem;" data-lang="account_sync_now">🔄 Synchroniser maintenant</button>
+    <button onclick="doManualSync()" style="width:100%;padding:12px;margin-top:14px;background:var(--bg);border-radius:25px;border:1px solid var(--border);font-size:0.9rem;" data-lang="account_sync_now">🔄 Synchroniser maintenant</button>
     <button id="biometricEnableBtn" onclick="doRegisterBiometric()" style="width:100%;padding:12px;margin-top:8px;background:#5f7d6b;color:white;border-radius:25px;border:none;font-size:0.9rem;" data-lang="account_enable_bio">🔐 Activer la biométrie</button>
-    <button id="biometricDisableBtn" onclick="doUnregisterBiometric()" style="width:100%;padding:12px;margin-top:8px;background:#e8e0d0;border-radius:25px;border:none;font-size:0.9rem;display:none;" data-lang="account_disable_bio">🔓 Désactiver la biométrie</button>
+    <button id="biometricDisableBtn" onclick="doUnregisterBiometric()" style="width:100%;padding:12px;margin-top:8px;background:var(--bg);border-radius:25px;border:1px solid var(--border);font-size:0.9rem;display:none;" data-lang="account_disable_bio">🔓 Désactiver la biométrie</button>
     <button class="btn-red" onclick="doSignOut()" style="width:100%;padding:14px;margin-top:14px;border-radius:25px;font-size:1rem;" data-lang="account_sign_out">🚪 Se déconnecter</button>
   </div>
 </div></div>
