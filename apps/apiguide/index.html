@@ -270,8 +270,8 @@ function blankContent() {
 }
 
 let CONTENT = blankContent();
-let currentLang = localStorage.getItem('apiguide_lang') || 'en';
-if (!LANGS.includes(currentLang)) currentLang = 'en';
+let currentLang = localStorage.getItem('vespacaution_lang') || localStorage.getItem('apiguide_lang') || 'en';
+    if (!LANGS.includes(currentLang)) currentLang = 'en';
 
 let s = null, l1 = null;
 
@@ -411,8 +411,9 @@ function renderLangSwitcher() {
   bar.innerHTML = LANGS.map(l => `<option value="${l}" ${l===currentLang?'selected':''}>${esc(LANG_LABELS[l])}</option>`).join('');
   bar.onchange = (e) => {
     currentLang = e.target.value;
-    localStorage.setItem('apiguide_lang', currentLang);
-    resetNav();
+       localStorage.setItem('vespacaution_lang', currentLang);
+    localStorage.setItem('apiguide_lang', currentLang); // Keep for backwards compatibility
+      resetNav();
     render();
   };
 }
