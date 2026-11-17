@@ -187,7 +187,8 @@ var supabase = sbClient;
       rm: { appName: 'AlvearCheck', apiaryTracker: 'administraziun dals apiars', manageApiaries: 'Administrescha tes apiars e lur avieuls', addApiary: '＋ Agiuntar in apiari', apiary: 'apiari', apiaries: 'apiars', addHive: '＋ Agiuntar in avieul', hive: 'avieul', hives: 'avieuls', backToApiaries: '← Enavos als apiars', backToHives: '← Enavos als avieuls', edit: '✎ Modifitgar', delete: '✕ Stizzar', deleteApiaryConfirm: 'Stizzar quest apiari e tut ses avieuls?', deleteHiveConfirm: 'Stizzar quest avieul?', noApiaries: 'Nagins apiars.', noHives: 'Nagins avieuls en quest apiari.', noVisits: 'Naginas visitas registradas.', visits: 'Visitas', visitHistory: 'cronologia da las visitas', allVisits: '📋 Tut las visitas', date: 'Data', maleFrames: 'Framas da drones', honeyFrames: 'Framas da mel', broodFrames: 'Framas da cova', swarmRisk: 'Ristga da sciamar', queenColor: 'Colur da la regina', varroa: 'Varroa', remarks: 'Remarcas', swarmAlert: '⚠️ alarm da sciamar', atRisk: '⚠️ en ristga', swarmAlertActive: '⚠️ Alarm da sciamar activ', apiaryName: 'Num da l\'apiari *', orientation: 'Orientaziun', coordinates: 'Coordinatas', hiveName: 'Num da l\'avieul *', queenColorYear: 'Colur da la regina (onn)', varroaCount: 'Dumber da varroas', atRiskOfSwarming: 'Ristga da sciamar', notes: 'Notas...', save: 'Salvar', create: 'Crear', cancel: 'Annullar', pleaseEnterApiaryName: 'Endatescha in num per l\'apiari.', pleaseEnterHiveName: 'Endatescha in num per l\'avieul.', apiaryNotFound: 'Apiari betg chattà.', hiveNotFound: 'Avieul betg chattà.', useMyLocation: 'Duvrar mia posiziun', geolocationNotSupported: 'Geolocalisaziun betg sustegnida.', geolocationError: 'Betg pussaivel da survegnir la posiziun: ', exportCSV: '📥 Exportar CSV', noDataToExport: 'Naginas visitas da exportar.', editApiary: 'Modifitgar l\'apiari', newApiary: 'Nov apiari', editHive: 'Modifitgar l\'avieul', newHive: 'Nov avieul', name: 'Num', queenColorBlue: 'Blau', queenColorWhite: 'Alv', queenColorYellow: 'Mellen', queenColorRed: 'Cotschna', queenColorGreen: 'Verd', swarmWarningLabel: 'Ristga da sciamar', confirmTitle: 'Confirmar', alertTitle: 'Avvis', deleteTitle: 'Stizzar', yes: 'Gea', no: 'Na', ok: 'OK', account: 'Mes Cont', logout: 'Sortir', enableBiometrics: 'Activar la biometrica', userId: 'ID Utilisader:', biometricEnabled: 'Biometrica activada!' }
     };
 
-    var currentLang = 'fr';
+   // Migrate old setting if it exists, or use global
+var currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
     var currentUser = null; // Global user state
     function t(key) { return (translations[currentLang] && translations[currentLang][key]) || translations.en[key] || key; }
     function escapeHtml(str) { if (str == null) return ''; return String(str).replace(/[&<>"]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; if (m === '"') return '&quot;'; return m; }); }
@@ -384,7 +385,11 @@ var supabase = sbClient;
     function apiaryHasSwarmAlert(apiary) { return apiary.hives.some(function(h) { return isSwarmAlertActive(h); }); }
     var queenColors = [ { value: 'blue', labelKey: 'queenColorBlue' }, { value: 'white', labelKey: 'queenColorWhite' }, { value: 'yellow', labelKey: 'queenColorYellow' }, { value: 'red', labelKey: 'queenColorRed' }, { value: 'green', labelKey: 'queenColorGreen' } ];
     function renderLangSelector() { return '<div class="lang-selector">' + ['en','fr','de','it','rm'].map(function(l) { return '<button class="lang-btn ' + (currentLang === l ? 'active' : '') + '" data-lang="' + l + '">' + l.toUpperCase() + '</button>'; }).join('') + '</div>'; }
-    function attachLangListeners() { document.querySelectorAll('.lang-btn').forEach(function(btn) { btn.addEventListener('click', function() { currentLang = btn.dataset.lang; render(); }); }); }
+    function attachLangListeners() { document.querySelectorAll('.lang-btn').forEach(function(btn) { btn.addEventListener('click', function() { 
+    currentLang = btn.dataset.lang; 
+    localStorage.setItem('vespacaution_lang', currentLang);
+    render(); 
+}); }); }
 
     var appEl = document.getElementById('app');
 
