@@ -1,13 +1,14 @@
-const CACHE_NAME = 'vespacaution-main-v1';
+const CACHE_NAME = 'vespacaution-cache';
 const OFFLINE_URL = '/apps/bee-game/index.html';
 
-// Core files to cache immediately on install
+// Core files to cache on install
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
-    '/manifest.json',
-    '/icon.png',
-    '/logo.png',
+    '/site/index.html',
+    '/site/manifest.json',
+    '/site/icon.png',
+    '/site/logo.png',
     OFFLINE_URL
 ];
 
@@ -15,63 +16,59 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS_TO_CACHE);
-        }).then(() => {
-            self.skipWaiting(); // Force the waiting service worker to become the active one
-        })
-    );
-});
-
-// Activate Event: Clean up old caches
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
-                    }
+                ASSETS_TO_CACHE.map(url => {
+                    // Catch errors so it doesn't fail if one file is missing
+                    return cache.add(url).catch(err => console.log('Failed to cache:', url));
                 })
             );
-        }).then(() => {
-            self.clients.claim(); // Take control of all pages immediately
-        })
+        }).then(() => self.skipWaiting())
     );
 });
 
-// Fetch Event: Serve offline fallback for navigation
+// Activate Event: Take control immediately
+self.addEventListener('activate', (event) => {
+    event.waitUntil(self.clients.claim());
+});
+
+// Fetch Event: Network-First with Offline Fallback
 self.addEventListener('fetch', (event) => {
-    // We only want to intercept page navigations (clicking links, refreshing)
+    // Intercept page navigation (clicking links, refreshing)
     if (event.request.mode === 'navigate') {
         event.respondWith(
-            fetch(event.request).catch(() => {
-                // If the network fails (offline), return the Bee Game
-                return caches.match(OFFLINE_URL).then((response) => {
-                    return response || new Response('Offline and fallback not found.', { status: 404 });
-                });
-            })
+            fetch(event.request)
+                .then((networkResponse) => {
+                    // Update the cache with the newest version of the page
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                    return networkResponse;
+                })
+                .catch(() => {
+                    // If offline, serve the Bee Game
+                    return caches.match(OFFLINE_URL).then((response) => {
+                        return response || new Response('Offline', { status: 404 });
+                    });
+                })
         );
     } else {
-        // For other requests (CSS, JS, Images), use cache-first, then network
+        // Stale-While-Revalidate for assets (CSS, JS, images)
         event.respondWith(
             caches.match(event.request).then((cachedResponse) => {
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
-                return fetch(event.request).then((networkResponse) => {
-                    // Optional: dynamically cache new assets (like Google Fonts or external scripts)
-                    if (
-                        networkResponse &&
-                        networkResponse.status === 200 &&
-                        networkResponse.type === 'basic' // Avoid caching opaque responses
-                    ) {
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
                         const responseToCache = networkResponse.clone();
                         caches.open(CACHE_NAME).then((cache) => {
                             cache.put(event.request, responseToCache);
                         });
                     }
                     return networkResponse;
+                }).catch(() => {
+                    // Ignore network fail for assets if we have it cached
                 });
+
+                return cachedResponse || fetchPromise;
             })
         );
     }
