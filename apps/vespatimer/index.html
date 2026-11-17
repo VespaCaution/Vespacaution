@@ -165,6 +165,35 @@
             .flight-item { font-size:0.75rem; padding:2px 6px; }
             hr { margin:6px 0 !important; }
         }
+        @media (prefers-color-scheme: dark) {
+    /* 1. Fix the specific white box with the hardcoded #f4f4f4 background */
+    div[style*="background: #f4f4f4"] {
+        background-color: #1e1e1e !important; /* Dark card color */
+        border: 1px solid #444 !important;
+    }
+
+    /* 2. Force the input inside that box to be dark */
+    div[style*="background: #f4f4f4"] input {
+        background-color: #121212 !important;
+        color: #f0f0f0 !important;
+        border: 1px solid #444 !important;
+    }
+
+    /* 3. Add white outline to the Language Selector */
+    .lang-select {
+        border: 1px solid #ffffff !important;
+    }
+
+    /* 4. Add white outline to the History button */
+    button[onclick="showHistory()"] {
+        border: 1px solid #ffffff !important;
+    }
+
+    /* 5. Add white outline to the "Nouveau" button */
+    button[onclick="resetAll()"] {
+        border: 1px solid #ffffff !important;
+    }
+}
     </style>
 </head>
 <body>
