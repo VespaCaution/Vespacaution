@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#c99b48">
     <meta name="color-scheme" content="light dark">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bee Game">
     <title>Vespacaution - Save the Bee</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+
     <style>
         :root {
             --bg: #f9f7f1;
@@ -15,6 +24,7 @@
             --text: #2d2d2d;
             --muted: #6b6b6b;
             --border: #e6e2d8;
+            --danger: #d9534f;
             color-scheme: light;
         }
 
@@ -56,18 +66,27 @@
             position: relative;
         }
 
-        h1 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .score-board {
+        h1 { color: var(--primary); font-size: 1.5rem; margin-bottom: 10px; }
+        
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 15px;
             color: var(--text);
         }
+        
+        .hud-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 1rem;
+        }
+
+        .lives { letter-spacing: 2px; }
+        .speed { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
 
         canvas {
             background: var(--bg);
@@ -77,63 +96,28 @@
             margin: 0 auto;
             max-width: 100%;
             height: auto;
+            transition: border-color 0.2s;
         }
 
-        .maintenance-msg {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: var(--muted);
-            line-height: 1.5;
-            padding: 0 10px;
-        }
+        .maintenance-msg { margin-top: 20px; font-size: 0.85rem; color: var(--muted); line-height: 1.5; padding: 0 10px; }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 15px;
-            background: var(--primary);
-            color: #121212;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            font-size: 1rem;
-            width: 100%;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 15px; background: var(--primary); color: #121212; text-decoration: none;
+            padding: 12px 24px; border-radius: 30px; font-weight: bold; border: none; cursor: pointer;
+            transition: background 0.2s, transform 0.1s; font-size: 1rem; width: 100%;
         }
-
         .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
         .btn:active { transform: translateY(0); }
 
-        /* Overlay for Game Over */
         #gameOverScreen {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--surface);
-            padding: 25px 20px;
-            border-radius: 16px;
-            border: 2px solid var(--primary);
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            width: 85%;
-            max-width: 320px;
-            z-index: 10;
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--surface); padding: 25px 20px; border-radius: 16px; border: 2px solid var(--danger);
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); width: 85%; max-width: 320px; z-index: 10;
         }
-        #gameOverScreen h2 { color: var(--primary); margin-bottom: 10px; }
+        #gameOverScreen h2 { color: var(--danger); margin-bottom: 10px; }
         #gameOverScreen p { margin-bottom: 15px; color: var(--text); }
-        
-        .btn-row {
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-        }
+        .btn-row { display: flex; gap: 10px; flex-direction: column; }
     </style>
 </head>
 <body>
@@ -141,14 +125,17 @@
     <div class="game-container">
         <h1 id="titleText">🐝 Save the Bee</h1>
         
-        <div class="score-board" id="scoreDisplay">Score: 0</div>
-        
+        <div class="hud">
+            <div id="scoreDisplay">Score: 0</div>
+            <div class="hud-right">
+                <div class="lives" id="livesDisplay">❤️❤️❤️</div>
+                <div class="speed" id="speedDisplay">Speed: 1</div>
+            </div>
+        </div>
+
         <canvas id="gameCanvas" width="350" height="400"></canvas>
 
-        <div class="maintenance-msg" id="statusMessage">
-            This section is currently in maintenance, deleted, or you are offline.
-        </div>
-        
+        <div class="maintenance-msg" id="statusMessage">This section is currently in maintenance, deleted, or you are offline.</div>
         <a href="../../index.html" class="btn" id="backBtn">← Back to Main Site</a>
 
         <div id="gameOverScreen">
@@ -164,79 +151,17 @@
     <script>
         // --- TRANSLATIONS ---
         const translations = {
-            en: {
-                title: "Save the Bee",
-                score: "Score:",
-                maintenance: "This section is currently in maintenance, deleted, or you are offline.",
-                back: "← Back to Main Site",
-                gameOver: "Game Over!",
-                collected: "You collected",
-                flowers: "flowers.",
-                playAgain: "Play Again",
-                share: "📤 Share Score",
-                shareTitle: "Vespacaution Bee Game",
-                shareText: "I scored {score} points in the Vespacaution Bee Game! Can you beat me? 🐝"
-            },
-            fr: {
-                title: "Sauvez l'Abeille",
-                score: "Score :",
-                maintenance: "Cette section est en maintenance, supprimée, ou vous êtes hors ligne.",
-                back: "← Retour au site principal",
-                gameOver: "Game Over !",
-                collected: "Vous avez collecté",
-                flowers: "fleurs.",
-                playAgain: "Rejouer",
-                share: "📤 Partager le score",
-                shareTitle: "Jeu de l'Abeille Vespacaution",
-                shareText: "J'ai marqué {score} points au jeu de l'abeille de Vespacaution ! Peux-tu faire mieux ? 🐝"
-            },
-            de: {
-                title: "Rette die Biene",
-                score: "Punkte:",
-                maintenance: "Dieser Bereich wird derzeit gewartet, wurde gelöscht oder Sie sind offline.",
-                back: "← Zurück zur Hauptseite",
-                gameOver: "Game Over!",
-                collected: "Du hast gesammelt",
-                flowers: "Blumen.",
-                playAgain: "Nochmal spielen",
-                share: "📤 Punktzahl teilen",
-                shareTitle: "Vespacaution Bienen-Spiel",
-                shareText: "Ich habe {score} Punkte im Vespacaution Bienen-Spiel erzielt! Kannst du mich schlagen? 🐝"
-            },
-            it: {
-                title: "Salva l'Ape",
-                score: "Punteggio:",
-                maintenance: "Questa sezione è in manutenzione, eliminata o sei offline.",
-                back: "← Torna al sito principale",
-                gameOver: "Game Over!",
-                collected: "Hai raccolto",
-                flowers: "fiori.",
-                playAgain: "Gioca di nuovo",
-                share: "📤 Condividi punteggio",
-                shareTitle: "Gioco dell'Ape Vespacaution",
-                shareText: "Ho totalizzato {score} punti nel gioco dell'ape di Vespacaution! Riesci a battermi? 🐝"
-            },
-            rm: {
-                title: "Salva l'Avia",
-                score: "Puncts:",
-                maintenance: "Questa secziun è en mantegniment, stizzada u ti es offline.",
-                back: "← Enavos a la pagina principala",
-                gameOver: "Game Over!",
-                collected: "Ti has rimnà",
-                flowers: "flurs.",
-                playAgain: "Giugar puspè",
-                share: "📤 Cundivider il puncts",
-                shareTitle: "Gieu da l'Avia Vespacaution",
-                shareText: "J'ai gudagnà {score} puncts en il gieu da l'avia da Vespacaution! Pos ti far meglier? 🐝"
-            }
+            en: { title: "Save the Bee", score: "Score:", speed: "Speed:", maintenance: "This section is currently in maintenance, deleted, or you are offline.", back: "← Back to Main Site", gameOver: "Game Over!", collected: "You collected", flowers: "flowers.", playAgain: "Play Again", share: "📤 Share Score", shareTitle: "Vespacaution Bee Game", shareText: "I scored {score} points in the Vespacaution Bee Game! Can you beat me? 🐝" },
+            fr: { title: "Sauvez l'Abeille", score: "Score :", speed: "Vitesse :", maintenance: "Cette section est en maintenance, supprimée, ou vous êtes hors ligne.", back: "← Retour au site principal", gameOver: "Game Over !", collected: "Vous avez collecté", flowers: "fleurs.", playAgain: "Rejouer", share: "📤 Partager le score", shareTitle: "Jeu de l'Abeille Vespacaution", shareText: "J'ai marqué {score} points au jeu de l'abeille de Vespacaution ! Peux-tu faire mieux ? 🐝" },
+            de: { title: "Rette die Biene", score: "Punkte:", speed: "Geschw.:", maintenance: "Dieser Bereich wird derzeit gewartet, wurde gelöscht oder Sie sind offline.", back: "← Zurück zur Hauptseite", gameOver: "Game Over!", collected: "Du hast gesammelt", flowers: "Blumen.", playAgain: "Nochmal spielen", share: "📤 Punktzahl teilen", shareTitle: "Vespacaution Bienen-Spiel", shareText: "Ich habe {score} Punkte im Vespacaution Bienen-Spiel erzielt! Kannst du mich schlagen? 🐝" },
+            it: { title: "Salva l'Ape", score: "Punteggio:", speed: "Velocità:", maintenance: "Questa sezione è in manutenzione, eliminata o sei offline.", back: "← Torna al sito principale", gameOver: "Game Over!", collected: "Hai raccolto", flowers: "fiori.", playAgain: "Gioca di nuovo", share: "📤 Condividi punteggio", shareTitle: "Gioco dell'Ape Vespacaution", shareText: "Ho totalizzato {score} punti nel gioco dell'ape di Vespacaution! Riesci a battermi? 🐝" },
+            rm: { title: "Salva l'Avia", score: "Puncts:", speed: "Sveltezza:", maintenance: "Questa secziun è en mantegniment, stizzada u ti es offline.", back: "← Enavos a la pagina principala", gameOver: "Game Over!", collected: "Ti has rimnà", flowers: "flurs.", playAgain: "Giugar puspè", share: "📤 Cundivider il puncts", shareTitle: "Gieu da l'Avia Vespacaution", shareText: "J'ai gudagnà {score} puncts en il gieu da l'avia da Vespacaution! Pos ti far meglier? 🐝" }
         };
 
-        // Detect language from Main Site
         let currentLang = localStorage.getItem('vespacaution_lang') || 'fr';
         if (!translations[currentLang]) currentLang = 'en';
         const t = translations[currentLang];
 
-        // Apply Translations
         document.getElementById('titleText').innerHTML = `🐝 ${t.title}`;
         document.getElementById('scoreDisplay').innerText = `${t.score} 0`;
         document.getElementById('statusMessage').innerText = t.maintenance;
@@ -251,69 +176,67 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const scoreDisplay = document.getElementById('scoreDisplay');
+        const livesDisplay = document.getElementById('livesDisplay');
+        const speedDisplay = document.getElementById('speedDisplay');
         const gameOverScreen = document.getElementById('gameOverScreen');
         const finalScoreDisplay = document.getElementById('finalScore');
 
         let score = 0;
+        let lives = 3;
+        let flowersCollected = 0;
+        let speedLevel = 1;
         let isGameOver = false;
         let animationId;
         let frameCount = 0;
         
+        // Invincibility frames (prevents losing all lives in 1 second)
+        let invincibleTimer = 0; 
+
         const laneWidth = canvas.width / 3;
         const laneCenters = [laneWidth / 2, canvas.width / 2, canvas.width - (laneWidth / 2)];
         
-        let bee = {
-            lane: 1,
-            x: laneCenters[1],
-            y: canvas.height - 50,
-            targetX: laneCenters[1]
-        };
+        let bee = { lane: 1, x: laneCenters[1], y: canvas.height - 50, targetX: laneCenters[1] };
 
         let objects = [];
-        const objectSpeed = 3.5;
-        const spawnRate = 55; 
+        
+        let objectSpeed = 2.5; 
+        let spawnRate = 70; 
+
+        function updateHUD() {
+            scoreDisplay.innerText = `${t.score} ${score}`;
+            livesDisplay.innerText = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
+            speedDisplay.innerText = `${t.speed} ${speedLevel}`;
+        }
 
         function drawBee() {
-            ctx.font = '30px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            // Flash the bee if invincible
+            if (invincibleTimer > 0 && Math.floor(Date.now() / 100) % 2 === 0) {
+                return; 
+            }
+            ctx.font = '30px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; 
             ctx.fillText('🐝', bee.x, bee.y);
         }
 
         function drawObjects() {
             objects.forEach(obj => {
-                ctx.font = '28px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+                ctx.font = '28px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.fillText(obj.type === 'flower' ? '🌻' : '🪨', obj.x, obj.y);
             });
         }
 
         document.addEventListener('keydown', (e) => {
             if (isGameOver) return;
-            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-                if (bee.lane > 0) bee.lane--;
-            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-                if (bee.lane < 2) bee.lane++;
-            }
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { if (bee.lane > 0) bee.lane--; }
+            else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { if (bee.lane < 2) bee.lane++; }
             bee.targetX = laneCenters[bee.lane];
         });
 
-        let touchStartX = 0;
-        let touchStartY = 0;
-        canvas.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
+        let touchStartX = 0, touchStartY = 0;
+        canvas.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: true });
         canvas.addEventListener('touchend', (e) => {
             if (isGameOver) return;
-            let touchEndX = e.changedTouches[0].clientX;
-            let touchEndY = e.changedTouches[0].clientY;
-            
-            let dx = touchEndX - touchStartX;
-            let dy = touchEndY - touchStartY;
-            
+            let dx = e.changedTouches[0].clientX - touchStartX;
+            let dy = e.changedTouches[0].clientY - touchStartY;
             if (Math.abs(dx) > Math.abs(dy)) {
                 if (dx > 30 && bee.lane < 2) bee.lane++; 
                 if (dx < -30 && bee.lane > 0) bee.lane--; 
@@ -324,18 +247,14 @@
         function spawnObject() {
             const lane = Math.floor(Math.random() * 3);
             const isFlower = Math.random() > 0.4; 
-            objects.push({
-                lane: lane,
-                x: laneCenters[lane],
-                y: -30,
-                type: isFlower ? 'flower' : 'rock'
-            });
+            objects.push({ lane: lane, x: laneCenters[lane], y: -30, type: isFlower ? 'flower' : 'rock' });
         }
 
         function updateGame() {
             if (isGameOver) return;
-
             bee.x += (bee.targetX - bee.x) * 0.2;
+
+            if (invincibleTimer > 0) invincibleTimer--;
 
             if (frameCount % spawnRate === 0) {
                 spawnObject();
@@ -344,47 +263,66 @@
             for (let i = objects.length - 1; i >= 0; i--) {
                 let obj = objects[i];
                 obj.y += objectSpeed;
-
                 let dist = Math.hypot(bee.x - obj.x, bee.y - obj.y);
+                
                 if (dist < 25) { 
                     if (obj.type === 'flower') {
                         score += 10;
-                        scoreDisplay.innerText = `${t.score} ${score}`;
+                        flowersCollected++;
+                        
+                        // Give a heart every 10 flowers, max 3
+                        if (flowersCollected % 10 === 0 && lives < 3) {
+                            lives++;
+                        }
+
+                        // Speed logic
+                        if (score >= 250 && speedLevel < 3) {
+                            speedLevel = 3;
+                            objectSpeed = 4.5;
+                            spawnRate = 45;
+                        } else if (score >= 100 && speedLevel < 2) {
+                            speedLevel = 2;
+                            objectSpeed = 3.5;
+                            spawnRate = 55;
+                        }
+
+                        updateHUD();
                         objects.splice(i, 1);
-                    } else if (obj.type === 'rock') {
-                        triggerGameOver();
-                        return;
+                    } else if (obj.type === 'rock' && invincibleTimer === 0) {
+                        // Hit a spike ball
+                        lives--;
+                        score = Math.max(0, score - 20); 
+                        invincibleTimer = 60; // 1 second of invincibility at 60fps
+                        updateHUD();
+                        objects.splice(i, 1); 
+                        
+                        canvas.style.borderColor = 'var(--danger)';
+                        setTimeout(() => { canvas.style.borderColor = 'var(--border)'; }, 300);
+
+                        if (lives <= 0) {
+                            triggerGameOver();
+                            return;
+                        }
                     }
                 }
-
-                if (obj.y > canvas.height + 30) {
-                    objects.splice(i, 1);
-                }
+                if (obj.y > canvas.height + 30) objects.splice(i, 1);
             }
-
             frameCount++;
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ctx.strokeStyle = 'rgba(150, 150, 150, 0.2)';
-            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgba(150, 150, 150, 0.2)'; ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(laneWidth, 0);
-            ctx.lineTo(laneWidth, canvas.height);
-            ctx.moveTo(laneWidth * 2, 0);
-            ctx.lineTo(laneWidth * 2, canvas.height);
+            ctx.moveTo(laneWidth, 0); ctx.lineTo(laneWidth, canvas.height);
+            ctx.moveTo(laneWidth * 2, 0); ctx.lineTo(laneWidth * 2, canvas.height);
             ctx.stroke();
-
-            drawObjects();
-            drawBee();
+            drawObjects(); drawBee();
         }
 
         function gameLoop() {
             if (isGameOver) return;
-            updateGame();
-            draw();
+            updateGame(); draw();
             animationId = requestAnimationFrame(gameLoop);
         }
 
@@ -396,14 +334,18 @@
         }
 
         function resetGame() {
-            score = 0;
-            frameCount = 0;
+            score = 0; 
+            lives = 3;
+            flowersCollected = 0;
+            speedLevel = 1;
+            objectSpeed = 2.5;
+            spawnRate = 70;
+            frameCount = 0; 
+            invincibleTimer = 0;
             objects = [];
-            bee.lane = 1;
-            bee.x = laneCenters[1];
-            bee.targetX = laneCenters[1];
+            bee.lane = 1; bee.x = laneCenters[1]; bee.targetX = laneCenters[1];
             isGameOver = false;
-            scoreDisplay.innerText = `${t.score} 0`;
+            updateHUD();
             gameOverScreen.style.display = 'none';
             gameLoop();
         }
@@ -411,18 +353,18 @@
         function shareScore() {
             const shareText = t.shareText.replace('{score}', score);
             if (navigator.share) {
-                navigator.share({
-                    title: t.shareTitle,
-                    text: shareText,
-                    url: window.location.href
-                }).catch((error) => console.log('Error sharing', error));
+                navigator.share({ title: t.shareTitle, text: shareText, url: window.location.href })
+                .catch((error) => console.log('Error sharing', error));
             } else {
-                // Fallback for desktop browsers
                 alert(shareText + "\n\n" + window.location.href);
             }
         }
 
-        // Start the game automatically
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed', err));
+        }
+
+        updateHUD();
         gameLoop();
     </script>
 </body>
