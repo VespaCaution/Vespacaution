@@ -1,7 +1,7 @@
 // Service Worker for Vespacaution Main Site
 const CACHE_NAME = 'vespacaution-site-cache';
-// Path from /site/ up to root, then into apps/bee-game
-const OFFLINE_URL = '../../apps/bee-game/index.html'; 
+// Use absolute path from the root for the fallback
+const OFFLINE_URL = '/apps/bee-game/index.html'; 
 
 const ASSETS_TO_CACHE = [
   './',
@@ -9,7 +9,7 @@ const ASSETS_TO_CACHE = [
   './manifest.json',
   './icon.png',
   './logo.png',
-  OFFLINE_URL
+  '/apps/bee-game/index.html' // Cache the game using absolute path
 ];
 
 // Install Event: Cache core assets immediately
@@ -18,7 +18,6 @@ self.addEventListener('install', (e) => {
     caches.open(CACHE_NAME).then((cache) => {
       return Promise.all(
         ASSETS_TO_CACHE.map(url => {
-          // Catch errors so it doesn't fail if one file is missing
           return cache.add(url).catch(err => console.log('Failed to cache:', url));
         })
       );
@@ -38,7 +37,6 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(e.request)
         .then((networkResponse) => {
-          // Update cache with the newest version of the page
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(e.request, responseToCache);
@@ -53,7 +51,7 @@ self.addEventListener('fetch', (e) => {
         })
     );
   } else {
-    // Stale-While-Revalidate for assets (CSS, JS, images)
+    // Stale-While-Revalidate for assets
     e.respondWith(
       caches.match(e.request).then((cachedResponse) => {
         const fetchPromise = fetch(e.request).then((networkResponse) => {
@@ -64,9 +62,7 @@ self.addEventListener('fetch', (e) => {
             });
           }
           return networkResponse;
-        }).catch(() => {
-          // Ignore network fail for assets if we have it cached
-        });
+        }).catch(() => {});
 
         return cachedResponse || fetchPromise;
       })
