@@ -39,7 +39,8 @@ Le site donne accès à trois applications web autonomes (PWA) :
 
 ```text
 /
-├── index.html              # Page de redirection vers /site/
+├── index.html          # Page de redirection vers /site/
+├── sw.js
 │
 ├── site/                   # Site principal (portail)
 │   ├── index.html          # Page d'accueil du portail
@@ -68,3 +69,4 @@ Le site donne accès à trois applications web autonomes (PWA) :
 │
 ├── README.md               # Ce fichier
 └── LICENSE                 # Licence Propriétaire Vespacaution
+tous les autres readme dans les apps et sites
