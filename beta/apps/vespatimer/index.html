@@ -171,6 +171,31 @@
             .btn-sm { background-color: var(--bg) !important; color: var(--text) !important; }
             .custom-alert-button { color: #121212 !important; }
         }
+        @media (prefers-color-scheme: dark) {
+    /* 1. Force the white input box to be dark */
+    #hornetList div[style*="background: white"],
+    #hornetList div[style*="background: #fff"],
+    #hornetList div[style*="background: #fdf8e8"],
+    #hornetList div[style*="background: #fcf8f0"],
+    #hornetList div[style*="background: #faf4ea"],
+    #hornetList div[style*="background: #f9f4e8"] {
+        background-color: #1e1e1e !important;
+        border: 1px solid #444 !important;
+    }
+
+    /* 2. Force the input inside that box to be dark */
+    #hornetList div[style*="background: white"] input,
+    #hornetList div[style*="background: #fff"] input {
+        background-color: #121212 !important;
+        color: #f0f0f0 !important;
+        border-color: #444 !important;
+    }
+
+    /* 3. Add the white outline to the "Nouveau" button */
+    button[style*="var(--danger)"] {
+        border: 1px solid #ffffff !important;
+    }
+        }
     </style>
 </head>
 <body>
