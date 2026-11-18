@@ -493,7 +493,6 @@
     </style>
 </head>
 <body>
-<!-- The rest of your HTML body goes here, ending with <script> -->
 
 <div id="authSection" class="card">
     <h1>🔒 <span data-i18n="admin_login_title">Espace Comité</span></h1>
@@ -601,26 +600,16 @@
                 <button class="subtab" data-sub="members" onclick="switchSubTab('members')" data-i18n="admin_site_members_tab">👥 Membres</button>
                 <button class="subtab" data-sub="thanks" onclick="switchSubTab('thanks')" data-i18n="admin_site_thanks_tab">🙏 Remerciements</button>
                 <button class="subtab" data-sub="apiguide" onclick="switchSubTab('apiguide')" data-i18n="admin_site_apiguide_tab">🐝 ApiGuide</button>
-            <div id="tabSite" class="card hidden">
-    <h2 data-i18n="admin_site_title">🛠️ Modifier le site</h2>
-    <div class="subtabs">
-        <button class="subtab active" data-sub="blog" onclick="switchSubTab('blog')" data-i18n="admin_site_blog_tab">📰 Blog</button>
-        <button class="subtab" data-sub="members" onclick="switchSubTab('members')" data-i18n="admin_site_members_tab">👥 Membres</button>
-        <button class="subtab" data-sub="thanks" onclick="switchSubTab('thanks')" data-i18n="admin_site_thanks_tab">🙏 Remerciements</button>
-        <button class="subtab" data-sub="apiguide" onclick="switchSubTab('apiguide')" data-i18n="admin_site_apiguide_tab">🐝 ApiGuide</button>
-    </div>
+            </div>
 
-    <!-- NEW BUTTONS -->
-<div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-    <button onclick="openTranslateModal('google')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px;" data-i18n="admin_site_translate_google">
-        🌍 Google Translate
-    </button>
-    <button onclick="openTranslateModal('rumantsch')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px; background: #5f7d6b;" data-i18n="admin_site_translate_rumantsch">
-        🏔️ Rumantsch Translator
-    </button>
-</div>
-
-    <!-- ... rest of the subtab contents ... -->
+            <!-- NEW BUTTONS -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button onclick="openTranslateModal('google')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px;" data-i18n="admin_site_translate_google">
+                    🌍 Google Translate
+                </button>
+                <button onclick="openTranslateModal('rumantsch')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px; background: #5f7d6b;" data-i18n="admin_site_translate_rumantsch">
+                    🏔️ Rumantsch Translator
+                </button>
             </div>
 
             <div id="subTabBlog" class="subtab-content">
@@ -742,6 +731,7 @@
                     ↗ <span data-i18n="admin_analytics_open">Open in new tab</span>
                 </a>
             </div>
+            <!-- Umami Iframe -->
             <div class="analytics-iframe-wrapper">
                 <iframe
                     src="https://cloud.umami.is/share/EC1wZPz4LAi9hrAM"
@@ -750,40 +740,21 @@
                     allow="clipboard-read; clipboard-write">
                 </iframe>
             </div>
-        </div>
-<div id="tabAnalytics" class="card hidden">
-    <h2 data-i18n="admin_analytics_title">📊 Analytics</h2>
-    <p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_desc">
-        Umami statistics dashboard (public share view).
-    </p>
-    <div style="text-align:right; margin-bottom:12px;">
-        <a href="https://cloud.umami.is/share/EC1wZPz4LAi9hrAM" target="_blank" rel="noopener" class="btn-blue btn-sm" style="text-decoration:none; display:inline-block; padding:8px 14px; border-radius:6px; color:white; font-weight:bold;">
-            ↗ <span data-i18n="admin_analytics_open">Open in new tab</span>
-        </a>
-    </div>
-    <!-- Umami Iframe -->
-    <div class="analytics-iframe-wrapper">
-        <iframe
-            src="https://cloud.umami.is/share/EC1wZPz4LAi9hrAM"
-            referrerpolicy="no-referrer-when-downgrade"
-            loading="lazy"
-            allow="clipboard-read; clipboard-write">
-        </iframe>
-    </div>
 
-    <!-- NEW: Web3Forms Iframe -->
-<h3 style="margin-top: 30px; margin-bottom: 10px;" data-i18n="admin_analytics_web3forms_title">📬 Form Submissions (Web3Forms)</h3>
-<p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_web3forms_desc">
-    View your contact form submissions.
-</p>
-<div class="analytics-iframe-wrapper" style="height: 600px;">
-    <iframe
-        src="https://web3forms.com/dashboard"
-        style="width:100%; height:100%; border:0;"
-        loading="lazy">
-    </iframe>
-</div>
-</div>
+            <!-- NEW: Web3Forms Iframe -->
+            <h3 style="margin-top: 30px; margin-bottom: 10px;" data-i18n="admin_analytics_web3forms_title">📬 Form Submissions (Web3Forms)</h3>
+            <p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_web3forms_desc">
+                View your contact form submissions.
+            </p>
+            <div class="analytics-iframe-wrapper" style="height: 600px;">
+                <iframe
+                    src="https://web3forms.com/dashboard"
+                    style="width:100%; height:100%; border:0;"
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
         <div class="card flex" style="justify-content: center; margin-top: 20px;">
             <button onclick="downloadBackup()" class="btn-blue" style="max-width: 300px;" data-i18n="admin_save_local">💾 Sauvegarde locale (JSON)</button>
             <input type="file" id="uploadBackup" accept=".json" style="display:none;" onchange="uploadBackup(event)">
@@ -791,6 +762,7 @@
         </div>
     </main>
 </div>
+
 <!-- ==================== TRANSLATOR MODALS ==================== -->
 <div id="translateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column;">
     <!-- White header with close button -->
@@ -803,16 +775,17 @@
         <iframe id="translateIframe" src="" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
-    <script>
+
+<script>
 /* =================================================================
    ADMIN TRANSLATIONS
    ================================================================= */
 const adminTranslations = {
     fr: {
         admin_site_translate_google: "🌍 Google Translate",
-admin_site_translate_rumantsch: "🇨🇭 Traducteur Rumantsch",
-admin_analytics_web3forms_title: "📬 Soumissions du formulaire (Web3Forms)",
-admin_analytics_web3forms_desc: "Consultez les messages reçus via le formulaire de contact.",
+        admin_site_translate_rumantsch: "🇨🇭 Traducteur Rumantsch",
+        admin_analytics_web3forms_title: "📬 Soumissions du formulaire (Web3Forms)",
+        admin_analytics_web3forms_desc: "Consultez les messages reçus via le formulaire de contact.",
         admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres du comité.", admin_login_btn: "Se connecter",
         admin_dashboard: "Tableau de bord", admin_sync_ready: "Prêt", admin_sync_save: "☁️ Sauvegarder", admin_sync_load: "☁️ Charger", admin_logout: "Déconnexion",
         admin_menu_label: "Menu",
@@ -868,9 +841,9 @@ admin_analytics_web3forms_desc: "Consultez les messages reçus via le formulaire
     },
     en: {
         admin_site_translate_google: "🌍 Google Translate",
-admin_site_translate_rumantsch: "🇨🇭 Rumantsch Translator",
-admin_analytics_web3forms_title: "📬 Form Submissions (Web3Forms)",
-admin_analytics_web3forms_desc: "View messages received via the contact form.",
+        admin_site_translate_rumantsch: "🇨🇭 Rumantsch Translator",
+        admin_analytics_web3forms_title: "📬 Form Submissions (Web3Forms)",
+        admin_analytics_web3forms_desc: "View messages received via the contact form.",
         admin_login_title: "Committee Space", admin_login_desc: "Committee members only.", admin_login_btn: "Log in",
         admin_dashboard: "Dashboard", admin_sync_ready: "Ready", admin_sync_save: "☁️ Save", admin_sync_load: "☁️ Load", admin_logout: "Log out",
         admin_menu_label: "Menu",
@@ -925,10 +898,10 @@ admin_analytics_web3forms_desc: "View messages received via the contact form.",
         admin_ag_confirm_pull: "Load ApiGuide from the cloud? This will replace the local editor content."
     },
     de: {
-      admin_site_translate_google: "🌍 Google Translate",
-admin_site_translate_rumantsch: "🇨🇭 Rumantsch-Übersetzer",
-admin_analytics_web3forms_title: "📬 Formular-Einsendungen (Web3Forms)",
-admin_analytics_web3forms_desc: "Sehen Sie Nachrichten, die über das Kontaktformular eingegangen sind.",
+        admin_site_translate_google: "🌍 Google Translate",
+        admin_site_translate_rumantsch: "🇨🇭 Rumantsch-Übersetzer",
+        admin_analytics_web3forms_title: "📬 Formular-Einsendungen (Web3Forms)",
+        admin_analytics_web3forms_desc: "Sehen Sie Nachrichten, die über das Kontaktformular eingegangen sind.",
         admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Komitee-Mitglieder.", admin_login_btn: "Anmelden",
         admin_dashboard: "Dashboard", admin_sync_ready: "Bereit", admin_sync_save: "☁️ Speichern", admin_sync_load: "☁️ Laden", admin_logout: "Abmelden",
         admin_menu_label: "Menü",
@@ -983,10 +956,10 @@ admin_analytics_web3forms_desc: "Sehen Sie Nachrichten, die über das Kontaktfor
         admin_ag_confirm_pull: "ApiGuide aus der Cloud laden? Der lokale Editorinhalt wird ersetzt."
     },
     it: {
-       admin_site_translate_google: "🌍 Google Translate",
-admin_site_translate_rumantsch: "🇨🇭 Traduttore Rumantsch",
-admin_analytics_web3forms_title: "📬 Invii del modulo (Web3Forms)",
-admin_analytics_web3forms_desc: "Visualizza i messaggi ricevuti tramite il modulo di contatto.",
+        admin_site_translate_google: "🌍 Google Translate",
+        admin_site_translate_rumantsch: "🇨🇭 Traduttore Rumantsch",
+        admin_analytics_web3forms_title: "📬 Invii del modulo (Web3Forms)",
+        admin_analytics_web3forms_desc: "Visualizza i messaggi ricevuti tramite il modulo di contatto.",
         admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri del comitato.", admin_login_btn: "Accedi",
         admin_dashboard: "Dashboard", admin_sync_ready: "Pronto", admin_sync_save: "☁️ Salva", admin_sync_load: "☁️ Carica", admin_logout: "Disconnetti",
         admin_menu_label: "Menu",
@@ -1041,10 +1014,10 @@ admin_analytics_web3forms_desc: "Visualizza i messaggi ricevuti tramite il modul
         admin_ag_confirm_pull: "Caricare ApiGuide dal cloud? Il contenuto locale dell'editor sarà sostituito."
     },
     rm: {
-       admin_site_translate_google: "🌍 Google Translate",
-admin_site_translate_rumantsch: "🇨🇭 Translatur Rumantsch",
-admin_analytics_web3forms_title: "📬 Tramissiuns dal formular (Web3Forms)",
-admin_analytics_web3forms_desc: "Controlla ils messadis retschavids tras il formular da contact.",
+        admin_site_translate_google: "🌍 Google Translate",
+        admin_site_translate_rumantsch: "🇨🇭 Translatur Rumantsch",
+        admin_analytics_web3forms_title: "📬 Tramissiuns dal formular (Web3Forms)",
+        admin_analytics_web3forms_desc: "Controlla ils messadis retschavids tras il formular da contact.",
         admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers dal comité.", admin_login_btn: "S'annunziar",
         admin_dashboard: "Dashboard", admin_sync_ready: "Pront", admin_sync_save: "☁️ Memorisar", admin_sync_load: "☁️ Chargiar", admin_logout: "Sortir",
         admin_menu_label: "Menu",
@@ -1286,6 +1259,7 @@ function loadAllData() {
     renderThanks();
     agRender();
 }
+
 // --- TRANSLATOR MODALS ---
 function openTranslateModal(type) {
     const modal = document.getElementById('translateModal');
@@ -1303,11 +1277,11 @@ function openTranslateModal(type) {
     modal.style.display = 'flex';
 }
 
-
 function closeTranslateModal() {
     document.getElementById('translateModal').style.display = 'none';
-    document.getElementById('translateIframe').src = ""; // Clear iframe to stop loading/playing
+    document.getElementById('translateIframe').src = ""; 
 }
+
 function saveAllData() {
     localStorage.setItem('vc_caisse', JSON.stringify(transactions));
     localStorage.setItem('vc_archives', JSON.stringify(archives));
