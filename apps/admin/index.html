@@ -602,7 +602,7 @@
                 <button class="subtab" data-sub="apiguide" onclick="switchSubTab('apiguide')" data-i18n="admin_site_apiguide_tab">🐝 ApiGuide</button>
             </div>
 
-                        <!-- NEW BUTTONS -->
+            <!-- NEW BUTTONS -->
             <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
                 <button onclick="openTranslateModal('google')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px;" data-i18n="admin_site_translate_google">
                     🌍 Google Translate
@@ -611,6 +611,7 @@
                     🇨🇭 Rumantsch Translator
                 </button>
             </div>
+
             <div id="subTabBlog" class="subtab-content">
                 <h3 data-i18n="admin_blog_add_title">Ajouter un article de blog</h3>
                 <div class="blog-lang-tabs">
@@ -720,7 +721,7 @@
             </div>
         </div>
 
-               <div id="tabAnalytics" class="card hidden">
+        <div id="tabAnalytics" class="card hidden">
             <h2 data-i18n="admin_analytics_title">📊 Analytics</h2>
             <p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_desc">
                 Umami statistics dashboard (public share view).
@@ -730,8 +731,7 @@
                     ↗ <span data-i18n="admin_analytics_open">Open in new tab</span>
                 </a>
             </div>
-            
-            <!-- Umami Iframe (This one still works) -->
+            <!-- Umami Iframe -->
             <div class="analytics-iframe-wrapper">
                 <iframe
                     src="https://cloud.umami.is/share/EC1wZPz4LAi9hrAM"
@@ -741,18 +741,19 @@
                 </iframe>
             </div>
 
-            <!-- NEW: Web3Forms Link (Since iframe doesn't work) -->
+            <!-- NEW: Web3Forms Link -->
             <h3 style="margin-top: 30px; margin-bottom: 10px;" data-i18n="admin_analytics_web3forms_title">📬 Form Submissions (Web3Forms)</h3>
             <p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_web3forms_desc">
                 View your contact form submissions.
             </p>
             <div style="text-align:center; padding: 20px; background: var(--bg); border-radius: 12px; border: 1px dashed var(--border);">
-                <p style="margin-bottom: 15px; font-size: 0.9rem;">Web3Forms blocks embedding. Click below to open the dashboard.</p>
-                <a href="https://web3forms.com/dashboard" target="_blank" rel="noopener" class="btn-blue" style="display:inline-block; padding: 12px 24px; border-radius: 30px; text-decoration:none; font-weight:bold; color: white;">
+                <p style="margin-bottom: 15px; font-size: 0.9rem;" data-i18n="admin_web3forms_blocked">Web3Forms blocks embedding. Click below to open the dashboard.</p>
+                <a href="https://web3forms.com/dashboard" target="_blank" rel="noopener" class="btn-blue" style="display:inline-block; padding: 12px 24px; border-radius: 30px; text-decoration:none; font-weight:bold; color: white;" data-i18n="admin_web3forms_btn">
                     ↗ Open Web3Forms Dashboard
                 </a>
             </div>
         </div>
+
         <div class="card flex" style="justify-content: center; margin-top: 20px;">
             <button onclick="downloadBackup()" class="btn-blue" style="max-width: 300px;" data-i18n="admin_save_local">💾 Sauvegarde locale (JSON)</button>
             <input type="file" id="uploadBackup" accept=".json" style="display:none;" onchange="uploadBackup(event)">
@@ -765,13 +766,13 @@
 <div id="translateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding: 20px;">
     <div style="background:var(--surface); padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:center; border:1px solid var(--border);">
         <h3 id="translateModalTitle" style="margin-bottom: 15px; color: var(--primary); font-size: 1.2rem;">Translator</h3>
-        <p style="font-size:0.9rem; margin-bottom: 20px; color: var(--text);">This external service cannot be embedded directly. Click below to open it in a new tab.</p>
+        <p style="font-size:0.9rem; margin-bottom: 20px; color: var(--text);" data-i18n="admin_modal_translator_desc">This external service cannot be embedded directly. Click below to open it in a new tab.</p>
         
         <a id="translateLinkBtn" href="#" target="_blank" class="btn-blue" style="display:block; padding: 12px; border-radius: 8px; text-decoration:none; font-weight:bold; margin-bottom: 10px;">
-            🌍 Open Translator
+            Open
         </a>
         
-        <button onclick="closeTranslateModal()" style="background:var(--muted); color:white; padding: 10px; border-radius: 8px; width: 100%; border:none; cursor:pointer;">
+        <button onclick="closeTranslateModal()" style="background:var(--muted); color:white; padding: 10px; border-radius: 8px; width: 100%; border:none; cursor:pointer;" data-i18n="admin_modal_btn_close">
             Close
         </button>
     </div>
@@ -787,6 +788,29 @@ const adminTranslations = {
         admin_site_translate_rumantsch: "🇨🇭 Traducteur Rumantsch",
         admin_analytics_web3forms_title: "📬 Soumissions du formulaire (Web3Forms)",
         admin_analytics_web3forms_desc: "Consultez les messages reçus via le formulaire de contact.",
+        admin_modal_translator_desc: "Ce service externe ne peut pas être intégré directement. Cliquez ci-dessous pour l'ouvrir dans un nouvel onglet.",
+        admin_modal_btn_google: "🌍 Ouvrir Google Translate",
+        admin_modal_btn_rumantsch: "🇨🇭 Ouvrir le traducteur Rumantsch",
+        admin_modal_btn_close: "Fermer",
+        admin_web3forms_blocked: "Web3Forms bloque l'intégration. Cliquez ci-dessous pour ouvrir le tableau de bord.",
+        admin_web3forms_btn: "Ouvrir le tableau de bord Web3Forms",
+        admin_alert_fill_fields: "Remplis tous les champs !",
+        admin_alert_enter_name: "Entrez un nom.",
+        admin_alert_folder_exists: "Dossier existant.",
+        admin_alert_confirm_delete_folder: "Supprimer le dossier \"{name}\" ?",
+        admin_alert_fill_title_content: "Remplis le titre et le contenu.",
+        admin_alert_doc_saved: "✅ Document enregistré !",
+        admin_alert_fill_name: "Remplis le nom.",
+        admin_alert_invalid_json: "❌ Fichier JSON invalide.",
+        admin_alert_error_read: "❌ Erreur lors de la lecture.",
+        admin_alert_restore_success: "✅ Sauvegarde restaurée !",
+        admin_alert_confirm_overwrite: "⚠️ Cela va remplacer TOUTES les données actuelles. Continuer ?",
+        admin_alert_no_cloud_data: "Aucune donnée sur le Cloud.",
+        admin_alert_confirm_load: "Des données ont été trouvées sur GitHub. Voulez-vous les charger ?",
+        admin_alert_save_success: "Sauvegarde GitHub réussie !",
+        admin_alert_file_too_large: "⚠️ Fichier trop lourd (>1Mo).",
+        admin_alert_network_error: "❌ Erreur réseau",
+        admin_alert_load_error: "❌ Erreur de chargement",
         admin_login_title: "Espace Comité", admin_login_desc: "Accès réservé aux membres du comité.", admin_login_btn: "Se connecter",
         admin_dashboard: "Tableau de bord", admin_sync_ready: "Prêt", admin_sync_save: "☁️ Sauvegarder", admin_sync_load: "☁️ Charger", admin_logout: "Déconnexion",
         admin_menu_label: "Menu",
@@ -845,6 +869,29 @@ const adminTranslations = {
         admin_site_translate_rumantsch: "🇨🇭 Rumantsch Translator",
         admin_analytics_web3forms_title: "📬 Form Submissions (Web3Forms)",
         admin_analytics_web3forms_desc: "View messages received via the contact form.",
+        admin_modal_translator_desc: "This external service cannot be embedded directly. Click below to open it in a new tab.",
+        admin_modal_btn_google: "🌍 Open Google Translate",
+        admin_modal_btn_rumantsch: "🇨🇭 Open Rumantsch Translator",
+        admin_modal_btn_close: "Close",
+        admin_web3forms_blocked: "Web3Forms blocks embedding. Click below to open the dashboard.",
+        admin_web3forms_btn: "Open Web3Forms Dashboard",
+        admin_alert_fill_fields: "Fill all fields!",
+        admin_alert_enter_name: "Enter a name.",
+        admin_alert_folder_exists: "Folder already exists.",
+        admin_alert_confirm_delete_folder: "Delete folder \"{name}\"?",
+        admin_alert_fill_title_content: "Fill the title and content.",
+        admin_alert_doc_saved: "✅ Document saved!",
+        admin_alert_fill_name: "Fill the name.",
+        admin_alert_invalid_json: "❌ Invalid JSON file.",
+        admin_alert_error_read: "❌ Error while reading.",
+        admin_alert_restore_success: "✅ Backup restored!",
+        admin_alert_confirm_overwrite: "⚠️ This will replace ALL current data. Continue?",
+        admin_alert_no_cloud_data: "No data on the Cloud.",
+        admin_alert_confirm_load: "Data was found on GitHub. Do you want to load it?",
+        admin_alert_save_success: "GitHub save successful!",
+        admin_alert_file_too_large: "⚠️ File too large (>1MB).",
+        admin_alert_network_error: "❌ Network error",
+        admin_alert_load_error: "❌ Loading error",
         admin_login_title: "Committee Space", admin_login_desc: "Committee members only.", admin_login_btn: "Log in",
         admin_dashboard: "Dashboard", admin_sync_ready: "Ready", admin_sync_save: "☁️ Save", admin_sync_load: "☁️ Load", admin_logout: "Log out",
         admin_menu_label: "Menu",
@@ -903,6 +950,29 @@ const adminTranslations = {
         admin_site_translate_rumantsch: "🇨🇭 Rumantsch-Übersetzer",
         admin_analytics_web3forms_title: "📬 Formular-Einsendungen (Web3Forms)",
         admin_analytics_web3forms_desc: "Sehen Sie Nachrichten, die über das Kontaktformular eingegangen sind.",
+        admin_modal_translator_desc: "Dieser externe Dienst kann nicht direkt eingebettet werden. Klicken Sie unten, um ihn in einem neuen Tab zu öffnen.",
+        admin_modal_btn_google: "🌍 Google Translate öffnen",
+        admin_modal_btn_rumantsch: "🇨🇭 Rumantsch-Übersetzer öffnen",
+        admin_modal_btn_close: "Schließen",
+        admin_web3forms_blocked: "Web3Forms blockiert das Einbetten. Klicken Sie unten, um das Dashboard zu öffnen.",
+        admin_web3forms_btn: "Web3Forms-Dashboard öffnen",
+        admin_alert_fill_fields: "Füllen Sie alle Felder aus!",
+        admin_alert_enter_name: "Geben Sie einen Namen ein.",
+        admin_alert_folder_exists: "Ordner existiert bereits.",
+        admin_alert_confirm_delete_folder: "Ordner \"{name}\" löschen?",
+        admin_alert_fill_title_content: "Titel und Inhalt ausfüllen.",
+        admin_alert_doc_saved: "✅ Dokument gespeichert!",
+        admin_alert_fill_name: "Namen ausfüllen.",
+        admin_alert_invalid_json: "❌ Ungültige JSON-Datei.",
+        admin_alert_error_read: "❌ Fehler beim Lesen.",
+        admin_alert_restore_success: "✅ Backup wiederhergestellt!",
+        admin_alert_confirm_overwrite: "⚠️ Dies ersetzt ALLE aktuellen Daten. Fortfahren?",
+        admin_alert_no_cloud_data: "Keine Daten in der Cloud.",
+        admin_alert_confirm_load: "Daten auf GitHub gefunden. Möchten Sie sie laden?",
+        admin_alert_save_success: "GitHub-Speicherung erfolgreich!",
+        admin_alert_file_too_large: "⚠️ Datei zu groß (>1MB).",
+        admin_alert_network_error: "❌ Netzwerkfehler",
+        admin_alert_load_error: "❌ Ladefehler",
         admin_login_title: "Komitee-Bereich", admin_login_desc: "Nur für Komitee-Mitglieder.", admin_login_btn: "Anmelden",
         admin_dashboard: "Dashboard", admin_sync_ready: "Bereit", admin_sync_save: "☁️ Speichern", admin_sync_load: "☁️ Laden", admin_logout: "Abmelden",
         admin_menu_label: "Menü",
@@ -961,6 +1031,29 @@ const adminTranslations = {
         admin_site_translate_rumantsch: "🇨🇭 Traduttore Rumantsch",
         admin_analytics_web3forms_title: "📬 Invii del modulo (Web3Forms)",
         admin_analytics_web3forms_desc: "Visualizza i messaggi ricevuti tramite il modulo di contatto.",
+        admin_modal_translator_desc: "Questo servizio esterno non può essere incorporato direttamente. Clicca sotto per aprirlo in una nuova scheda.",
+        admin_modal_btn_google: "🌍 Apri Google Translate",
+        admin_modal_btn_rumantsch: "🇨🇭 Apri il traduttore Rumantsch",
+        admin_modal_btn_close: "Chiudi",
+        admin_web3forms_blocked: "Web3Forms blocca l'incorporamento. Clicca sotto per aprire la dashboard.",
+        admin_web3forms_btn: "Apri la dashboard di Web3Forms",
+        admin_alert_fill_fields: "Compila tutti i campi!",
+        admin_alert_enter_name: "Inserisci un nome.",
+        admin_alert_folder_exists: "La cartella esiste già.",
+        admin_alert_confirm_delete_folder: "Eliminare la cartella \"{name}\"?",
+        admin_alert_fill_title_content: "Compila il titolo e il contenuto.",
+        admin_alert_doc_saved: "✅ Documento salvato!",
+        admin_alert_fill_name: "Compila il nome.",
+        admin_alert_invalid_json: "❌ File JSON non valido.",
+        admin_alert_error_read: "❌ Errore durante la lettura.",
+        admin_alert_restore_success: "✅ Backup ripristinato!",
+        admin_alert_confirm_overwrite: "⚠️ Questo sostituirà TUTTI i dati attuali. Continuare?",
+        admin_alert_no_cloud_data: "Nessun dato sul Cloud.",
+        admin_alert_confirm_load: "Dati trovati su GitHub. Vuoi caricarli?",
+        admin_alert_save_success: "Salvataggio su GitHub riuscito!",
+        admin_alert_file_too_large: "⚠️ File troppo grande (>1MB).",
+        admin_alert_network_error: "❌ Errore di rete",
+        admin_alert_load_error: "❌ Errore di caricamento",
         admin_login_title: "Spazio Comitato", admin_login_desc: "Solo per membri del comitato.", admin_login_btn: "Accedi",
         admin_dashboard: "Dashboard", admin_sync_ready: "Pronto", admin_sync_save: "☁️ Salva", admin_sync_load: "☁️ Carica", admin_logout: "Disconnetti",
         admin_menu_label: "Menu",
@@ -1019,6 +1112,29 @@ const adminTranslations = {
         admin_site_translate_rumantsch: "🇨🇭 Translatur Rumantsch",
         admin_analytics_web3forms_title: "📬 Tramissiuns dal formular (Web3Forms)",
         admin_analytics_web3forms_desc: "Controlla ils messadis retschavids tras il formular da contact.",
+        admin_modal_translator_desc: "Quest servetsch extern na po betg vegnir integrà directamain. Clicca sutvart per el avrir en in nov tab.",
+        admin_modal_btn_google: "🌍 Avrir Google Translate",
+        admin_modal_btn_rumantsch: "🇨🇭 Avrir il translatur Rumantsch",
+        admin_modal_btn_close: "Serrar",
+        admin_web3forms_blocked: "Web3Forms blochescha l'integraziun. Clicca sutvart per avrir il dashboard.",
+        admin_web3forms_btn: "Avrir il dashboard Web3Forms",
+        admin_alert_fill_fields: "Emplenescha tut ils champs!",
+        admin_alert_enter_name: "Endatescha in num.",
+        admin_alert_folder_exists: "L'ordinatur exista gia.",
+        admin_alert_confirm_delete_folder: "Stizzar l'ordinatur \"{name}\"?",
+        admin_alert_fill_title_content: "Emplenescha il titel ed il cuntegn.",
+        admin_alert_doc_saved: "✅ Document memorisà!",
+        admin_alert_fill_name: "Emplenescha il num.",
+        admin_alert_invalid_json: "❌ Datoteca JSON nunvalaivla.",
+        admin_alert_error_read: "❌ Errur cun leger.",
+        admin_alert_restore_success: "✅ Backup restabilì!",
+        admin_alert_confirm_overwrite: "⚠️ Quai remplazza TUT las datas actualas. Cuntinuar?",
+        admin_alert_no_cloud_data: "Naginas datas en il Cloud.",
+        admin_alert_confirm_load: "Datas chattadas sin GitHub. Vuls ti las chargiar?",
+        admin_alert_save_success: "Memorisar sin GitHub reussì!",
+        admin_alert_file_too_large: "⚠️ Datoteca massa gronda (>1MB).",
+        admin_alert_network_error: "❌ Errur da rait",
+        admin_alert_load_error: "❌ Errur da chargiar",
         admin_login_title: "Spazi dal comité", admin_login_desc: "Mo per commembers dal comité.", admin_login_btn: "S'annunziar",
         admin_dashboard: "Dashboard", admin_sync_ready: "Pront", admin_sync_save: "☁️ Memorisar", admin_sync_load: "☁️ Chargiar", admin_logout: "Sortir",
         admin_menu_label: "Menu",
@@ -1270,15 +1386,16 @@ function openTranslateModal(type) {
     if (type === 'google') {
         title.innerText = "Google Translate";
         linkBtn.href = "https://translate.google.com/?sl=fr&tl=en&op=translate";
-        linkBtn.innerText = "🌍 Open Google Translate";
+        linkBtn.innerText = t('admin_modal_btn_google');
     } else if (type === 'rumantsch') {
         title.innerText = "Rumantsch Translator";
-        linkBtn.href = "https://www.supertext.ch/en/translation/rumantsch"; // Supertext URL
-        linkBtn.innerText = "🇨🇭 Open Rumantsch Translator";
+        linkBtn.href = "https://www.supertext.ch/en/translation/rumantsch"; 
+        linkBtn.innerText = t('admin_modal_btn_rumantsch');
     }
 
     modal.style.display = 'flex';
 }
+
 function closeTranslateModal() {
     document.getElementById('translateModal').style.display = 'none';
 }
@@ -1355,7 +1472,7 @@ function addTransaction() {
     const date = document.getElementById('txDate').value;
     const desc = document.getElementById('txDesc').value;
     const amount = parseFloat(document.getElementById('txAmount').value);
-    if (!date || !desc || isNaN(amount)) return alert("Remplis tous les champs !");
+    if (!date || !desc || isNaN(amount)) return alert(t('admin_alert_fill_fields'));
     transactions.push({ type: type, date: date, desc: desc, amount: Math.abs(amount) });
     renderTable();
     saveAllData();
@@ -1459,8 +1576,8 @@ function renderArchives() {
 }
 function createFolder() {
     const name = document.getElementById('newFolderName').value.trim();
-    if (!name) return alert("Entrez un nom.");
-    if (archives[name]) return alert("Dossier existant.");
+    if (!name) return alert(t('admin_alert_enter_name'));
+    if (archives[name]) return alert(t('admin_alert_folder_exists'));
     archives[name] = [];
     document.getElementById('newFolderName').value = '';
     renderArchives();
@@ -1468,7 +1585,7 @@ function createFolder() {
     updateEditorFolders();
 }
 function deleteFolder(name) {
-    if (confirm('Supprimer le dossier "' + name + '" ?')) {
+    if (confirm(t('admin_alert_confirm_delete_folder').replace('{name}', name))) {
         delete archives[name];
         renderArchives();
         saveAllData();
@@ -1514,11 +1631,11 @@ function saveTextDoc() {
     const folder = document.getElementById('editorFolder').value;
     const title = document.getElementById('editorTitle').value.trim();
     const content = document.getElementById('editorContent').value.trim();
-    if (!title || !content) return alert("Remplis le titre et le contenu.");
+    if (!title || !content) return alert(t('admin_alert_fill_title_content'));
     if (!archives[folder]) archives[folder] = [];
     archives[folder].push({ id: Date.now().toString(), name: title + ".txt", type: 'text', content: content });
     saveAllData();
-    alert("✅ Document enregistré !");
+    alert(t('admin_alert_doc_saved'));
     document.getElementById('editorTitle').value = '';
     document.getElementById('editorContent').value = '';
 }
@@ -1628,7 +1745,7 @@ function addMember() {
     const name = document.getElementById('memberName').value.trim();
     const image = document.getElementById('memberImage').value.trim();
     const group = document.getElementById('memberGroup').value;
-    if (!name) return alert("Remplis le nom.");
+    if (!name) return alert(t('admin_alert_fill_name'));
     const role = {};
     let hasAtLeastFr = false;
     ['fr', 'en', 'de', 'it', 'rm'].forEach(lang => {
@@ -1715,7 +1832,7 @@ function uploadBackup(event) {
         try {
             const parsed = JSON.parse(e.target.result);
             if (parsed.caisse || parsed.archives || parsed.blog || parsed.members || parsed.specialThanks || parsed.apiguide) {
-                if (confirm("⚠️ Cela va remplacer TOUTES les données actuelles. Continuer ?")) {
+                if (confirm(t('admin_alert_confirm_overwrite'))) {
                     transactions = parsed.caisse || [];
                     archives = parsed.archives || {};
                     blogPosts = parsed.blog || [];
@@ -1730,11 +1847,11 @@ function uploadBackup(event) {
                     updateEditorFolders();
                     agRender();
                     saveAllData();
-                    alert("✅ Sauvegarde restaurée !");
+                    alert(t('admin_alert_restore_success'));
                 }
-            } else alert("❌ Fichier JSON invalide.");
+            } else alert(t('admin_alert_invalid_json'));
         } catch (err) {
-            alert("❌ Erreur lors de la lecture.");
+            alert(t('admin_alert_error_read'));
         }
     };
     reader.readAsText(file);
@@ -1778,7 +1895,7 @@ async function syncCloud(action) {
                 apiguide: AG_CONTENT
             });
             const jsonString = JSON.stringify(data);
-            if (new Blob([jsonString]).size > 1048576) return alert("⚠️ Fichier trop lourd (>1Mo).");
+            if (new Blob([jsonString]).size > 1048576) return alert(t('admin_alert_file_too_large'));
             const body = { files: {} };
             body.files[GIST_FILENAME] = { content: jsonString };
             const res = await fetch(GITHUB_API_URL, {
@@ -1788,7 +1905,7 @@ async function syncCloud(action) {
             });
             if (res.ok) {
                 status.textContent = "✅ Sauvegardé sur GitHub";
-                alert("Sauvegarde GitHub réussie !");
+                alert(t('admin_alert_save_success'));
                 try { localStorage.setItem('vc_gist_updated', Date.now().toString()); } catch(e) {}
             } else {
                 const err = await res.json();
@@ -1796,7 +1913,7 @@ async function syncCloud(action) {
                 alert("Erreur : " + (err.message || res.statusText));
             }
         } catch (e) {
-            status.textContent = "❌ Erreur réseau";
+            status.textContent = t('admin_alert_network_error');
             console.error(e);
         }
     }
@@ -1807,10 +1924,10 @@ async function syncCloud(action) {
             const gistData = await res.json();
             if (gistData.files && gistData.files[GIST_FILENAME]) {
                 const fileContent = gistData.files[GIST_FILENAME].content;
-                if (!fileContent || fileContent.trim() === "{}") return alert("Aucune donnée sur le Cloud.");
+                if (!fileContent || fileContent.trim() === "{}") return alert(t('admin_alert_no_cloud_data'));
                 const parsed = JSON.parse(fileContent);
                 if (parsed) {
-                    if (confirm("Des données ont été trouvées sur GitHub. Voulez-vous les charger ?")) {
+                    if (confirm(t('admin_alert_confirm_load'))) {
                         transactions = parsed.caisse || [];
                         archives = parsed.archives || {};
                         blogPosts = parsed.blog || [];
@@ -1830,7 +1947,7 @@ async function syncCloud(action) {
                 }
             }
         } catch (e) {
-            status.textContent = "❌ Erreur de chargement";
+            status.textContent = t('admin_alert_load_error');
             console.error(e);
         }
     }
