@@ -38,7 +38,61 @@
             --shadow: 0 4px 20px rgba(0,0,0,0.05);
             --shadow-hover: 0 10px 30px rgba(0,0,0,0.1);
         }
+/* --- BREADCRUMB NAVIGATION --- */
+.breadcrumb-nav {
+    display: block; /* Overrides your global 'nav { display: flex; }' */
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
 
+.breadcrumb-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Separator */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    margin: 0 10px;
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Override global 'nav a' padding */
+.breadcrumb-item a {
+    padding: 0;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+/* Current page */
+.breadcrumb-item.active {
+    color: var(--text-main);
+    font-weight: 700;
+}
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
@@ -633,7 +687,18 @@
     </style>
 </head>
 <body>
+<main>
+  <!-- BREADCRUMB NAVIGATION -->
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb-list">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="/ressources">Ressources</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Liens utiles</li>
+    </ol>
+  </nav>
 
+  <!-- Your existing page content starts here... -->
+    
     <header>
         <div class="header-left">
             <a href="#" class="logo-container" onclick="window.location.hash=''">
