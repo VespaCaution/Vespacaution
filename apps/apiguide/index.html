@@ -227,7 +227,7 @@ footer {
 </head>
 <body>
 <div class="app-header">
-  <div class="app-title">ApiGuide <small>v1.0 · beekeeping seasons & activities</small></div>
+  <div class="app-title">ApiGuide <small id="appSubtitle">v1.0</small></div>
   <div class="editor-bar">
     <select class="lang-select" id="langSelect"></select>
   </div>
@@ -240,7 +240,7 @@ footer {
   <button class="install-btn" id="installBtn">⬇ Installer l'application</button>
 </div>
 
-<footer>ApiGuide v1.0</footer>
+<footer id="appFooter">ApiGuide v1.0</footer>
 
 <script>
 const GIST_ID = "f4fe8523136960f0289660123aa32cb7";
@@ -252,11 +252,31 @@ const LANG_LABELS = { en:'English', fr:'Français', it:'Italiano', de:'Deutsch',
 
 // UI Translations
 const UI_TEXT = {
-  en: { back: "← Back", chooseSeason: "choose a season", activity: "activity", noText: "(no text)", loading: "Loading...", offline: "Content not yet available. An administrator must publish it from the committee panel.", install: "⬇ Install App" },
-  fr: { back: "← Retour", chooseSeason: "choisir une saison", activity: "activité", noText: "(aucun texte)", loading: "Chargement...", offline: "Contenu pas encore disponible. Un administrateur doit le publier depuis le panneau comité.", install: "⬇ Installer l'app" },
-  de: { back: "← Zurück", chooseSeason: "Jahreszeit wählen", activity: "Aktivität", noText: "(kein Text)", loading: "Lädt...", offline: "Inhalt noch nicht verfügbar. Ein Administrator muss ihn über das Komitee-Panel veröffentlichen.", install: "⬇ App installieren" },
-  it: { back: "← Indietro", chooseSeason: "scegli una stagione", activity: "attività", noText: "(nessun testo)", loading: "Caricamento...", offline: "Contenuto non ancora disponibile. Un amministratore deve pubblicarlo dal pannello del comitato.", install: "⬇ Installa app" },
-  rm: { back: "← Enavos", chooseSeason: "tscherna ina stagiun", activity: "activitad", noText: "(nagin text)", loading: "Chargiar...", offline: "Cuntegn betg anc disponibel. In administratur sto el publitgar dal panel dal comité.", install: "⬇ Installar l'app" }
+  en: { 
+    back: "← Back", chooseSeason: "choose a season", activity: "activity", noText: "(no text)", 
+    loading: "Loading...", offline: "Content not yet available. An administrator must publish it from the committee panel.", 
+    install: "⬇ Install App", subtitle: "v1.0 · beekeeping seasons & activities" 
+  },
+  fr: { 
+    back: "← Retour", chooseSeason: "choisir une saison", activity: "activité", noText: "(aucun texte)", 
+    loading: "Chargement...", offline: "Contenu pas encore disponible. Un administrateur doit le publier depuis le panneau comité.", 
+    install: "⬇ Installer l'app", subtitle: "v1.0 · saisons & activités apicoles" 
+  },
+  de: { 
+    back: "← Zurück", chooseSeason: "Jahreszeit wählen", activity: "Aktivität", noText: "(kein Text)", 
+    loading: "Lädt...", offline: "Inhalt noch nicht verfügbar. Ein Administrator muss ihn über das Komitee-Panel veröffentlichen.", 
+    install: "⬇ App installieren", subtitle: "v1.0 · Jahreszeiten & Imkerei" 
+  },
+  it: { 
+    back: "← Indietro", chooseSeason: "scegli una stagione", activity: "attività", noText: "(nessun testo)", 
+    loading: "Caricamento...", offline: "Contenuto non ancora disponibile. Un amministratore deve pubblicarlo dal pannello del comitato.", 
+    install: "⬇ Installa app", subtitle: "v1.0 · stagioni & attività apistiche" 
+  },
+  rm: { 
+    back: "← Enavos", chooseSeason: "tscherna ina stagiun", activity: "activitad", noText: "(nagin text)", 
+    loading: "Chargiar...", offline: "Cuntegn betg anc disponibel. In administratur sto el publitgar dal panel dal comité.", 
+    install: "⬇ Installar l'app", subtitle: "v1.0 · stagiuns & activitats da las avieuls" 
+  }
 };
 
 function blankLang() {
@@ -296,6 +316,20 @@ function currentTitles(level) {
 }
 function t(key) {
   return UI_TEXT[currentLang][key] || UI_TEXT['en'][key] || key;
+}
+
+// Updates the header subtitle and footer dynamically
+function updateStaticUI() {
+  const subtitleEl = document.getElementById('appSubtitle');
+  if (subtitleEl) subtitleEl.innerText = t('subtitle');
+  
+  const footerEl = document.getElementById('appFooter');
+  if (footerEl) footerEl.innerText = `ApiGuide ${t('subtitle')}`;
+
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn && !isStandalone()) {
+    installBtn.innerText = t('install');
+  }
 }
 
 async function loadContent() {
@@ -353,6 +387,7 @@ function normalizeContent(raw) {
 
 function render() {
   renderLangSwitcher();
+  updateStaticUI();
   const app = document.getElementById('app');
 
   if (s !== null && l1 !== null) {
@@ -363,7 +398,7 @@ function render() {
         <span class="breadcrumb">${esc(LANG_LABELS[currentLang])} · S${s+1} · ${l1+1}</span>
       </div>
       <div class="textbox-container">
-        <!-- REMOVED Notes Header -->
+        <!-- Notes header removed here -->
         ${text && text.length ? `<div class="text-content">${esc(text)}</div>` : `<div class="empty-note">${t('noText')}</div>`}
       </div>
     `;
@@ -427,16 +462,7 @@ function renderLangSwitcher() {
     localStorage.setItem('apiguide_lang', currentLang);
     resetNav();
     render();
-    updateInstallBtn();
   };
-}
-
-// Update Install Button Text based on language
-function updateInstallBtn() {
-  const installBtn = document.getElementById('installBtn');
-  if (installBtn && !isStandalone()) {
-    installBtn.innerText = t('install');
-  }
 }
 
 let deferredInstallPrompt = null;
@@ -454,8 +480,6 @@ const installBtn = document.getElementById('installBtn');
 if (installBtn) {
   if (isStandalone()) {
     installBtn.style.display = 'none';
-  } else {
-    installBtn.innerText = t('install');
   }
   
   installBtn.addEventListener('click', async () => {
