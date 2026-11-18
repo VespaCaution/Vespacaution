@@ -350,18 +350,34 @@
         
     }
 }
-        @media (prefers-color-scheme: dark) {
-    /* Force the ApiGuide warning to stay a badge in dark mode */
+        /* =========================================
+   API GUIDE WARNING BADGE (Light & Dark)
+   ========================================= */
+.apiguide-warning {
+    display: block;
+    width: fit-content;
+    max-width: 90%;
+    margin: 12px auto 0 auto;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.4;
+    
+    /* Light Mode Colors */
+    background: linear-gradient(135deg, #fee2e2, #ffedd5, #fce7f3);
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
     .apiguide-warning {
-        display: inline-block !important;
+        /* Dark Mode Colors */
         background: linear-gradient(135deg, #4a1c1c, #3d3326) !important;
         border: 1px solid #d9534f !important;
         color: #ff8a80 !important;
-        padding: 8px 18px !important;
-        border-radius: 20px !important;
-        margin: 12px auto !important;
-        max-width: 90% !important;
-        text-align: center !important;
         box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2) !important;
     }
 }
