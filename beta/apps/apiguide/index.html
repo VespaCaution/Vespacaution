@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light dark">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#c99b48">
 <title>ApiGuide v1.0</title>
 <link rel="manifest" href="manifest.json">
@@ -25,35 +25,105 @@ body {
     display: flex;
     flex-direction: column;
 }
+/* =========================================
+   DARK MODE - APIGUIDE
+   ========================================= */
 @media (prefers-color-scheme: dark) {
     :root { color-scheme: dark; }
+
+    body { 
+        background: #121212 !important; 
+        color: #f0f0f0 !important; 
+    }
+
+    .app-header { 
+        border-bottom-color: #333 !important; 
+    }
     
-    body { background: #121212 !important; color: #f0f0f0 !important; }
+    .app-title { 
+        color: #c99b48 !important; 
+    }
     
-    .app-header { border-bottom-color: #333 !important; }
-    .app-title { color: #c99b48 !important; }
-    .app-title small { color: #a0a0a0 !important; }
-    .lang-select { background: #2a2a2a !important; color: #c99b48 !important; border-color: #444 !important; }
+    .app-title small { 
+        color: #a0a0a0 !important; 
+    }
+
+    .lang-select { 
+        background: #2a2a2a !important; 
+        color: #c99b48 !important; 
+        border-color: #444 !important; 
+    }
+
+    .back-btn, .btn { 
+        background: #c99b48 !important; 
+        color: #121212 !important; 
+    }
     
-    .back-btn, .btn { background: #c99b48 !important; color: #121212 !important; }
-    .btn-ghost { background: transparent !important; border-color: #c99b48 !important; color: #c99b48 !important; }
+    .btn-ghost { 
+        background: transparent !important; 
+        border-color: #c99b48 !important; 
+        color: #c99b48 !important; 
+    }
+
+    .grid-btn { 
+        background: #1e1e1e !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
+        box-shadow: 0 3px 0 #c99b48 !important; 
+    }
+
+    .textbox-container { 
+        background: #1e1e1e !important; 
+        border-color: #333 !important; 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important; 
+    }
     
-    .grid-btn { background: #1e1e1e !important; color: #f0f0f0 !important; border-color: #444 !important; box-shadow: 0 3px 0 #c99b48 !important; }
-    .textbox-container { background: #1e1e1e !important; border-color: #333 !important; box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important; }
-    .textbox-container h2, .breadcrumb { color: #c99b48 !important; }
-    .text-content { color: #f0f0f0 !important; }
+    .text-content { 
+        color: #f0f0f0 !important; 
+    }
     
-    textarea { background: #121212 !important; color: #f0f0f0 !important; border-color: #444 !important; }
-    .empty-note { color: #a0a0a0 !important; }
+    .breadcrumb { 
+        color: #c99b48 !important; 
+    }
+
+    textarea { 
+        background: #121212 !important; 
+        color: #f0f0f0 !important; 
+        border-color: #444 !important; 
+    }
     
-    footer { color: #a0a0a0 !important; border-top-color: #333 !important; }
-    .install-btn { background: #4a7c2e !important; color: #ffffff !important; }
-    .editor-hint { background: #3d3326 !important; color: #c99b48 !important; border-left-color: #c99b48 !important; }
+    .empty-note { 
+        color: #a0a0a0 !important; 
+    }
+
+    footer { 
+        color: #a0a0a0 !important; 
+        border-top-color: #333 !important; 
+    }
+
+    .install-btn { 
+        background: #4a7c2e !important; 
+        color: #ffffff !important; 
+    }
     
-    #iosModal > div { background: #1e1e1e !important; border-color: #444 !important; }
-    #iosModal h2, #iosModal p, #iosModal li { color: #f0f0f0 !important; }
+    .editor-hint { 
+        background: #3d3326 !important; 
+        color: #c99b48 !important; 
+        border-left-color: #c99b48 !important; 
+    }
+    
+    .hidden-flag { opacity: 0.4; }
+
+    #iosModal > div { 
+        background: #1e1e1e !important; 
+        border-color: #444 !important; 
+    }
+    
+    #iosModal h2, #iosModal p, #iosModal li { 
+        color: #f0f0f0 !important; 
+    }
 }
-    .app-header {
+.app-header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -122,7 +192,6 @@ body {
     border: 1px solid #e6e2d8;
     margin: 1rem 0;
 }
-.textbox-container h2 { font-size: 1.1rem; color: #c99b48; margin-bottom: 0.75rem; }
 .text-content { white-space: pre-wrap; color: #2d2d2d; font-size: 1rem; }
 .empty-note { font-style: italic; color: #6b6b6b; font-size: 0.9rem; }
 .breadcrumb { font-weight: 500; color: #c99b48; flex: 1; min-width: 180px; }
@@ -181,6 +250,15 @@ const CACHE_KEY = "apiguide_cache_v2";
 const LANGS = ['en','fr','it','de','rm'];
 const LANG_LABELS = { en:'English', fr:'Français', it:'Italiano', de:'Deutsch', rm:'Rumantsch' };
 
+// UI Translations
+const UI_TEXT = {
+  en: { back: "← Back", chooseSeason: "choose a season", activity: "activity", noText: "(no text)", loading: "Loading...", offline: "Content not yet available. An administrator must publish it from the committee panel.", install: "⬇ Install App" },
+  fr: { back: "← Retour", chooseSeason: "choisir une saison", activity: "activité", noText: "(aucun texte)", loading: "Chargement...", offline: "Contenu pas encore disponible. Un administrateur doit le publier depuis le panneau comité.", install: "⬇ Installer l'app" },
+  de: { back: "← Zurück", chooseSeason: "Jahreszeit wählen", activity: "Aktivität", noText: "(kein Text)", loading: "Lädt...", offline: "Inhalt noch nicht verfügbar. Ein Administrator muss ihn über das Komitee-Panel veröffentlichen.", install: "⬇ App installieren" },
+  it: { back: "← Indietro", chooseSeason: "scegli una stagione", activity: "attività", noText: "(nessun testo)", loading: "Caricamento...", offline: "Contenuto non ancora disponibile. Un amministratore deve pubblicarlo dal pannello del comitato.", install: "⬇ Installa app" },
+  rm: { back: "← Enavos", chooseSeason: "tscherna ina stagiun", activity: "activitad", noText: "(nagin text)", loading: "Chargiar...", offline: "Cuntegn betg anc disponibel. In administratur sto el publitgar dal panel dal comité.", install: "⬇ Installar l'app" }
+};
+
 function blankLang() {
   const E10 = () => ['', '', '', '', '', '', '', '', '', ''];
   return {
@@ -216,8 +294,13 @@ function currentTitles(level) {
   if (level === 'level1') return C.level1[s] || [];
   return [];
 }
+function t(key) {
+  return UI_TEXT[currentLang][key] || UI_TEXT['en'][key] || key;
+}
 
 async function loadContent() {
+  document.getElementById('app').innerHTML = `<div class="loading-note">${t('loading')}</div>`;
+  
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
     if (cached && cached.content) {
@@ -245,6 +328,9 @@ async function loadContent() {
     }
   } catch (e) {
     console.warn('[ApiGuide] Gist unreachable, using cache.', e);
+    if (!CONTENT || !CONTENT[currentLang] || CONTENT[currentLang].season.every(s => s === '')) {
+       document.getElementById('app').innerHTML = `<div class="empty-note" style="text-align:center; margin-top:2rem;">${t('offline')}</div>`;
+    }
   }
 }
 
@@ -273,12 +359,12 @@ function render() {
     const text = (CONTENT[currentLang].text[s] || [])[l1] || '';
     app.innerHTML = `
       <div class="row">
-        <button class="back-btn" id="backBtn">← Back</button>
+        <button class="back-btn" id="backBtn">${t('back')}</button>
         <span class="breadcrumb">${esc(LANG_LABELS[currentLang])} · S${s+1} · ${l1+1}</span>
       </div>
       <div class="textbox-container">
-        <h2>📝 Notes</h2>
-        ${text && text.length ? `<div class="text-content">${esc(text)}</div>` : `<div class="empty-note">(no text)</div>`}
+        <!-- REMOVED Notes Header -->
+        ${text && text.length ? `<div class="text-content">${esc(text)}</div>` : `<div class="empty-note">${t('noText')}</div>`}
       </div>
     `;
     document.getElementById('backBtn').onclick = back;
@@ -290,8 +376,8 @@ function render() {
   else level = 'season';
 
   const crumbText = {
-    season: `${esc(LANG_LABELS[currentLang])} · choose a season`,
-    level1: `${esc(LANG_LABELS[currentLang])} · S${s+1} → activity`
+    season: `${esc(LANG_LABELS[currentLang])} · ${t('chooseSeason')}`,
+    level1: `${esc(LANG_LABELS[currentLang])} · S${s+1} → ${t('activity')}`
   }[level];
 
   const titles = currentTitles(level);
@@ -306,7 +392,7 @@ function render() {
     app.innerHTML = `
       <div class="row"><span class="breadcrumb">${crumbText}</span></div>
       <div class="textbox-container">
-        <div class="empty-note">Contenu pas encore disponible. Un administrateur doit le publier depuis le panneau comité.</div>
+        <div class="empty-note">${t('offline')}</div>
       </div>
     `;
     return;
@@ -314,7 +400,7 @@ function render() {
 
   app.innerHTML = `
     <div class="row">
-      ${level === 'season' ? '' : '<button class="back-btn" id="backBtn">← Back</button>'}
+      ${level === 'season' ? '' : `<button class="back-btn" id="backBtn">${t('back')}</button>`}
       <span class="breadcrumb">${crumbText}</span>
     </div>
     <div class="grid-container" id="grid" ${level==='season'?'style="grid-template-columns:repeat(2,1fr);"':''}>${html}</div>
@@ -337,11 +423,20 @@ function renderLangSwitcher() {
   bar.innerHTML = LANGS.map(l => `<option value="${l}" ${l===currentLang?'selected':''}>${esc(LANG_LABELS[l])}</option>`).join('');
   bar.onchange = (e) => {
     currentLang = e.target.value;
-       localStorage.setItem('vespacaution_lang', currentLang);
-    localStorage.setItem('apiguide_lang', currentLang); // Keep for backwards compatibility
+    localStorage.setItem('vespacaution_lang', currentLang);
+    localStorage.setItem('apiguide_lang', currentLang);
     resetNav();
     render();
+    updateInstallBtn();
   };
+}
+
+// Update Install Button Text based on language
+function updateInstallBtn() {
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn && !isStandalone()) {
+    installBtn.innerText = t('install');
+  }
 }
 
 let deferredInstallPrompt = null;
@@ -357,7 +452,12 @@ function isStandalone() { return window.matchMedia('(display-mode: standalone)')
 
 const installBtn = document.getElementById('installBtn');
 if (installBtn) {
-  if (isStandalone()) installBtn.style.display = 'none';
+  if (isStandalone()) {
+    installBtn.style.display = 'none';
+  } else {
+    installBtn.innerText = t('install');
+  }
+  
   installBtn.addEventListener('click', async () => {
     if (isStandalone()) return;
     if (deferredInstallPrompt) {
