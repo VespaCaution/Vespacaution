@@ -70,47 +70,7 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-.breadcrumb-nav {
-  background-color: #211c14; /* Dark brownish-black background */
-  padding: 20px 32px;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 16px;
-}
 
-.breadcrumb-list {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-/* Separator slash */
-.breadcrumb-list li + li::before {
-  content: "/";
-  color: #8c8273;
-  margin: 0 10px;
-}
-
-/* Previous page links */
-.breadcrumb-list a {
-  color: #d1c4ae;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-thickness: 1px;
-  transition: color 0.2s ease;
-}
-
-.breadcrumb-list a:hover {
-  color: #ffffff;
-}
-
-/* Current active page */
-.breadcrumb-list li[aria-current="page"] {
-  color: #ffffff;
-  font-weight: 700;
-}
         
         .header-left { display: flex; align-items: center; gap: 15px; }
         
@@ -787,13 +747,7 @@
             </p>
             &copy; <span id="year"></span> Vespacaution. <span data-i18n="footer_credit">Créé par Ben Hupka.</span>
         </div>
-    </footer>
-<nav aria-label="Breadcrumb" class="breadcrumb-nav">
-  <ol id="breadcrumb-list" class="breadcrumb-list">
-    <!-- Dynamic items will be inserted here -->
-  </ol>
-</nav>
-    
+    </footer>  
     <!-- OVERLAY PDF -->
     <div class="pdf-overlay" id="pdfOverlay">
         <div class="pdf-header">
@@ -2297,53 +2251,7 @@ document.addEventListener('keydown', function(e) {
                     .catch(err => console.log('Erreur Service Worker:', err));
             });
         }
-document.addEventListener("DOMContentLoaded", () => {
-  const breadcrumbList = document.getElementById("breadcrumb-list");
-  
-  // 1. Always start with the Home ("Accueil") link
-  const homeItem = document.createElement("li");
-  homeItem.innerHTML = `<a href="/">Accueil</a>`;
-  breadcrumbList.appendChild(homeItem);
-
-  // 2. Get the current URL path and split it into segments
-  // Example: "/services/confidentialite" -> ["services", "confidentialite"]
-  const pathSegments = window.location.pathname
-    .split("/")
-    .filter(segment => segment.length > 0);
-
-  // Optional: Map raw URL slugs to clean French titles with accents
-  const titleMap = {
-    "confidentialite": "Confidentialité",
-    "a-propos": "À propos",
-    "contact": "Contact"
-  };
-
-  let currentPath = "";
-
-  // 3. Loop through each segment to build the trail
-  pathSegments.forEach((segment, index) => {
-    currentPath += `/${segment}`;
-    const li = document.createElement("li");
-
-    // Format the name (use titleMap if available, otherwise capitalize)
-    const cleanSlug = segment.replace(".html", "").toLowerCase();
-    const displayName = titleMap[cleanSlug] || 
-      cleanSlug.charAt(0).toUpperCase() + cleanSlug.slice(1).replace(/-/g, " ");
-
-    // If it's the last segment, make it bold text (active page)
-    if (index === pathSegments.length - 1) {
-      li.setAttribute("aria-current", "page");
-      li.textContent = displayName;
-    } else {
-      // Otherwise, make it a clickable link
-      li.innerHTML = `<a href="${currentPath}">${displayName}</a>`;
-    }
-
-    breadcrumbList.appendChild(li);
-  });
-});
-        
-        document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
             addLongPressEvents();
             handleAutoBetaRedirect();
         });
