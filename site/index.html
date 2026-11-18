@@ -710,6 +710,15 @@
             <div>
                 <h3 data-i18n="footer_legal">Légal</h3>
                 <ul>
+                   <div id="searchModal">
+    <div class="search-box">
+        <h3>🔍 <span data-i18n="search_title">Rechercher sur Vespacaution</span></h3>
+        <input type="text" id="searchInput" oninput="performSearch()" placeholder="App, page, article, membre..." data-i18n-placeholder="search_placeholder" autocomplete="off">
+        <div id="searchResults"></div>
+        <button onclick="closeSearch()" class="btn" style="width:100%; margin-top:12px;" data-i18n="search_close">Fermer</button>
+    </div>
+    </div>
+
                     <li><a href="#privacy" data-i18n="nav_privacy">Politique de confidentialité</a></li>
                 </ul>
 
