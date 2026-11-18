@@ -551,9 +551,16 @@ function toggleHistoricalFlights(d){historicalVisibility[d]=!historicalVisibilit
 function openModal(id){document.getElementById(id).style.display='flex';}
 function closeModal(id){document.getElementById(id).style.display='none';if(id==='compassModal')stopCompass();}
     function openLangModal(){var langs=[{code:'fr',flag:'🇫🇷',name:'Français'},{code:'en',flag:'🇬🇧',name:'English'},{code:'de',flag:'🇩🇪',name:'Deutsch'},{code:'it',flag:'🇮🇹',name:'Italiano'},{code:'rm',flag:'🇨🇭',name:'Rumantsch'}];var html='';for(var i=0;i<langs.length;i++){html+='<div class="lang-option'+(currentLang===langs[i].code?' selected':'')+'" onclick="changeLanguage(\''+langs[i].code+'\')"><span class="lang-flag">'+langs[i].flag+'</span><span class="lang-name">'+langs[i].name+'</span></div>';}document.getElementById('langOptions').innerHTML=html;openModal('langModal');}
-function changeLanguage(lang){currentLang=lang;localStorage.setItem('vespacaution_lang', lang);
-localStorage.setItem('vl', lang); // Keep for backwards compatibilitycloseModal('langModal');applyTranslations();renderAll();if(map)drawAnalysis();showToast(t('lang_changed'));}
-
+function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('vespacaution_lang', lang);
+    localStorage.setItem('vl', lang); // Keep for backwards compatibility
+    closeModal('langModal');
+    applyTranslations();
+    renderAll();
+    if(map) drawAnalysis();
+    showToast(t('lang_changed'));
+}
 function openCompassModal(){openModal('compassModal');startCompass();setTimeout(drawGraduations,100);}
 function startCompass(){
   compassActive=true;
