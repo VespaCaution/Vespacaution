@@ -602,16 +602,15 @@
                 <button class="subtab" data-sub="apiguide" onclick="switchSubTab('apiguide')" data-i18n="admin_site_apiguide_tab">🐝 ApiGuide</button>
             </div>
 
-            <!-- NEW BUTTONS -->
+                        <!-- NEW BUTTONS -->
             <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
                 <button onclick="openTranslateModal('google')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px;" data-i18n="admin_site_translate_google">
                     🌍 Google Translate
                 </button>
                 <button onclick="openTranslateModal('rumantsch')" class="btn-blue" style="flex: 1; padding: 12px; border-radius: 8px; background: #5f7d6b;" data-i18n="admin_site_translate_rumantsch">
-                    🏔️ Rumantsch Translator
+                    🇨🇭 Rumantsch Translator
                 </button>
             </div>
-
             <div id="subTabBlog" class="subtab-content">
                 <h3 data-i18n="admin_blog_add_title">Ajouter un article de blog</h3>
                 <div class="blog-lang-tabs">
@@ -721,7 +720,7 @@
             </div>
         </div>
 
-        <div id="tabAnalytics" class="card hidden">
+               <div id="tabAnalytics" class="card hidden">
             <h2 data-i18n="admin_analytics_title">📊 Analytics</h2>
             <p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_desc">
                 Umami statistics dashboard (public share view).
@@ -731,7 +730,8 @@
                     ↗ <span data-i18n="admin_analytics_open">Open in new tab</span>
                 </a>
             </div>
-            <!-- Umami Iframe -->
+            
+            <!-- Umami Iframe (This one still works) -->
             <div class="analytics-iframe-wrapper">
                 <iframe
                     src="https://cloud.umami.is/share/EC1wZPz4LAi9hrAM"
@@ -741,20 +741,18 @@
                 </iframe>
             </div>
 
-            <!-- NEW: Web3Forms Iframe -->
+            <!-- NEW: Web3Forms Link (Since iframe doesn't work) -->
             <h3 style="margin-top: 30px; margin-bottom: 10px;" data-i18n="admin_analytics_web3forms_title">📬 Form Submissions (Web3Forms)</h3>
             <p style="color:#666; font-size:0.9rem; margin-bottom:12px;" data-i18n="admin_analytics_web3forms_desc">
                 View your contact form submissions.
             </p>
-            <div class="analytics-iframe-wrapper" style="height: 600px;">
-                <iframe
-                    src="https://web3forms.com/dashboard"
-                    style="width:100%; height:100%; border:0;"
-                    loading="lazy">
-                </iframe>
+            <div style="text-align:center; padding: 20px; background: var(--bg); border-radius: 12px; border: 1px dashed var(--border);">
+                <p style="margin-bottom: 15px; font-size: 0.9rem;">Web3Forms blocks embedding. Click below to open the dashboard.</p>
+                <a href="https://web3forms.com/dashboard" target="_blank" rel="noopener" class="btn-blue" style="display:inline-block; padding: 12px 24px; border-radius: 30px; text-decoration:none; font-weight:bold; color: white;">
+                    ↗ Open Web3Forms Dashboard
+                </a>
             </div>
         </div>
-
         <div class="card flex" style="justify-content: center; margin-top: 20px;">
             <button onclick="downloadBackup()" class="btn-blue" style="max-width: 300px;" data-i18n="admin_save_local">💾 Sauvegarde locale (JSON)</button>
             <input type="file" id="uploadBackup" accept=".json" style="display:none;" onchange="uploadBackup(event)">
@@ -764,15 +762,18 @@
 </div>
 
 <!-- ==================== TRANSLATOR MODALS ==================== -->
-<div id="translateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column;">
-    <!-- White header with close button -->
-    <div style="background:var(--surface); padding:10px 15px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border);">
-        <h3 id="translateModalTitle" style="margin:0; font-size:1rem;">Translator</h3>
-        <button onclick="closeTranslateModal()" style="background:var(--danger); color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center;">✕</button>
-    </div>
-    <!-- Iframe container -->
-    <div style="flex-grow:1; background:#fff; position:relative;">
-        <iframe id="translateIframe" src="" style="width:100%; height:100%; border:none;"></iframe>
+<div id="translateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding: 20px;">
+    <div style="background:var(--surface); padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:center; border:1px solid var(--border);">
+        <h3 id="translateModalTitle" style="margin-bottom: 15px; color: var(--primary); font-size: 1.2rem;">Translator</h3>
+        <p style="font-size:0.9rem; margin-bottom: 20px; color: var(--text);">This external service cannot be embedded directly. Click below to open it in a new tab.</p>
+        
+        <a id="translateLinkBtn" href="#" target="_blank" class="btn-blue" style="display:block; padding: 12px; border-radius: 8px; text-decoration:none; font-weight:bold; margin-bottom: 10px;">
+            🌍 Open Translator
+        </a>
+        
+        <button onclick="closeTranslateModal()" style="background:var(--muted); color:white; padding: 10px; border-radius: 8px; width: 100%; border:none; cursor:pointer;">
+            Close
+        </button>
     </div>
 </div>
 
@@ -1263,23 +1264,23 @@ function loadAllData() {
 // --- TRANSLATOR MODALS ---
 function openTranslateModal(type) {
     const modal = document.getElementById('translateModal');
-    const iframe = document.getElementById('translateIframe');
     const title = document.getElementById('translateModalTitle');
+    const linkBtn = document.getElementById('translateLinkBtn');
 
     if (type === 'google') {
-        title.innerText = t('admin_site_translate_google');
-        iframe.src = "https://translate.google.com/?sl=fr&tl=en&op=translate";
+        title.innerText = "Google Translate";
+        linkBtn.href = "https://translate.google.com/?sl=fr&tl=en&op=translate";
+        linkBtn.innerText = "🌍 Open Google Translate";
     } else if (type === 'rumantsch') {
-        title.innerText = t('admin_site_translate_rumantsch');
-        iframe.src = "https://www.pledarigrond.ch/rumantschgrischun/"; 
+        title.innerText = "Rumantsch Translator";
+        linkBtn.href = "https://www.supertext.ch/en/translation/rumantsch"; // Supertext URL
+        linkBtn.innerText = "🇨🇭 Open Rumantsch Translator";
     }
 
     modal.style.display = 'flex';
 }
-
 function closeTranslateModal() {
     document.getElementById('translateModal').style.display = 'none';
-    document.getElementById('translateIframe').src = ""; 
 }
 
 function saveAllData() {
