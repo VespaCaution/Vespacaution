@@ -72,7 +72,7 @@
     #authScreen input, #resetScreen input { margin-bottom: 1rem; }
     #errorBox { display: none; background: #ffcccc; color: red; padding: 15px; border: 2px solid red; margin-bottom: 20px; font-weight: bold; white-space: pre-wrap; }
     .account-btn { position: absolute; top: 1rem; right: 1rem; background: transparent; color: #7a6a58; font-size: 0.8rem; border: 1px solid #7a6a58; padding: 0.3rem 0.8rem; border-radius: 20px; }
- @media (prefers-color-scheme: dark) {
+   @media (prefers-color-scheme: dark) {
     :root { color-scheme: dark; }
     
     body { background: #121212 !important; color: #f0f0f0 !important; }
@@ -117,6 +117,31 @@
     .voice-btn { background: #2a2a2a !important; color: #f0f0f0 !important; }
     .voice-btn.active { background: #c47b2e !important; color: #ffffff !important; }
 }
+    .app-bottom-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  padding: 15px 0;
+}
+
+.app-bottom-logo a {
+  display: inline-block;
+  opacity: 0.85;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.app-bottom-logo a:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.app-bottom-logo img {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+    
   </style>
 </head>
 <body>
@@ -154,7 +179,11 @@
    <button id="installPwaBtn" style="position: fixed; bottom: 6rem; left: 1rem; background: #c47b2e; color: white; border: none; padding: 0.6rem 1rem; border-radius: 40px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; display: none;">
   📲 Installer l'app
    </button>
-
+<div class="app-bottom-logo">
+  <a href="https://vespacaution.github.io" title="Vespacaution">
+    <img src="logo.png" alt="Vespacaution Logo">
+  </a>
+</div>
   <script>
   window.addEventListener('error', function(e) {
   alert("CRASH: " + e.message + "\nLine: " + e.lineno);
