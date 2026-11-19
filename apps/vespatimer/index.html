@@ -125,30 +125,6 @@
         .lang-name { font-weight:600; }
         .site-tab.active { color:var(--gold) !important; border-bottom:3px solid var(--gold) !important; background:var(--bg) !important; }
         .site-tab:hover { background:var(--bg); }
-        .app-bottom-logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-  padding: 15px 0;
-}
-
-.app-bottom-logo a {
-  display: inline-block;
-  opacity: 0.85;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.app-bottom-logo a:hover {
-  transform: scale(1.05);
-  opacity: 1;
-}
-
-.app-bottom-logo img {
-  height: 28px;
-  width: auto;
-  display: block;
-}
         
         /* Dark Mode overrides for inline JS styles */
         @media (prefers-color-scheme: dark) {
@@ -452,16 +428,9 @@
     <div id="historyPanel"></div>
 </div>
 
-    
 <div class="card"><h2>📊 <span data-lang="stats_title">Statistiques</span></h2><div id="statsContent" style="font-size:0.9rem;"></div></div>
 
-    <div class="app-bottom-logo">
-  <a href="https://vespacaution.github.io" title="Vespacaution">
-    <img src="logo.png" alt="Vespacaution Logo">
-  </a>
-</div>
-
-    <div class="bottom-bar" id="bottomBar">
+<div class="bottom-bar" id="bottomBar">
     <button class="btn-sm" onclick="openModal('exportModal')">📤 <span data-lang="export_import">Export/Import</span></button>
     <button class="btn-sm" onclick="openModal('optionsModal')">⚙️ <span data-lang="options">Options</span></button>
 </div>
