@@ -44,7 +44,31 @@
                 color-scheme: dark;
             }
         }
+.app-bottom-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  padding: 15px 0;
+}
 
+.app-bottom-logo a {
+  display: inline-block;
+  opacity: 0.85;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.app-bottom-logo a:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.app-bottom-logo img {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -761,7 +785,11 @@
         </div>
     </main>
 </div>
-
+<div class="app-bottom-logo">
+  <a href="https://vespacaution.github.io" title="Vespacaution">
+    <img src="logo.png" alt="Vespacaution Logo">
+  </a>
+</div>
 <!-- ==================== TRANSLATOR MODALS ==================== -->
 <div id="translateModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding: 20px;">
     <div style="background:var(--surface); padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:center; border:1px solid var(--border);">
