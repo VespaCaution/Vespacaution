@@ -125,65 +125,6 @@
         }
         .lang-btn:hover { color: var(--primary); }
         .lang-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-        /* --- BREADCRUMB NAVIGATION --- */
-.breadcrumb-wrapper {
-    display: block; /* Overrides global 'nav { display: flex; }' */
-    width: 100%;
-    padding: 12px 20px 0 20px; /* Aligns top-left right under the header */
-    background: transparent;
-    border: none;
-    font-size: 0.85rem;
-}
-
-.breadcrumb-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.breadcrumb-item {
-    display: flex;
-    align-items: center;
-    color: var(--primary); /* Golden brand color */
-    font-weight: 600;
-}
-
-/* Slash Separator */
-.breadcrumb-item + .breadcrumb-item::before {
-    content: "/";
-    margin: 0 8px;
-    color: var(--primary);
-    font-weight: 600;
-}
-
-/* Plain golden text for clickable links/buttons */
-.breadcrumb-item a,
-.breadcrumb-item button {
-    background: none;
-    border: none;
-    padding: 0;
-    font: inherit;
-    color: var(--primary);
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.breadcrumb-item a:hover,
-.breadcrumb-item button:hover {
-    color: var(--primary-hover); /* Slightly deeper gold on hover */
-    text-decoration: underline;
-}
-
-/* Active Page (Last Item) */
-.breadcrumb-item.active {
-    color: var(--primary);
-    font-weight: 600; /* Keeps uniform plain text weight, or change to 700 if you want the current page slightly bolder */
-    cursor: default;
-}
         
         /* --- DROPDOWN MENU --- */
         .dropdown { position: relative; display: inline-block; }
@@ -745,13 +686,7 @@
     </div>
     </nav>
     </header>
-    
-<!-- DYNAMIC BREADCRUMB -->
-<nav id="breadcrumb-bar" aria-label="Breadcrumb" class="breadcrumb-wrapper" style="display: none;">
-    <ol id="breadcrumb-list" class="breadcrumb-list"></ol>
-</nav>
 
-    
     <main id="app-content"></main>
 
     <footer>
@@ -1178,65 +1113,7 @@ search_tag_app: "App", search_tag_page: "Pagina", search_tag_blog: "Blog", searc
         function t(key) {
             return (translations[currentLang] && translations[currentLang][key]) ? translations[currentLang][key] : key;
         }
-/**
- * Updates the breadcrumb trail dynamically and translates items using existing keys.
- * 
- * @param {string} currentKey - The translation key for the current page (e.g., 'nav_blog', 'nav_links', 'home')
- * @param {string|null} parentKey - Optional parent category translation key (e.g., 'nav_resources')
- * @param {string|null} customTitle - Optional raw title (useful for dynamic blog article titles)
- */
-function updateBreadcrumb(currentKey, parentKey = null, customTitle = null) {
-    const bar = document.getElementById('breadcrumb-bar');
-    const list = document.getElementById('breadcrumb-list');
-    if (!bar || !list) return;
-
-    // 1. Hide completely if on the Home screen
-    if (!currentKey || currentKey === 'home' || currentKey === 'nav_home') {
-        bar.style.display = 'none';
-        list.innerHTML = '';
-        return;
-    }
-
-    // Helper to fetch from your existing translation dictionary
-    // Replace `translations[currentLang]` with your actual dictionary variable name
-    const t = (key) => {
-        if (typeof translations !== 'undefined' && translations[currentLang]?.[key]) {
-            return translations[currentLang][key];
-        }
-        return key; // Fallback if key isn't found
-    };
-
-    // 2. Build the path array dynamically (Always starts with Home)
-    // Adjust 'nav_home' to match whatever key you use for "Accueil / Home"
-    const trail = [
-        { label: t('nav_home'), route: 'home', active: false }
-    ];
-
-    // Add intermediate parent if provided (e.g., Ressources -> Liens utiles)
-    if (parentKey) {
-        trail.push({ label: t(parentKey), route: parentKey, active: false });
-    }
-
-    // Add current active page
-    trail.push({
-        label: customTitle || t(currentKey),
-        route: currentKey,
-        active: true
-    });
-
-    // 3. Render the HTML
-    list.innerHTML = trail.map(item => {
-        if (item.active) {
-            return `<li class="breadcrumb-item active" aria-current="page">${item.label}</li>`;
-        }
-        // Replace `navigateTo('${item.route}')` with your actual page-switching function
-        return `<li class="breadcrumb-item"><button type="button" onclick="navigateTo('${item.route}')">${item.label}</button></li>`;
-    }).join('');
-
-    // 4. Show the breadcrumb bar
-    bar.style.display = 'block';
-}
-        
+  
         // ==========================================
         // 2. APP CONFIGURATION & FULL DESCRIPTIONS
         // ==========================================
