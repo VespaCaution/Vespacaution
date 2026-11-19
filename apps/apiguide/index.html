@@ -25,6 +25,31 @@ body {
     display: flex;
     flex-direction: column;
 }
+    .app-bottom-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  padding: 15px 0;
+}
+
+.app-bottom-logo a {
+  display: inline-block;
+  opacity: 0.85;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.app-bottom-logo a:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.app-bottom-logo img {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+    
 /* =========================================
    DARK MODE - APIGUIDE
    ========================================= */
@@ -241,6 +266,11 @@ footer {
 </div>
 
 <footer id="appFooter">ApiGuide v1.0</footer>
+<div class="app-bottom-logo">
+  <a href="https://vespacaution.github.io" title="Vespacaution">
+    <img src="logo.png" alt="Vespacaution Logo">
+  </a>
+</div>
 
 <script>
 const GIST_ID = "f4fe8523136960f0289660123aa32cb7";
