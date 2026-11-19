@@ -174,10 +174,13 @@
 .breadcrumb-bar {
     display: none;
     width: 100%;
-    padding: 12px 20px 0 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--primary);
+    padding: 10px 20px 0 20px;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem !important; /* Smaller than your 1.4rem app title and 0.9rem nav */
+    line-height: 1.4;
 }
 
 .breadcrumb-bar ol {
@@ -187,23 +190,34 @@
     align-items: center;
     margin: 0;
     padding: 0;
+    background: none !important;
 }
 
-.breadcrumb-bar li {
-    display: flex;
-    align-items: center;
+.breadcrumb-bar li,
+.breadcrumb-bar a,
+.breadcrumb-bar span {
+    font-size: 0.78rem !important; /* Keeps every item the exact same size */
+    font-weight: 600;
     color: var(--primary);
+    background: none !important;
+    border: none !important;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
 }
 
+/* Uniform slash separator */
 .breadcrumb-bar li + li::before {
     content: "/";
-    margin: 0 8px;
+    margin: 0 6px;
+    font-size: 0.78rem !important;
+    font-weight: 600;
     color: var(--primary);
 }
 
 .breadcrumb-bar a {
-    padding: 0;
-    color: var(--primary);
+    text-decoration: none;
     cursor: pointer;
 }
 
@@ -211,6 +225,8 @@
     text-decoration: underline;
     color: var(--primary-hover);
 }
+        
+
         
         /* --- MAIN LAYOUT --- */
         main { max-width: 1000px; margin: 30px auto; padding: 0 20px; min-height: 70vh; animation: fadeIn 0.4s ease; }
