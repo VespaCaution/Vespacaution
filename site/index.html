@@ -170,6 +170,47 @@
         /* Search button */
         .search-btn { background: none; border: none; color: var(--primary); font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 50%; transition: background 0.2s; line-height: 1; }
         .search-btn:hover { background: var(--primary-light); }
+        /* --- BREADCRUMB (FIL D'ARIANE) --- */
+.breadcrumb-bar {
+    display: none;
+    width: 100%;
+    padding: 12px 20px 0 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.breadcrumb-bar ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumb-bar li {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+}
+
+.breadcrumb-bar li + li::before {
+    content: "/";
+    margin: 0 8px;
+    color: var(--primary);
+}
+
+.breadcrumb-bar a {
+    padding: 0;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.breadcrumb-bar a:hover {
+    text-decoration: underline;
+    color: var(--primary-hover);
+}
         
         /* --- MAIN LAYOUT --- */
         main { max-width: 1000px; margin: 30px auto; padding: 0 20px; min-height: 70vh; animation: fadeIn 0.4s ease; }
@@ -634,7 +675,7 @@
     </style>
 </head>
 <body>
-<main>
+
 
 
   <!-- Your existing page content starts here... -->
@@ -687,6 +728,13 @@
     </nav>
     </header>
 
+
+ <nav id="breadcrumb" class="breadcrumb-bar" aria-label="Breadcrumb">
+     <ol id="breadcrumb-list"></ol>
+ </nav>
+
+ 
+    
     <main id="app-content"></main>
 
     <footer>
@@ -1734,12 +1782,19 @@ function openBlogArticle(id) {
     const main = document.getElementById('app-content');
     main.innerHTML = html;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+updateBreadcrumb([
+    { label: t('nav_blog'), href: '#blog', onclick: 'closeBlogArticle(); return false;' },
+    { label: article.title }
+]);
+    
 }
 
 function closeBlogArticle() {
     const main = document.getElementById('app-content');
     main.innerHTML = getBlogHtml();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+updateBreadcrumb([{ label: t('nav_blog') }]);
+    
 }
     
 function toggleBlogPost(button) {
@@ -1807,18 +1862,49 @@ function toggleBlogPost(button) {
             }
         }
 
-        function renderStaticPage(pageId) {
-            if (pageId === 'links' || pageId === 'credits') {
-                mainContent.innerHTML = getResourcesHtml(pageId);
-                window.location.hash = 'resources';
-            }
-        }
+       function updateBreadcrumb(items) {
+    const bar = document.getElementById('breadcrumb');
+    const list = document.getElementById('breadcrumb-list');
+    if (!bar || !list) return;
 
-        function render() {
+    // Cache le fil d'Ariane sur la page d'accueil
+    if (!items || items.length === 0) {
+        bar.style.display = 'none';
+        list.innerHTML = '';
+        return;
+    }
+
+    // Toujours commencer par Accueil (traduit dynamiquement)
+    const trail = [{ label: t('nav_home'), href: '#' }, ...items];
+
+    list.innerHTML = trail.map((item, index) => {
+        const isLast = index === trail.length - 1;
+        if (isLast) {
+            return `<li aria-current="page">${item.label}</li>`;
+        }
+        const action = item.onclick ? `onclick="${item.onclick}"` : '';
+        return `<li><a href="${item.href || '#'}" ${action}>${item.label}</a></li>`;
+    }).join('');
+
+    bar.style.display = 'block';
+       }
+        
+        function renderStaticPage(pageId) {
+    if (pageId === 'links' || pageId === 'credits') {
+        mainContent.innerHTML = getResourcesHtml(pageId);
+        window.location.hash = 'resources';
+        const subKey = pageId === 'links' ? 'nav_links' : 'nav_credits';
+        updateBreadcrumb([
+            { label: t('nav_resources'), href: '#resources' },
+            { label: t(subKey) }
+        ]);
+    }
+}
+
+function render() {
     let hash = window.location.hash.replace('#', '') || 'home';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Per-page language override: #vespatimer-de
     let pageLang = currentLang;
     const overrideMatch = hash.match(/^(.+)-(en|fr|de|it|rm)$/);
     if (overrideMatch && appsConfig[overrideMatch[1]]) {
@@ -1827,32 +1913,47 @@ function toggleBlogPost(button) {
     }
 
     if (appsConfig[hash]) {
-        // Temporarily switch currentLang so t() returns the right strings
         const savedLang = currentLang;
         currentLang = pageLang;
         mainContent.innerHTML = appsConfig[hash].html[pageLang]();
         currentLang = savedLang;
+        updateBreadcrumb([
+            { label: t('nav_apps'), href: '#apps' },
+            { label: appsConfig[hash].title }
+        ]);
     } else if (hash === 'apps') {
         mainContent.innerHTML = getHomeHtml();
+        updateBreadcrumb([]); // Masqué sur l'accueil
         const el = document.getElementById('apps');
         if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
     } else if (hash === 'resources') {
         mainContent.innerHTML = getResourcesHtml('links');
+        updateBreadcrumb([
+            { label: t('nav_resources'), href: '#resources' },
+            { label: t('nav_links') }
+        ]);
     } else if (hash === 'support') {
         mainContent.innerHTML = getSupportHtml();
+        updateBreadcrumb([{ label: t('nav_support') }]);
     } else if (hash === 'members') {
         mainContent.innerHTML = getMembersHtml();
+        updateBreadcrumb([{ label: t('nav_members') }]);
     } else if (hash === 'blog') {
         mainContent.innerHTML = getBlogHtml();
+        updateBreadcrumb([{ label: t('nav_blog') }]);
     } else if (hash === 'contact') {
         mainContent.innerHTML = getContactHtml();
         setupContactForm();
+        updateBreadcrumb([{ label: t('nav_contact') }]);
     } else if (hash === 'privacy') {
         mainContent.innerHTML = getPrivacyHtml();
+        updateBreadcrumb([{ label: t('nav_privacy') }]);
     } else {
         mainContent.innerHTML = getHomeHtml();
+        updateBreadcrumb([]); // Masqué sur l'accueil
     }
-        }
+}
+        
 
         // ==========================================
         // 5. CONTACT FORM LOGIC
